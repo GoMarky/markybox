@@ -7,13 +7,10 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 
-export default defineComponent({
-  name: 'App',
-  setup() {
-  }
+export default window.workbench.createComponent(() => {
+  return defineComponent({
+    name: 'App',
+    setup() {}
+  });
 })
 </script>
-
-<style scoped>
-
-</style>
