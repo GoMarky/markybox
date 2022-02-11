@@ -33,13 +33,15 @@
     "resolveJsonModule": true,
     "paths": {
       "@/*": [
-        "./app/src/*"
+        "./src/*"
       ]
     }
   },
   "include": [
     "*.ts",
-    "*.tsx"
+    "*.tsx",
+    "*.vue",
+    "src"
   ],
   "exclude": [
     "node_modules"

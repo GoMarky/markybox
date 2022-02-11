@@ -3,7 +3,7 @@ const os = require('os');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const webpackMerge = require('webpack-merge');
-const VueLoaderPlugin = require('vue-loader/lib/plugin');
+const { VueLoaderPlugin } = require('vue-loader');
 const WebpackManifestPlugin = require('webpack-manifest-plugin');
 const ExtractCssChunks = require('extract-css-chunks-webpack-plugin');
 const WebpackBar = require('webpackbar');
@@ -11,10 +11,9 @@ const StdEnv = require('std-env');
 const IgnoreNotFoundExportPlugin = require('./config/plugins/IgnoreNotFoundExportPlugin');
 const EnvironmentVariable = require('./config/environment-variable');
 const MetaVariable = require('./config/meta-variable');
-const modeConfig = env => require(`./config/webpack.${ env }`)(env);
+const modeConfig = env => require(`./config/webpack.${env}`)(env);
 
 const showBuildParams = require('./config/helpers/show-build-params');
-const extractCssChunkLoader = require('./config/loaders/extract-css-chunk.loader');
 
 showBuildParams();
 
@@ -26,7 +25,6 @@ module.exports = ({ mode } = { mode: 'production' }) => {
 
   const {
     TAG_TITLE,
-    NETWORK_ERROR_TEXT,
     APP_NAME,
     META_DESCRIPTION,
     META_THEME_COLOR,
@@ -53,7 +51,7 @@ module.exports = ({ mode } = { mode: 'production' }) => {
       sortAttributes: true,
       sortClassName: true,
     },
-    inject: EnvironmentVariable.isDev,
+    inject: true,
     templateParameters: {
       IS_DEV: EnvironmentVariable.isDev,
       IS_PRODUCTION: EnvironmentVariable.isProduction,
@@ -63,7 +61,6 @@ module.exports = ({ mode } = { mode: 'production' }) => {
       TAG_TITLE,
       APP_NAME,
       META_DESCRIPTION,
-      NETWORK_ERROR_TEXT,
     },
   };
 
@@ -78,16 +75,16 @@ module.exports = ({ mode } = { mode: 'production' }) => {
   plugins.push(new HtmlWebpackPlugin(htmlWebpackPluginOptions));
 
   plugins.push(
-    /**
-     * @see https://github.com/TypeStrong/ts-loader#transpileonly
-     */
-    new IgnoreNotFoundExportPlugin(),
-    new webpack.DefinePlugin({
-      'process.env.BUILD_NUMBER': JSON.stringify(EnvironmentVariable.buildNumber),
-      'process.env.BUILD_DATE': JSON.stringify(new Date().toString()),
-      'process.env.APP_VERSION': JSON.stringify(EnvironmentVariable.appVersion),
-      'process.env.PUBLIC_PATH': JSON.stringify(EnvironmentVariable.publicPath),
-    }),
+      /**
+       * @see https://github.com/TypeStrong/ts-loader#transpileonly
+       */
+      new IgnoreNotFoundExportPlugin(),
+      new webpack.DefinePlugin({
+        'process.env.BUILD_NUMBER': JSON.stringify(EnvironmentVariable.buildNumber),
+        'process.env.BUILD_DATE': JSON.stringify(new Date().toString()),
+        'process.env.APP_VERSION': JSON.stringify(EnvironmentVariable.appVersion),
+        'process.env.PUBLIC_PATH': JSON.stringify(EnvironmentVariable.publicPath),
+      }),
   );
 
   //#region TS
@@ -128,7 +125,7 @@ module.exports = ({ mode } = { mode: 'production' }) => {
   plugins.push(new WebpackBar({
     reporter: {
       // специальный обработчик для CI
-      progress ({ state }) {
+      progress({ state }) {
         if (!StdEnv.minimalCLI) {
           return;
         }
@@ -159,109 +156,104 @@ module.exports = ({ mode } = { mode: 'production' }) => {
   const styleLoader = require('./config/loaders/style.loader');
   const extractCssChunkLoader = require('./config/loaders/extract-css-chunk.loader');
   const cssLoader = require('./config/loaders/css.loader');
-  const postCssLoader = require('./config/loaders/postcss.loader');
 
   cssLoaders.add(styleLoader);
-
   cssLoaders.add(extractCssChunkLoader);
-
   cssLoaders.add(cssLoader);
-  cssLoaders.add(postCssLoader);
   //#endregion CSS
 
   return webpackMerge({
-      entry: path.resolve(__dirname, 'app/src/main.ts'),
-      output: {
-        filename,
-        sourceMapFilename,
-        path: _path,
-        publicPath: EnvironmentVariable.publicPath,
-        chunkLoadTimeout: 30000,
-      },
-      mode,
-      devtool: 'source-map',
-      performance: {
-        hints: false,
-      },
-      stats: {
-        assets: EnvironmentVariable.isDev ? false : true,
-        children: false,
-        env: true,
-        modules: false,
-        entrypoints: EnvironmentVariable.isDev ? false : true,
-        version: EnvironmentVariable.isDev ? false : true,
-        timings: EnvironmentVariable.isDev ? false : true,
-        builtAt: EnvironmentVariable.isDev ? false : true,
-      },
-      module: {
-        rules: [
-          {
-            test: /\.tsx?$/,
-            use: Array.from(tsLoaders.values()),
-          },
-          {
-            test: /\.html$/,
-            use: 'vue-html-loader',
-          },
-          {
-            test: /\.vue$/,
-            use: Array.from(vueLoaders.values()),
-          },
-          {
-            test: /\.css$/,
-            use: Array.from(cssLoaders),
-          },
-          {
-            test: /\.postcss$/,
-            use: Array.from(cssLoaders),
-          },
-          {
-            test: /\.js$/,
-            exclude: /node_modules/,
-            loader: 'babel-loader',
-          },
-          {
-            test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
-            use: {
-              loader: 'url-loader',
-              options: {
-                // Иначе url-loader делает преобразования в base64
-                limit: 1,
-                name: 'images/[name]--[folder].[ext]',
+        entry: path.resolve(__dirname, 'src/main.ts'),
+        output: {
+          filename,
+          sourceMapFilename,
+          path: _path,
+          publicPath: EnvironmentVariable.publicPath,
+          chunkLoadTimeout: 30000,
+        },
+        mode,
+        devtool: 'source-map',
+        performance: {
+          hints: false,
+        },
+        stats: {
+          assets: EnvironmentVariable.isDev ? false : true,
+          children: false,
+          env: true,
+          modules: false,
+          entrypoints: EnvironmentVariable.isDev ? false : true,
+          version: EnvironmentVariable.isDev ? false : true,
+          timings: EnvironmentVariable.isDev ? false : true,
+          builtAt: EnvironmentVariable.isDev ? false : true,
+        },
+        module: {
+          rules: [
+            {
+              test: /\.tsx?$/,
+              use: Array.from(tsLoaders.values()),
+            },
+            {
+              test: /\.html$/,
+              use: 'vue-html-loader',
+            },
+            {
+              test: /\.vue$/,
+              use: Array.from(vueLoaders.values()),
+            },
+            {
+              test: /\.css$/,
+              use: Array.from(cssLoaders),
+            },
+            {
+              test: /\.postcss$/,
+              use: Array.from(cssLoaders),
+            },
+            {
+              test: /\.js$/,
+              exclude: /node_modules/,
+              loader: 'babel-loader',
+            },
+            {
+              test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
+              use: {
+                loader: 'url-loader',
+                options: {
+                  // Иначе url-loader делает преобразования в base64
+                  limit: 1,
+                  name: 'images/[name]--[folder].[ext]',
+                },
               },
             },
-          },
-          {
-            test: /\.(mp4|webm|ogg|mp3|wav|flac|aac)(\?.*)?$/,
-            loader: 'url-loader',
-            options: {
-              limit: 10000,
-              name: 'media/[name]--[folder].[ext]',
-            },
-          },
-          {
-            test: /\.(woff2?|eot|ttf|otf)(\?.*)?$/,
-            use: {
+            {
+              test: /\.(mp4|webm|ogg|mp3|wav|flac|aac)(\?.*)?$/,
               loader: 'url-loader',
               options: {
                 limit: 10000,
-                name: 'fonts/[name]--[folder].[ext]',
+                name: 'media/[name]--[folder].[ext]',
               },
             },
-          },
-        ],
-      },
-      resolve: {
-        alias: {
-          '@': path.join(__dirname, 'app/src'),
-          vue$: 'vue/dist/vue.esm.js',
-          // Убираем дублирование bn.js
-          'bn.js': path.join(__dirname, 'node_modules/bn.js/lib/bn.js'),
+            {
+              test: /\.(woff2?|eot|ttf|otf)(\?.*)?$/,
+              use: {
+                loader: 'url-loader',
+                options: {
+                  limit: 10000,
+                  name: 'fonts/[name]--[folder].[ext]',
+                },
+              },
+            },
+          ],
         },
-        extensions: ['.tsx', '.ts', '.js', '.vue'],
+        resolve: {
+          alias: {
+            '@': path.join(__dirname, 'src'),
+            // Убираем дублирование bn.js
+            'bn.js': path.join(__dirname, 'node_modules/bn.js/lib/bn.js'),
+          },
+          extensions: ['.tsx', '.ts', '.js', '.vue'],
+        },
+        plugins,
       },
-      plugins,
-    },
-    modeConfig(mode),
+      modeConfig(mode),
   );
 };

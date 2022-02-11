@@ -24,10 +24,6 @@ const plugins = [
   ],
 ];
 
-if (!isTargetModernBuild) {
-  plugins.unshift(['module:fast-async', { spec: true }]);
-}
-
 module.exports = {
   presets: [
     [
