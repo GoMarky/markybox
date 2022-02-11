@@ -14,14 +14,14 @@ export interface IEditorOptions {
 
 export class MEditor extends MObject {
   private readonly renderer: IAbstractRenderer;
-  private readonly rows: MRow[] = [];
+  private readonly _rows: MRow[] = [];
 
   constructor(options: IEditorOptions) {
     super();
 
     const { renderer, fullscreen } = options;
-
     this.renderer = renderer;
+    this.renderer.editor = this;
 
     if (fullscreen) {
       this.renderer.display.setFullScreen();
@@ -29,14 +29,19 @@ export class MEditor extends MObject {
 
     this.renderer.gutter.init();
     this.renderer.body.init();
+    this.renderer.init();
+  }
+
+  public get rows(): MRow[] {
+    return this._rows;
   }
 
   public addRow(): this {
-    const { rows } = this;
-    const row = new MRow(rows.length);
+    const { _rows } = this;
+    const row = new MRow(_rows.length);
 
-    rows.push(row);
-    this.renderer.gutter.renderRows(rows);
+    _rows.push(row);
+    this.renderer.gutter.renderRows(_rows);
 
     return this;
   }

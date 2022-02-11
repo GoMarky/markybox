@@ -1,7 +1,7 @@
 import { MObject } from '@/core/objects/MObject';
 import { toPixel } from '@/base/dom';
 import { MRow } from '@/core/objects/MRow';
-import { mRowToGutterElement } from '@/core/renderer/renderer';
+import { mRowToGutterElement } from '@/core/renderer/html/helpers';
 
 export class MEditorGutter extends MObject {
   private gutterEl: HTMLElement;
