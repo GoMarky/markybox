@@ -35,6 +35,7 @@ export default window.workbench.createComponent(() => {
 
 <style>
 .marky {
+  display: flex;
   position: relative;
   overflow: hidden;
   font: 12px/normal 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', 'source-code-pro', monospace;
@@ -49,13 +50,17 @@ body {
   padding: 0;
 }
 
-.m-gutter {
+.m-editor__gutter {
   display: flex;
   background-color: #e8e8e8;
   flex-direction: column;
 }
 
-.m-gutter__cell {
+.m-editor__body {
+
+}
+
+.m-editor__gutter-cell {
   padding-right: 13px;
   padding-left: 19px;
 }

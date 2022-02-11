@@ -28,6 +28,7 @@ export class MEditor extends MObject {
     }
 
     this.renderer.gutter.init();
+    this.renderer.body.init();
   }
 
   public addRow(): this {

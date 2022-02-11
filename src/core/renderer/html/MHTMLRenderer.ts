@@ -3,7 +3,8 @@ import { DisposableStore } from '@/platform/lifecycle/common/lifecycle';
 import { IAbstractRenderer } from '@/core/renderer/renderer';
 import { MRow } from '@/core/objects/MRow';
 import { toPixel } from '@/base/dom';
-import { MGutter } from '@/core/renderer/html/MGutter';
+import { MEditorGutter } from '@/core/renderer/html/MEditorGutter';
+import { MEditorBody } from '@/core/renderer/html/MEditorBody';
 
 export interface IDisplayRenderer {
   setFullScreen(): void;
@@ -26,13 +27,15 @@ export class MHTMLRenderer extends MObject implements IAbstractRenderer {
   private readonly disposables: DisposableStore = new DisposableStore();
 
   public readonly display: IDisplayRenderer;
-  public readonly gutter: MGutter;
+  public readonly gutter: MEditorGutter;
+  public readonly body: MEditorBody;
 
   constructor(private readonly root: HTMLElement) {
     super();
 
     this.display = new HTMLDisplayRenderer(root);
-    this.gutter = new MGutter(root);
+    this.gutter = new MEditorGutter(root);
+    this.body = new MEditorBody(root);
 
     this.registerListeners();
   }

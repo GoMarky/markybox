@@ -1,8 +1,9 @@
 import { MObject } from '@/core/objects/MObject';
 import { toPixel } from '@/base/dom';
 import { MRow } from '@/core/objects/MRow';
+import { mRowToGutterElement } from '@/core/renderer/renderer';
 
-export class MGutter extends MObject {
+export class MEditorGutter extends MObject {
   private gutterEl: HTMLElement;
 
   constructor(private readonly root: HTMLElement) {
@@ -15,7 +16,7 @@ export class MGutter extends MObject {
     const children = Array.from(gutterEl.children);
 
     children.forEach((child) => gutterEl.removeChild(child));
-    rows.forEach((row) => gutterEl.appendChild(row.element));
+    rows.forEach((row) => gutterEl.appendChild(mRowToGutterElement(row)));
   }
 
   public init(): void {
@@ -24,7 +25,7 @@ export class MGutter extends MObject {
     const gutterElement = document.createElement('div');
     gutterElement.style.width = toPixel(42);
     gutterElement.style.height = toPixel(root.offsetHeight);
-    gutterElement.classList.add('m-gutter')
+    gutterElement.classList.add('m-editor__gutter')
 
     this.gutterEl = gutterElement;
 
