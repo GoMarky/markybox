@@ -2,9 +2,13 @@ export interface IRendererDisplay {
   setFullScreen(): void;
 }
 
-export interface IRendererGutter {}
+export interface IRendererGutter {
+  readonly el: HTMLElement;
+}
 
-export interface IRendererBody {}
+export interface IRendererBody {
+  readonly el: HTMLElement;
+}
 
 export interface IAbstractRenderer {
   readonly display: IRendererDisplay;

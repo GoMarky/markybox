@@ -1,7 +1,8 @@
 export enum Char {
-  Space,
-  Enter,
-  Backspace,
-  Shift,
-  Ctrl
+  Space= 'Space',
+  Enter = 'Enter',
+  Backspace = 'Backspace',
+  ShiftLeft = 'ShiftLeft',
+  ShiftRight = 'ShiftRight',
+  ControlLeft = 'ControlLeft',
 }
