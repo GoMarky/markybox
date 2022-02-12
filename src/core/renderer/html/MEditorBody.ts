@@ -1,18 +1,19 @@
-import { MObject } from '@/core/objects/MObject';
 import { toPixel } from '@/base/dom';
+import { MDomObject } from '@/core/renderer/html/MDomObject';
+import { IRendererBody } from '@/core/renderer/renderer';
 
-export class MEditorBody extends MObject {
-  private bodyEl: HTMLDivElement;
-
+export class MEditorBody extends MDomObject implements IRendererBody{
   public get el() {
-    return this.bodyEl;
+    return this._el;
   }
 
   constructor(private readonly root: HTMLElement) {
     super();
+
+    this.init();
   }
 
-  public init(): void {
+  private init(): void {
     const { root } = this;
 
     const bodyElement = document.createElement('div');
@@ -20,7 +21,7 @@ export class MEditorBody extends MObject {
     bodyElement.style.height = toPixel(root.offsetHeight);
     bodyElement.classList.add('m-editor__body')
 
-    this.bodyEl = bodyElement;
+    this._el = bodyElement;
 
     root.appendChild(bodyElement);
   }

@@ -1,25 +1,15 @@
-import { MObject } from '@/core/objects/MObject';
 import { toPixel } from '@/base/dom';
-import { MRow } from '@/core/objects/MRow';
-import { mRowToGutterElement } from '@/core/renderer/html/helpers';
+import { MDomObject } from '@/core/renderer/html/MDomObject';
+import { IRendererGutter } from '@/core/renderer/renderer';
 
-export class MEditorGutter extends MObject {
-  private gutterEl: HTMLElement;
-
+export class MEditorGutter extends MDomObject implements IRendererGutter {
   constructor(private readonly root: HTMLElement) {
     super();
+
+    this.init();
   }
 
-  public renderRows(rows: readonly MRow[]): void {
-    const { gutterEl } = this;
-
-    const children = Array.from(gutterEl.children);
-
-    children.forEach((child) => gutterEl.removeChild(child));
-    rows.forEach((row) => gutterEl.appendChild(mRowToGutterElement(row)));
-  }
-
-  public init(): void {
+  private init(): void {
     const { root } = this;
 
     const gutterElement = document.createElement('div');
@@ -27,7 +17,7 @@ export class MEditorGutter extends MObject {
     gutterElement.style.height = toPixel(root.offsetHeight);
     gutterElement.classList.add('m-editor__gutter')
 
-    this.gutterEl = gutterElement;
+    this._el = gutterElement;
 
     root.appendChild(gutterElement);
   }

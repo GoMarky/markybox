@@ -1,14 +1,15 @@
-import { IDisplayRenderer } from '@/core/renderer/html/MHTMLRenderer';
-import { MEditorGutter } from '@/core/renderer/html/MEditorGutter';
-import { MEditorBody } from '@/core/renderer/html/MEditorBody';
-import { MEditor } from '@/core';
+export interface IRendererDisplay {
+  setFullScreen(): void;
+}
+
+export interface IRendererGutter {}
+
+export interface IRendererBody {
+
+}
 
 export interface IAbstractRenderer {
-  editor: MEditor;
-  readonly gutter: MEditorGutter;
-  readonly body: MEditorBody;
-  readonly display: IDisplayRenderer;
-  init(): void;
-
-  render(): void;
+  readonly display: IRendererDisplay;
+  readonly gutter: IRendererGutter;
+  readonly body: IRendererBody;
 }
