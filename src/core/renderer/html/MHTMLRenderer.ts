@@ -1,8 +1,8 @@
 import { MObject } from '@/core/objects/MObject';
 import { IAbstractRenderer, IRendererBody, IRendererDisplay, IRendererGutter } from '@/core/renderer/renderer';
 import { toPixel } from '@/base/dom';
-import { MEditorGutter } from '@/core/renderer/html/MEditorGutter';
-import { MEditorBody } from '@/core/renderer/html/MEditorBody';
+import { MHTMLEditorGutter } from '@/core/renderer/html/MHTMLEditorGutter';
+import { MHTMLEditorBody } from '@/core/renderer/html/MHTMLEditorBody';
 
 class HTMLDisplayRenderer extends MObject implements IRendererDisplay {
   constructor(private readonly root: HTMLElement) {
@@ -26,7 +26,7 @@ export class MHTMLRenderer extends MObject implements IAbstractRenderer {
     super();
 
     this.display = new HTMLDisplayRenderer(root);
-    this.gutter = new MEditorGutter(root);
-    this.body = new MEditorBody(root);
+    this.gutter = new MHTMLEditorGutter(root);
+    this.body = new MHTMLEditorBody(root);
   }
 }

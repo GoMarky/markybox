@@ -1,12 +1,12 @@
 import { toPixel } from '@/base/dom';
 import { MDomObject } from '@/core/renderer/html/MDomObject';
 import { IRendererBody } from '@/core/renderer/renderer';
-import { MEditorBodyTextarea } from '@/core/renderer/html/MEditorBodyTextarea';
+import { MHTMLEditorBodyTextarea } from '@/core/renderer/html/MHTMLEditorBodyTextarea';
 import { MRow } from '@/core/objects/MRow';
 
 const row = new MRow(-1);
 
-export class MEditorBody extends MDomObject implements IRendererBody {
+export class MHTMLEditorBody extends MDomObject implements IRendererBody {
   constructor(private readonly root: HTMLElement) {
     super();
 
@@ -41,7 +41,7 @@ export class MEditorBody extends MDomObject implements IRendererBody {
 
     root.appendChild(bodyElement);
 
-    const textarea = new MEditorBodyTextarea(root);
+    const textarea = new MHTMLEditorBodyTextarea(root);
 
     textarea.onDidUpdate(this.onInput);
   }

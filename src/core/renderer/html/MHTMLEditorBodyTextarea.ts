@@ -1,7 +1,7 @@
 import { MDomObject } from '@/core/renderer/html/MDomObject';
 import { Emitter, IEvent } from '@/base/event';
 
-export class MEditorBodyTextarea extends MDomObject {
+export class MHTMLEditorBodyTextarea extends MDomObject {
   private readonly _onDidUpdate: Emitter<string> = new Emitter<string>();
   public readonly onDidUpdate: IEvent<string> = this._onDidUpdate.event;
 

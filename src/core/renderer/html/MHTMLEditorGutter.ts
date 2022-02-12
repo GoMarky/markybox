@@ -2,7 +2,7 @@ import { toPixel } from '@/base/dom';
 import { MDomObject } from '@/core/renderer/html/MDomObject';
 import { IRendererGutter } from '@/core/renderer/renderer';
 
-export class MEditorGutter extends MDomObject implements IRendererGutter {
+export class MHTMLEditorGutter extends MDomObject implements IRendererGutter {
   constructor(private readonly root: HTMLElement) {
     super();
 
