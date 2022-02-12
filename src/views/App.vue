@@ -1,6 +1,6 @@
 <template>
   <div id="root" class="marky">
-    <textarea wrap="off" autocapitalize="off" autocorrect="off" spellcheck="=false" class="marky__textarea"></textarea>
+    <textarea wrap="off" autocapitalize="off" autocorrect="off" spellcheck="false" class="marky__textarea"></textarea>
   </div>
 </template>
 
@@ -17,16 +17,13 @@ export default window.workbench.createComponent(() => {
 
         const root = document.querySelector<HTMLElement>('#root') as HTMLElement;
 
+        const renderer = new markybox.MHTMLRenderer(root);
         const editor = new markybox.MEditor({
-          renderer: new markybox.MHTMLRenderer(root),
+          renderer,
           fullscreen: true,
         });
 
-        editor
-          .addRow()
-          .addRow()
-          .addRow()
-          .addRow();
+        editor.addRow()
       })
     }
   });

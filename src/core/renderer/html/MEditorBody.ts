@@ -2,16 +2,31 @@ import { toPixel } from '@/base/dom';
 import { MDomObject } from '@/core/renderer/html/MDomObject';
 import { IRendererBody } from '@/core/renderer/renderer';
 import { MEditorBodyTextarea } from '@/core/renderer/html/MEditorBodyTextarea';
+import { MRow } from '@/core/objects/MRow';
+
+const row = new MRow(-1);
 
 export class MEditorBody extends MDomObject implements IRendererBody {
-  public get el() {
-    return this._el;
-  }
-
   constructor(private readonly root: HTMLElement) {
     super();
 
     this.init();
+  }
+
+  public get el() {
+    return this._el;
+  }
+
+  private getCurrentRow(): MRow {
+    return row;
+  }
+
+  private onInput = (letter: string) => {
+    const row = this.getCurrentRow();
+
+    row.content.content += letter
+
+    console.log(row.content.content);
   }
 
   private init(): void {
@@ -26,6 +41,8 @@ export class MEditorBody extends MDomObject implements IRendererBody {
 
     root.appendChild(bodyElement);
 
-    new MEditorBodyTextarea(root);
+    const textarea = new MEditorBodyTextarea(root);
+
+    textarea.onDidUpdate(this.onInput);
   }
 }

@@ -1,6 +1,10 @@
 import { MDomObject } from '@/core/renderer/html/MDomObject';
+import { Emitter, IEvent } from '@/base/event';
 
 export class MEditorBodyTextarea extends MDomObject {
+  private readonly _onDidUpdate: Emitter<string> = new Emitter<string>();
+  public readonly onDidUpdate: IEvent<string> = this._onDidUpdate.event;
+
   constructor(private readonly root: HTMLElement) {
     super();
 
@@ -20,8 +24,10 @@ export class MEditorBodyTextarea extends MDomObject {
 
     _el.addEventListener('input', (evt) => {
       const event = evt as InputEvent;
-
       const { data } = event;
+      const str = data as string;
+
+      this._onDidUpdate.fire(str);
     })
   }
 }

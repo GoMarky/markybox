@@ -18,7 +18,6 @@ export class MEditorGutter extends MDomObject implements IRendererGutter {
     gutterElement.classList.add('m-editor__gutter')
 
     this._el = gutterElement;
-
     root.appendChild(gutterElement);
   }
 }

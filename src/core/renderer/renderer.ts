@@ -4,9 +4,7 @@ export interface IRendererDisplay {
 
 export interface IRendererGutter {}
 
-export interface IRendererBody {
-
-}
+export interface IRendererBody {}
 
 export interface IAbstractRenderer {
   readonly display: IRendererDisplay;

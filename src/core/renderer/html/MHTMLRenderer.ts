@@ -1,5 +1,5 @@
 import { MObject } from '@/core/objects/MObject';
-import { IAbstractRenderer, IRendererDisplay } from '@/core/renderer/renderer';
+import { IAbstractRenderer, IRendererBody, IRendererDisplay, IRendererGutter } from '@/core/renderer/renderer';
 import { toPixel } from '@/base/dom';
 import { MEditorGutter } from '@/core/renderer/html/MEditorGutter';
 import { MEditorBody } from '@/core/renderer/html/MEditorBody';
@@ -19,8 +19,8 @@ class HTMLDisplayRenderer extends MObject implements IRendererDisplay {
 
 export class MHTMLRenderer extends MObject implements IAbstractRenderer {
   public readonly display: IRendererDisplay;
-  public readonly gutter: MEditorGutter;
-  public readonly body: MEditorBody;
+  public readonly gutter: IRendererGutter;
+  public readonly body: IRendererBody;
 
   constructor(private readonly root: HTMLElement) {
     super();
