@@ -1,6 +1,6 @@
 <template>
   <div id="root" class="marky">
-
+    <textarea wrap="off" autocapitalize="off" autocorrect="off" spellcheck="=false" class="marky__textarea"></textarea>
   </div>
 </template>
 
@@ -44,8 +44,20 @@ export default window.workbench.createComponent(() => {
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }
 
-body {
+.marky__textarea {
+  border: 0;
+  resize: none;
+  outline: none;
+  padding: 0 1px;
+  margin: 0 -1px;
+  z-index: 0;
+  position: absolute;
+  opacity: 0;
+  height: 19px;
+  width: 8px;
+}
 
+body {
   margin: 0;
   padding: 0;
 }

@@ -1,8 +1,9 @@
 import { toPixel } from '@/base/dom';
 import { MDomObject } from '@/core/renderer/html/MDomObject';
 import { IRendererBody } from '@/core/renderer/renderer';
+import { MEditorBodyTextarea } from '@/core/renderer/html/MEditorBodyTextarea';
 
-export class MEditorBody extends MDomObject implements IRendererBody{
+export class MEditorBody extends MDomObject implements IRendererBody {
   public get el() {
     return this._el;
   }
@@ -24,5 +25,7 @@ export class MEditorBody extends MDomObject implements IRendererBody{
     this._el = bodyElement;
 
     root.appendChild(bodyElement);
+
+    new MEditorBodyTextarea(root);
   }
 }
