@@ -1,23 +1,17 @@
 import { MDomObject } from '@/core/renderer/html/MDomObject';
 import { IRendererBody } from '@/core/renderer/renderer';
 import { MHTMLEditorBodyTextarea } from '@/core/renderer/html/MHTMLEditorBodyTextarea';
-import { MRow } from '@/core/objects/MRow';
+import { MHTMLRenderer } from '@/core';
 
 export class MHTMLEditorBody extends MDomObject implements IRendererBody {
-  private _currentRow: MRow;
-
-  constructor(private readonly root: HTMLElement) {
+  constructor(private readonly renderer: MHTMLRenderer) {
     super();
 
     this.init();
   }
 
-  private getCurrentRow(): MRow {
-    return this._currentRow;
-  }
-
   private onInput = (letter: string) => {
-    const row = this.getCurrentRow();
+    const row = this.renderer.editor.getCurrentRow();
 
     row.content.content += letter;
 
@@ -25,7 +19,7 @@ export class MHTMLEditorBody extends MDomObject implements IRendererBody {
   }
 
   private init(): void {
-    const { root } = this;
+    const { renderer: { root } } = this;
 
     const bodyElement = document.createElement('div');
     bodyElement.style.width = '100%';

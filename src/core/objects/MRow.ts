@@ -1,14 +1,18 @@
 import { MObject } from '@/core/objects/MObject';
+import { MDomObject } from '@/core/renderer/html/MDomObject';
+import { toPixel } from '@/base/dom';
 
 class MRowContent extends MObject {
   private _content = '';
 
-  constructor() {
+  constructor(private readonly row: MRow) {
     super();
   }
 
-  set content(data: string) {
+  public set content(data: string) {
     this._content = data;
+
+    this.row.el.textContent = data;
   }
 
   public get content(): string {
@@ -16,14 +20,21 @@ class MRowContent extends MObject {
   }
 }
 
-export class MRow extends MObject {
+export class MRow extends MDomObject {
   public readonly content: MRowContent;
 
   constructor(
+    public readonly root: HTMLElement,
     public readonly index: number
   ) {
     super();
 
-    this.content = new MRowContent();
+    const rowElement = document.createElement('div');
+    rowElement.classList.add('m-editor__row')
+
+    this._el = rowElement;
+    root.appendChild(this._el);
+
+    this.content = new MRowContent(this);
   }
 }

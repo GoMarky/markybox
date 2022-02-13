@@ -1,35 +1,23 @@
 import { MObject } from '@/core/objects/MObject';
-import { IAbstractRenderer, IRendererBody, IRendererDisplay, IRendererGutter } from '@/core/renderer/renderer';
-import { toPixel } from '@/base/dom';
+import { IAbstractRenderer, IRendererBody, IRendererDisplay, IRendererEditorController, IRendererGutter } from '@/core/renderer/renderer';
 import { MHTMLEditorGutter } from '@/core/renderer/html/MHTMLEditorGutter';
 import { MHTMLEditorBody } from '@/core/renderer/html/MHTMLEditorBody';
 import { Char } from '@/base/char';
 import { MRow } from '@/core/objects/MRow';
-
-class HTMLDisplayRenderer extends MObject implements IRendererDisplay {
-  constructor(private readonly root: HTMLElement) {
-    super();
-  }
-
-  public setFullScreen(): void {
-    const { innerWidth, innerHeight } = window;
-
-    this.root.style.width = toPixel(innerWidth);
-    this.root.style.height = toPixel(innerHeight);
-  }
-}
+import { HTMLDisplayRenderer } from '@/core/renderer/html/MHTMLDisplayRenderer';
 
 export class MHTMLRenderer extends MObject implements IAbstractRenderer {
   public readonly display: IRendererDisplay;
   public readonly gutter: IRendererGutter;
   public readonly body: IRendererBody;
+  public editor: IRendererEditorController
 
-  constructor(private readonly root: HTMLElement) {
+  constructor(public readonly root: HTMLElement) {
     super();
 
-    this.display = new HTMLDisplayRenderer(root);
-    this.gutter = new MHTMLEditorGutter(root);
-    this.body = new MHTMLEditorBody(root);
+    this.display = new HTMLDisplayRenderer(this);
+    this.gutter = new MHTMLEditorGutter(this);
+    this.body = new MHTMLEditorBody(this);
 
     this.activateSpecialKeysHandler();
   }

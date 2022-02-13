@@ -3,16 +3,17 @@ import { MDomObject } from '@/core/renderer/html/MDomObject';
 import { IRendererGutter } from '@/core/renderer/renderer';
 import { MRow } from '@/core/objects/MRow';
 import { mRowToGutterElement } from '@/core/renderer/html/helpers';
+import { MHTMLRenderer } from '@/core';
 
 export class MHTMLEditorGutter extends MDomObject implements IRendererGutter {
-  constructor(private readonly root: HTMLElement) {
+  constructor(private readonly renderer: MHTMLRenderer) {
     super();
 
     this.init();
   }
 
   private init(): void {
-    const { root } = this;
+    const { renderer: { root } } = this;
 
     const gutterElement = document.createElement('div');
     gutterElement.style.width = toPixel(42);

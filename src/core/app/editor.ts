@@ -1,5 +1,5 @@
 import { MObject } from '@/core/objects/MObject';
-import { IAbstractRenderer } from '@/core/renderer/renderer';
+import { IAbstractRenderer, IRendererEditorController } from '@/core/renderer/renderer';
 import { MRow } from '@/core/objects/MRow';
 
 export interface IEditorOptions {
@@ -7,9 +7,11 @@ export interface IEditorOptions {
   readonly fullscreen: boolean;
 }
 
-export class MEditor extends MObject {
+export class MEditor extends MObject implements IRendererEditorController {
   private readonly renderer: IAbstractRenderer;
   private readonly rows: MRow[] = [];
+
+  private _currentRow: MRow;
 
   constructor(options: IEditorOptions) {
     super();
@@ -20,14 +22,36 @@ export class MEditor extends MObject {
     if (fullscreen) {
       this.renderer.display.setFullScreen();
     }
+
+    this.renderer.editor = this;
+  }
+
+  public setCurrentRow(row: MRow): this {
+    this._currentRow = row;
+
+    return this;
+  }
+
+  public getCurrentRow(): MRow {
+    return this._currentRow;
   }
 
   public addRow(): this {
     const { rows, renderer } = this;
-    const row = new MRow(rows.length);
+    const { el } = renderer.body
+    const row = new MRow(el, rows.length);
+
+    // TODO
+    this._currentRow = row;
 
     rows.push(row);
     renderer.onAddRow(row);
+
+    return this;
+  }
+
+  public addRowWithContent(content: string): this {
+    console.log(content);
 
     return this;
   }
