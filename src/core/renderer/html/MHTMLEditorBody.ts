@@ -2,6 +2,7 @@ import { MDomObject } from '@/core/renderer/html/MDomObject';
 import { IRendererBody } from '@/core/renderer/renderer';
 import { MHTMLEditorBodyTextarea } from '@/core/renderer/html/MHTMLEditorBodyTextarea';
 import { MHTMLRenderer } from '@/core';
+import { removeLastLetter } from '@/base/string';
 
 export class MHTMLEditorBody extends MDomObject implements IRendererBody {
   private textarea: MHTMLEditorBodyTextarea;
@@ -16,7 +17,7 @@ export class MHTMLEditorBody extends MDomObject implements IRendererBody {
     const currentRow = this.renderer.editor.getCurrentRow();
     const { text } = currentRow.content
 
-    currentRow.content.setContent(text.slice(0, -1))
+    currentRow.content.setContent(removeLastLetter(text))
   }
 
   private onInput = (letter: string) => {
