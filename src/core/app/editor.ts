@@ -9,7 +9,7 @@ export interface IEditorOptions {
 
 export class MEditor extends MObject {
   private readonly renderer: IAbstractRenderer;
-  private readonly _rows: MRow[] = [];
+  private readonly rows: MRow[] = [];
 
   constructor(options: IEditorOptions) {
     super();
@@ -23,10 +23,11 @@ export class MEditor extends MObject {
   }
 
   public addRow(): this {
-    const { _rows } = this;
-    const row = new MRow(_rows.length);
+    const { rows, renderer } = this;
+    const row = new MRow(rows.length);
 
-    _rows.push(row);
+    rows.push(row);
+    renderer.onAddRow(row);
 
     return this;
   }

@@ -63,10 +63,11 @@ body {
   display: flex;
   background-color: #e8e8e8;
   flex-direction: column;
+  height: 100%;
 }
 
 .m-editor__body {
-
+  height: 100%;
 }
 
 .m-editor__gutter-cell {

@@ -1,30 +1,25 @@
-import { toPixel } from '@/base/dom';
 import { MDomObject } from '@/core/renderer/html/MDomObject';
 import { IRendererBody } from '@/core/renderer/renderer';
 import { MHTMLEditorBodyTextarea } from '@/core/renderer/html/MHTMLEditorBodyTextarea';
 import { MRow } from '@/core/objects/MRow';
 
-const row = new MRow(-1);
-
 export class MHTMLEditorBody extends MDomObject implements IRendererBody {
+  private _currentRow: MRow;
+
   constructor(private readonly root: HTMLElement) {
     super();
 
     this.init();
   }
 
-  public get el() {
-    return this._el;
-  }
-
   private getCurrentRow(): MRow {
-    return row;
+    return this._currentRow;
   }
 
   private onInput = (letter: string) => {
     const row = this.getCurrentRow();
 
-    row.content.content += letter
+    row.content.content += letter;
 
     console.log(row.content.content);
   }
@@ -34,7 +29,6 @@ export class MHTMLEditorBody extends MDomObject implements IRendererBody {
 
     const bodyElement = document.createElement('div');
     bodyElement.style.width = '100%';
-    bodyElement.style.height = toPixel(root.offsetHeight);
     bodyElement.classList.add('m-editor__body')
 
     this._el = bodyElement;

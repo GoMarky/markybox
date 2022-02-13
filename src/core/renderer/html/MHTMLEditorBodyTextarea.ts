@@ -1,5 +1,6 @@
 import { MDomObject } from '@/core/renderer/html/MDomObject';
 import { Emitter, IEvent } from '@/base/event';
+import { toPixel } from '@/base/dom';
 
 export class MHTMLEditorBodyTextarea extends MDomObject {
   private readonly _onDidUpdate: Emitter<string> = new Emitter<string>();
@@ -21,6 +22,8 @@ export class MHTMLEditorBodyTextarea extends MDomObject {
 
   private init(): void {
     const { _el } = this;
+
+    this._el.style.left = toPixel(42);
 
     _el.addEventListener('input', (evt) => {
       const event = evt as InputEvent;

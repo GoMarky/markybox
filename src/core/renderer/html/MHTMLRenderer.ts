@@ -4,6 +4,7 @@ import { toPixel } from '@/base/dom';
 import { MHTMLEditorGutter } from '@/core/renderer/html/MHTMLEditorGutter';
 import { MHTMLEditorBody } from '@/core/renderer/html/MHTMLEditorBody';
 import { Char } from '@/base/char';
+import { MRow } from '@/core/objects/MRow';
 
 class HTMLDisplayRenderer extends MObject implements IRendererDisplay {
   constructor(private readonly root: HTMLElement) {
@@ -42,12 +43,19 @@ export class MHTMLRenderer extends MObject implements IAbstractRenderer {
       case Char.Space:
         event.preventDefault();
         event.stopPropagation();
-        console.log(code);
         break;
     }
   }
 
   private activateSpecialKeysHandler() {
     window.addEventListener('keydown', this.onSpecialKeyDown)
+  }
+
+  public onAddRow(row: MRow): void {
+    this.gutter.addRow(row);
+  }
+
+  public onRemoveRow(row: MRow): void {
+    console.log(row);
   }
 }
