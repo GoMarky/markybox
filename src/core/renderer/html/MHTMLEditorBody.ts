@@ -4,18 +4,28 @@ import { MHTMLEditorBodyTextarea } from '@/core/renderer/html/MHTMLEditorBodyTex
 import { MHTMLRenderer } from '@/core';
 
 export class MHTMLEditorBody extends MDomObject implements IRendererBody {
+  private textarea: MHTMLEditorBodyTextarea;
+
   constructor(private readonly renderer: MHTMLRenderer) {
     super();
 
     this.init();
   }
 
+  public removeLastLetterFromCurrentRow(): void {
+    const currentRow = this.renderer.editor.getCurrentRow();
+    const { text } = currentRow.content
+
+    currentRow.content.setContent(text.slice(0, -1))
+  }
+
   private onInput = (letter: string) => {
-    const row = this.renderer.editor.getCurrentRow();
+    const currentRow = this.renderer.editor.getCurrentRow();
+    const rawText = currentRow.content.text + letter;
 
-    row.content.content += letter;
+    currentRow.content.setContent(rawText);
 
-    console.log(row.content.content);
+    this.textarea.setLeftPosition(currentRow.width + 40);
   }
 
   private init(): void {
@@ -30,6 +40,8 @@ export class MHTMLEditorBody extends MDomObject implements IRendererBody {
     root.appendChild(bodyElement);
 
     const textarea = new MHTMLEditorBodyTextarea(root);
+
+    this.textarea = textarea;
 
     textarea.onDidUpdate(this.onInput);
   }

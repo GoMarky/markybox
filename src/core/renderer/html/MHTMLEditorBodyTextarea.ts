@@ -20,6 +20,10 @@ export class MHTMLEditorBodyTextarea extends MDomObject {
     this.init();
   }
 
+  public setLeftPosition(x: number): void {
+    this._el.style.left = toPixel(x);
+  }
+
   private init(): void {
     const { _el } = this;
 

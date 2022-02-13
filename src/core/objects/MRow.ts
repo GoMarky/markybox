@@ -1,22 +1,21 @@
 import { MObject } from '@/core/objects/MObject';
 import { MDomObject } from '@/core/renderer/html/MDomObject';
-import { toPixel } from '@/base/dom';
 
 class MRowContent extends MObject {
-  private _content = '';
+  private _text = '';
 
   constructor(private readonly row: MRow) {
     super();
   }
 
-  public set content(data: string) {
-    this._content = data;
+  public setContent(data: string) {
+    this._text = data;
 
     this.row.el.textContent = data;
   }
 
-  public get content(): string {
-    return this._content;
+  public get text(): string {
+    return this._text;
   }
 }
 
@@ -36,5 +35,9 @@ export class MRow extends MDomObject {
     root.appendChild(this._el);
 
     this.content = new MRowContent(this);
+  }
+
+  public get width(): number {
+    return this._el.offsetWidth;
   }
 }

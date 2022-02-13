@@ -23,7 +23,7 @@ export default window.workbench.createComponent(() => {
           fullscreen: true,
         });
 
-        editor.addRow()
+        editor.addEmptyRow()
       })
     }
   })
@@ -62,10 +62,16 @@ export default window.workbench.createComponent(() => {
 
 .m-editor__body {
   height: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
 .m-editor__gutter-cell {
   padding-right: 13px;
   padding-left: 19px;
+}
+
+.m-editor__row {
+  display: inline-block;
 }
 </style>

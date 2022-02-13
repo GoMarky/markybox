@@ -23,7 +23,7 @@ export class MHTMLEditorGutter extends MDomObject implements IRendererGutter {
     root.appendChild(gutterElement);
   }
 
-  public addRow(row: MRow): void {
+  public onAddRow(row: MRow): void {
     this.el.appendChild(mRowToGutterElement(row));
   }
 }

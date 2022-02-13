@@ -1,23 +1,27 @@
 import { MRow } from '@/core/objects/MRow';
 
+export interface IDOMElement {
+  readonly el: HTMLElement;
+}
+
 export interface IRendererDisplay {
   setFullScreen(): void;
 }
 
 export interface IRendererEditorController {
+  addEmptyRow(): void;
+
   setCurrentRow(row: MRow): void;
 
   getCurrentRow(): MRow;
 }
 
-export interface IRendererGutter {
-  readonly el: HTMLElement;
-
-  addRow(row: MRow): void;
+export interface IRendererGutter extends IDOMElement {
+  onAddRow(row: MRow): void;
 }
 
-export interface IRendererBody {
-  readonly el: HTMLElement;
+export interface IRendererBody extends IDOMElement {
+  removeLastLetterFromCurrentRow(): void;
 }
 
 export interface IAbstractRenderer {

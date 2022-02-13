@@ -6,6 +6,10 @@ import { Char } from '@/base/char';
 import { MRow } from '@/core/objects/MRow';
 import { HTMLDisplayRenderer } from '@/core/renderer/html/MHTMLDisplayRenderer';
 
+function hasPressedSpecialKey(code: Char): boolean {
+  return Object.values(Char).includes(code);
+}
+
 export class MHTMLRenderer extends MObject implements IAbstractRenderer {
   public readonly display: IRendererDisplay;
   public readonly gutter: IRendererGutter;
@@ -25,12 +29,19 @@ export class MHTMLRenderer extends MObject implements IAbstractRenderer {
   private onSpecialKeyDown = (event: KeyboardEvent) => {
     const code = event.code as Char;
 
+    const mustPreventEvent = hasPressedSpecialKey(code);
+
+    if (mustPreventEvent) {
+      event.preventDefault();
+      event.stopPropagation();
+    }
+
     switch (code) {
       case Char.Backspace:
+        this.body.removeLastLetterFromCurrentRow();
+        break;
       case Char.Enter:
-      case Char.Space:
-        event.preventDefault();
-        event.stopPropagation();
+        this.editor.addEmptyRow();
         break;
     }
   }
@@ -40,7 +51,7 @@ export class MHTMLRenderer extends MObject implements IAbstractRenderer {
   }
 
   public onAddRow(row: MRow): void {
-    this.gutter.addRow(row);
+    this.gutter.onAddRow(row);
   }
 
   public onRemoveRow(row: MRow): void {
