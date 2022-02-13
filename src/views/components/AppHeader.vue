@@ -1,6 +1,6 @@
 <template>
   <header class="marky-header">
-    Marky!
+    markybox
   </header>
 </template>
 
@@ -15,6 +15,9 @@ export default window.workbench.createComponent(() => {
 <style scoped>
 .marky-header {
   width: 100%;
-  height: 50px;
+  height: 25px;
+  padding: 5px;
+  background-color: #ead791;
 }
 </style>
+

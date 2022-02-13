@@ -1,15 +1,20 @@
 <template>
-  <main>
+  <div>
+    <app-header />
     <router-view />
-  </main>
+  </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
+import AppHeader from '@/views/components/AppHeader.vue';
 
 export default window.workbench.createComponent(() => {
   return defineComponent({
     name: 'AppLayout',
+    components: {
+      AppHeader,
+    }
   })
 })
 </script>

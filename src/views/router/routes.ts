@@ -4,16 +4,16 @@ import { AppRoute } from '@/views/router/router';
 const routes = [
   {
     name: 'AppLayout',
-    path: '',
+    path: '/',
     component: AppLayout,
     children: [
       {
-        name: AppRoute.HomePage,
+        name: 'HomePage',
         path: '/',
-        component: () => import(/* webpackChunkName: "[HomePage]" */ '@/views/pages/HomePage.vue')
+        component: () => import(/* webpackChunkName: "[HomePage]" */ '@/views/pages/HomePage.vue'),
       },
       {
-        name: AppRoute.CodePage,
+        name: 'CodePage',
         path: '/:id',
         component: () => import(/* webpackChunkName: "[CodePage]" */ '@/views/pages/CodePage.vue')
       }

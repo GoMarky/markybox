@@ -1,11 +1,10 @@
 import { createApp } from 'vue';
 import appServices from '@/constructors';
 import { IInstantiationService } from '@/platform/instantiation/common/instantiation';
-import { ILogService } from '@/platform/log/common/log';
+import { ILogService, now } from '@/platform/log/common/log';
 import { ICreateComponentFactory } from '@/base/platform';
 import { ServiceCollection } from '@/platform/instantiation/browser/collection';
 import { getSingletonServiceDescriptors } from '@/platform/instantiation/browser/singleton';
-import router from '@/views/router/router';
 
 class Application {
   public init(services: ServiceCollection): void {
@@ -28,8 +27,10 @@ class Application {
     const logService = services.get(ILogService);
 
     const App = (await import('@/views/App.vue')).default;
+    const router = (await import('@/views/router/router')).default;
 
-    logService.info(`Create view`);
+
+    logService.info(`App started at: ${now()}`);
     createApp(App).use(router).mount('#app')
   }
 }
