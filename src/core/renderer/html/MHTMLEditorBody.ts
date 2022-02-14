@@ -26,7 +26,12 @@ export class MHTMLEditorBody extends MDomObject implements IRendererBody {
 
     currentRow.content.setContent(rawText);
 
-    this.textarea.setLeftPosition(currentRow.width + 40);
+    const x = currentRow.width + 40;
+
+    console.log(x);
+
+    this.textarea.setLeftPosition(x);
+    this.renderer.caretLayer.setPosition({ row: 0, column: rawText.length });
   }
 
   private init(): void {
@@ -35,15 +40,11 @@ export class MHTMLEditorBody extends MDomObject implements IRendererBody {
     const bodyElement = document.createElement('div');
     bodyElement.style.width = '100%';
     bodyElement.classList.add('m-editor__body')
-
     this._el = bodyElement;
-
     root.appendChild(bodyElement);
 
     const textarea = new MHTMLEditorBodyTextarea(root);
-
     this.textarea = textarea;
-
     textarea.onDidUpdate(this.onInput);
   }
 }

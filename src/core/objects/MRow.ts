@@ -23,7 +23,7 @@ export class MRow extends MDomObject {
   public readonly content: MRowContent;
 
   constructor(
-    public readonly root: HTMLElement,
+    public readonly layer: HTMLElement,
     public readonly index: number
   ) {
     super();
@@ -32,7 +32,7 @@ export class MRow extends MDomObject {
     rowElement.classList.add('m-editor__row')
 
     this._el = rowElement;
-    root.appendChild(this._el);
+    layer.appendChild(this._el);
 
     this.content = new MRowContent(this);
   }

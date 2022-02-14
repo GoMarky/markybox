@@ -9,14 +9,6 @@ export class MHTMLEditorBodyTextarea extends MDomObject {
   constructor(private readonly root: HTMLElement) {
     super();
 
-    const el = root.querySelector('textarea');
-
-    if (!el) {
-      throw new ReferenceError(`Textarea field must exist`);
-    }
-
-    this._el = el;
-
     this.init();
   }
 
@@ -24,7 +16,24 @@ export class MHTMLEditorBodyTextarea extends MDomObject {
     this._el.style.left = toPixel(x);
   }
 
+  private createTextareaElement(): void {
+    const { root } = this;
+
+    const element = document.createElement('textarea');
+
+    element.setAttribute('wrap', 'off');
+    element.setAttribute('autocapitalize', 'off');
+    element.setAttribute('autocorrect', 'off');
+    element.setAttribute('spellcheck', 'false');
+    element.classList.add('marky__textarea')
+
+    root.appendChild(element);
+    this._el = element;
+  }
+
   private init(): void {
+    this.createTextareaElement();
+
     const { _el } = this;
 
     this._el.style.left = toPixel(42);

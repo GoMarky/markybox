@@ -1,4 +1,5 @@
 import { MDomObject } from '@/core/renderer/html/MDomObject';
 
-export class MLayer extends MDomObject {
+export abstract class MLayer extends MDomObject {
+  protected zIndex = 0;
 }

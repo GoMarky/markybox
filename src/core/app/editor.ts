@@ -38,10 +38,8 @@ export class MEditor extends MObject implements IRendererEditorController {
 
   public addEmptyRow(): this {
     const { rows, renderer } = this;
-    const { el } = renderer.body
+    const { el } = renderer.textLayer
     const row = new MRow(el, rows.length);
-
-    console.log(this._currentRow);
 
     // TODO
     this._currentRow = row;

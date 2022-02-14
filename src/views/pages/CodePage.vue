@@ -1,7 +1,5 @@
 <template>
-  <div id="root" class="marky">
-    <textarea wrap="off" autocapitalize="off" autocorrect="off" spellcheck="false" class="marky__textarea"></textarea>
-  </div>
+  <div id="root" class="marky" />
 </template>
 
 <script lang="ts">
@@ -61,6 +59,7 @@ export default window.workbench.createComponent(() => {
 }
 
 .m-editor__body {
+  position: relative;
   height: 100%;
   display: flex;
   flex-direction: column;
@@ -73,5 +72,33 @@ export default window.workbench.createComponent(() => {
 
 .m-editor__row {
   display: inline-block;
+}
+
+.m-editor__layer-text {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.m-editor__layer-caret  {
+  font-size: 12px;
+  background-color: blue;
+  color: blue;
+  position: absolute;
+  opacity: 0.5;
+  height: 1.5em;
+  width: 3px;
+  max-width: 3px;
+  overflow: hidden;
+  text-indent: -5px;
+  display: inline-block;
+  text-decoration: blink;
+  animation: blinker 1s linear infinite;
+}
+
+@keyframes blinker {
+  50% {
+    opacity: 0.0;
+  }
 }
 </style>
