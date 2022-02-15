@@ -5,8 +5,11 @@
 <script lang="ts">
 import { defineComponent, nextTick, onMounted } from 'vue';
 import * as markybox from '@/core';
+import { ILogService } from '@/platform/log/common/log';
 
-export default window.workbench.createComponent(() => {
+export default window.workbench.createComponent((accessor) => {
+  const logService = accessor.get(ILogService);
+
   return defineComponent({
     name: 'AppLayout',
     setup() {
@@ -19,6 +22,7 @@ export default window.workbench.createComponent(() => {
         const editor = new markybox.MEditor({
           renderer,
           fullscreen: true,
+          logger: logService
         });
 
         editor.addEmptyRow()
@@ -73,6 +77,7 @@ export default window.workbench.createComponent(() => {
 }
 
 .m-editor__row {
+  height: 16px;
   display: inline-block;
 }
 

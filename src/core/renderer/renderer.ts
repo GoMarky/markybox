@@ -1,5 +1,6 @@
 import { MRow } from '@/core/objects/MRow';
 import { MTextLayer } from '@/core/renderer/html/layers/MTextLayer';
+import { ILogger } from '@/core/renderer/common';
 
 export interface IDOMElement {
   readonly el: HTMLElement;
@@ -10,11 +11,17 @@ export interface IRendererDisplay {
 }
 
 export interface IRendererEditorController {
+  readonly rowsCount: number;
+
+  readonly logger?: ILogger;
+
   addEmptyRow(): MRow;
 
   setCurrentRow(row: MRow): MRow;
 
   getCurrentRow(): MRow;
+
+  getRowByPosition(row: number): MRow;
 }
 
 export interface IRendererGutter extends IDOMElement {

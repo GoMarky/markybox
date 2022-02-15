@@ -16,10 +16,50 @@ export class MHTMLEditorBodyNavigator extends MObject {
   }
 
   public setPosition(position: IPosition) {
+    return this.doSetPosition(position);
+  }
+
+  public prevColumn() {
+    const { row, column } = this._currentPosition;
+
+    let newColumn = column - 1;
+
+    if (newColumn < 0) {
+      newColumn = 0;
+    }
+
+    const newPosition: IPosition = { row, column: newColumn };
+    this.doSetPosition(newPosition);
+  }
+
+  public nextColumn() {
+    const { row, column } = this._currentPosition;
+
+    const newPosition: IPosition = { row, column: column + 1 };
+    this.doSetPosition(newPosition);
+  }
+
+  public previousRow() {
+    const { row, column } = this._currentPosition;
+
+    const newPosition: IPosition = { row: row - 1, column }
+    this.doSetPosition(newPosition);
+  }
+
+  public nextRow() {
+    const { row, column } = this._currentPosition;
+
+    const newPosition: IPosition = { row: row + 1, column }
+    this.doSetPosition(newPosition);
+  }
+
+  private doSetPosition(position: IPosition): void {
     const { caretLayer } = this.renderer;
 
     caretLayer.setPosition(position);
     this._currentPosition = position;
+
+    this.renderer.editor.logger?.info(`Position - row: ${position.row}, column: ${position.column}`);
   }
 
   private init(): void {

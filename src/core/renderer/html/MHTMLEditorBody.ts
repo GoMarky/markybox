@@ -3,6 +3,7 @@ import { IRendererBody } from '@/core/renderer/renderer';
 import { MHTMLEditorBodyTextarea } from '@/core/renderer/html/MHTMLEditorBodyTextarea';
 import { MHTMLRenderer } from '@/core';
 import { removeLastLetter } from '@/base/string';
+import { splitAtIndex } from '@/core/renderer/common';
 
 export class MHTMLEditorBody extends MDomObject implements IRendererBody {
   private textarea: MHTMLEditorBodyTextarea;
@@ -21,15 +22,23 @@ export class MHTMLEditorBody extends MDomObject implements IRendererBody {
   }
 
   private onInput = (letter: string) => {
-    const currentRow = this.renderer.editor.getCurrentRow();
-    const rawText = currentRow.content.text + letter;
+    const { row, column } = this.renderer.navigator.position;
+    const currentRow = this.renderer.editor.getRowByPosition(row);
+    const { content } = currentRow;
+    const { text } = content;
 
+    const [first, last] = splitAtIndex(column)(text);
+
+    const rawText = first + letter + last;
     currentRow.content.setContent(rawText);
 
     const x = currentRow.width + 40;
-
     this.textarea.setLeftPosition(x);
-    this.renderer.navigator.setPosition({ row: currentRow.index, column: rawText.length });
+    this.renderer.navigator.setPosition({ row, column: column + 1 });
+  }
+
+  private setRowText(letter: string): void {
+    console.log(letter);
   }
 
   private init(): void {

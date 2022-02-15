@@ -37,14 +37,37 @@ export class MHTMLRenderer extends MObject implements IAbstractRenderer {
   private onSpecialKeyDown = (event: KeyboardEvent) => {
     const code = event.code as Char;
 
+    const { rowsCount } = this.editor;
+    const { position: { row } } = this.navigator;
+
     switch (code) {
+      case Char.ArrowLeft:
+        return this.navigator.prevColumn();
+      case Char.ArrowRight:
+        return this.navigator.nextColumn();
+      case Char.ArrowUp: {
+        return this.navigator.setPosition({ row: row - 1, column: 0 })
+      }
+      case Char.ArrowDown: {
+        const isCurrentPositionHasLastRow = (row + 1) === rowsCount;
+
+        if (isCurrentPositionHasLastRow) {
+          const { index } = this.editor.addEmptyRow();
+          console.log(index);
+
+          return this.navigator.setPosition({ row: index, column: 0 })
+        }
+
+        return this.navigator.nextRow();
+      }
       case Char.Backspace:
-        this.body.removeLastLetterFromCurrentRow();
-        break;
-      case Char.Enter:
-        const row = this.editor.addEmptyRow();
-        this.caretLayer.setPosition({ row: row.index, column: 0 });
-        break;
+        this.navigator.prevColumn();
+        return this.body.removeLastLetterFromCurrentRow();
+      case Char.Enter: {
+        const { index } = this.editor.addEmptyRow();
+        this.navigator.nextRow();
+        return this.navigator.setPosition({ row: index, column: 0 })
+      }
     }
   }
 

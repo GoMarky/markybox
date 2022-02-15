@@ -37,6 +37,10 @@ export class MRow extends MDomObject {
     this.content = new MRowContent(this);
   }
 
+  public get columns(): number {
+    return this._el.textContent?.length || 0;
+  }
+
   public get width(): number {
     return this._el.offsetWidth;
   }
