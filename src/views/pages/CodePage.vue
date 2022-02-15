@@ -79,6 +79,8 @@ export default window.workbench.createComponent((accessor) => {
 .m-editor__row {
   height: 16px;
   display: inline-block;
+  word-wrap: normal;
+  white-space: pre;
 }
 
 .m-editor__layer-text {
@@ -101,6 +103,22 @@ export default window.workbench.createComponent((accessor) => {
   display: inline-block;
   text-decoration: blink;
   animation: blinker 1s linear infinite;
+}
+
+.m-editor__keyword-class {
+  color: #c800a4;
+}
+
+.m-editor__keyword-class-name {
+  color: #c79229;
+}
+
+.m-editor__keyword-function-name {
+  color: #2858b3;
+}
+
+.m-editor__keyword-function {
+  color: #c800a4;
 }
 
 @keyframes blinker {

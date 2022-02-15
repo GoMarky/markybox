@@ -16,9 +16,13 @@ export class MHTMLEditorBody extends MDomObject implements IRendererBody {
 
   public removeLastLetterFromCurrentRow(): void {
     const currentRow = this.renderer.editor.getCurrentRow();
-    const { text } = currentRow.content
+    const { text } = currentRow.content;
 
-    currentRow.content.setContent(removeLastLetter(text))
+    const formattedText = removeLastLetter(text);
+
+    const keywords = this.renderer.editor.formatter.parseKeywords(formattedText);
+
+    currentRow.content.setContentWithFormat(keywords)
   }
 
   private onInput = (letter: string) => {
@@ -28,17 +32,16 @@ export class MHTMLEditorBody extends MDomObject implements IRendererBody {
     const { text } = content;
 
     const [first, last] = splitAtIndex(column)(text);
-
     const rawText = first + letter + last;
-    currentRow.content.setContent(rawText);
+
+    const keywords = this.renderer.editor.formatter.parseKeywords(rawText);
+
+    currentRow.content.setContentWithFormat(keywords)
+
 
     const x = currentRow.width + 40;
     this.textarea.setLeftPosition(x);
     this.renderer.navigator.setPosition({ row, column: column + 1 });
-  }
-
-  private setRowText(letter: string): void {
-    console.log(letter);
   }
 
   private init(): void {

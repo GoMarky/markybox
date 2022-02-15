@@ -53,8 +53,6 @@ export class MHTMLRenderer extends MObject implements IAbstractRenderer {
 
         if (isCurrentPositionHasLastRow) {
           const { index } = this.editor.addEmptyRow();
-          console.log(index);
-
           return this.navigator.setPosition({ row: index, column: 0 })
         }
 
@@ -86,9 +84,5 @@ export class MHTMLRenderer extends MObject implements IAbstractRenderer {
 
   public onAddRow(row: MRow): void {
     this.gutter.onAddRow(row);
-  }
-
-  public onRemoveRow(row: MRow): void {
-    console.log(row);
   }
 }

@@ -1,6 +1,7 @@
 import { MRow } from '@/core/objects/MRow';
 import { MTextLayer } from '@/core/renderer/html/layers/MTextLayer';
 import { ILogger } from '@/core/renderer/common';
+import { ICodeFormatter } from '@/core/formatters/common';
 
 export interface IDOMElement {
   readonly el: HTMLElement;
@@ -12,8 +13,8 @@ export interface IRendererDisplay {
 
 export interface IRendererEditorController {
   readonly rowsCount: number;
-
   readonly logger?: ILogger;
+  readonly formatter: ICodeFormatter;
 
   addEmptyRow(): MRow;
 
@@ -41,6 +42,4 @@ export interface IAbstractRenderer {
   editor: IRendererEditorController;
 
   onAddRow(row: MRow): void;
-
-  onRemoveRow(row: MRow): void;
 }

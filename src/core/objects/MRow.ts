@@ -1,5 +1,6 @@
 import { MObject } from '@/core/objects/MObject';
 import { MDomObject } from '@/core/renderer/html/MDomObject';
+import { IParsedFormatterWord } from '@/core/formatters/common';
 
 class MRowContent extends MObject {
   private _text = '';
@@ -8,14 +9,38 @@ class MRowContent extends MObject {
     super();
   }
 
-  public setContent(data: string) {
-    this._text = data;
+  public setContentWithFormat(keywords: IParsedFormatterWord[]): void {
+    const { el } = this.row;
 
-    this.row.el.textContent = data;
+    let text = '';
+
+    // TODO: edit elements, instead of removing
+    MRowContent.removeAllElements(el);
+
+    for (const { className, data } of keywords) {
+      text += data;
+
+      const element = MRowContent.createSpanElement(data, className);
+      this.row.el.appendChild(element);
+    }
+
+    this._text = text;
   }
 
   public get text(): string {
     return this._text;
+  }
+
+  private static removeAllElements(element: HTMLElement): void {
+    Array.from(element.children).forEach((element) => element.remove());
+  }
+
+  private static createSpanElement(data: string, className: string): HTMLElement {
+    const element = document.createElement('span');
+    element.classList.add(className);
+    element.textContent = data;
+
+    return element;
   }
 }
 

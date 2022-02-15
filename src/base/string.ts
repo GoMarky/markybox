@@ -7,3 +7,7 @@ export function removeLastLetter(text: string): string {
 
   return text.slice(0, -1);
 }
+
+export function isEmptyString(str?: string): boolean {
+  return str?.length === 0;
+}

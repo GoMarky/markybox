@@ -58,8 +58,6 @@ export class MHTMLEditorBodyNavigator extends MObject {
 
     caretLayer.setPosition(position);
     this._currentPosition = position;
-
-    this.renderer.editor.logger?.info(`Position - row: ${position.row}, column: ${position.column}`);
   }
 
   private init(): void {

@@ -2,6 +2,8 @@ import { MObject } from '@/core/objects/MObject';
 import { IAbstractRenderer, IRendererEditorController } from '@/core/renderer/renderer';
 import { MRow } from '@/core/objects/MRow';
 import { ILogger } from '@/core/renderer/common';
+import { ICodeFormatter } from '@/core/formatters/common';
+import { JavascriptCodeFormatter } from '@/core/formatters/javascript/javascript-formatter';
 
 export interface IEditorOptions {
   readonly renderer: IAbstractRenderer;
@@ -13,6 +15,7 @@ export class MEditor extends MObject implements IRendererEditorController {
   private readonly renderer: IAbstractRenderer;
   private readonly rows: MRow[] = [];
   private _currentRow: MRow;
+  private _currentFormatter: ICodeFormatter;
 
   public readonly logger: ILogger | undefined;
 
@@ -27,7 +30,13 @@ export class MEditor extends MObject implements IRendererEditorController {
       this.renderer.display.setFullScreen();
     }
 
+    this._currentFormatter = new JavascriptCodeFormatter();
+
     this.renderer.editor = this;
+  }
+
+  public get formatter(): ICodeFormatter {
+    return this._currentFormatter;
   }
 
   public get rowsCount(): number {
@@ -59,11 +68,5 @@ export class MEditor extends MObject implements IRendererEditorController {
     renderer.onAddRow(row);
 
     return row;
-  }
-
-  public addRowWithContent(content: string): this {
-    console.log(content);
-
-    return this;
   }
 }
