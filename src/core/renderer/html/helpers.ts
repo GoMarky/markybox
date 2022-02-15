@@ -13,7 +13,7 @@ export function mRowToGutterElement(row: MRow): HTMLElement {
   const element = document.createElement('span');
   element.textContent = `${index}`;
   element.classList.add('m-editor__gutter-cell');
-  element.style.height = toPixel(19);
+  element.style.height = toPixel(16);
 
   return element;
 }
@@ -23,8 +23,8 @@ export function mRowToBodyElement(row: MRow): HTMLElement {
 
   const element = document.createElement('span');
   element.textContent = `${index}`;
-  element.classList.add('m-editor__gutter-cell');
-  element.style.height = toPixel(19);
+  element.classList.add('m-editor__body-cell');
+  element.style.height = toPixel(16);
 
   return element;
 }

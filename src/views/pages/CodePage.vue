@@ -62,6 +62,8 @@ export default window.workbench.createComponent(() => {
   position: relative;
   height: 100%;
   display: flex;
+  cursor: text;
+  overflow: hidden;
   flex-direction: column;
 }
 
@@ -80,7 +82,7 @@ export default window.workbench.createComponent(() => {
   height: 100%;
 }
 
-.m-editor__layer-caret  {
+.m-editor__layer-caret {
   font-size: 12px;
   background-color: blue;
   color: blue;

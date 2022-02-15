@@ -17,6 +17,7 @@ export default window.workbench.createComponent(() => {
 <style>
 body {
   font: 12px/normal 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', 'source-code-pro', monospace;
+  overflow: hidden;
   margin: 0;
   padding: 0;
 }

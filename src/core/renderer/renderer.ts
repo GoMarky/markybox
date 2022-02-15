@@ -1,4 +1,5 @@
 import { MRow } from '@/core/objects/MRow';
+import { MTextLayer } from '@/core/renderer/html/layers/MTextLayer';
 
 export interface IDOMElement {
   readonly el: HTMLElement;
@@ -9,9 +10,9 @@ export interface IRendererDisplay {
 }
 
 export interface IRendererEditorController {
-  addEmptyRow(): void;
+  addEmptyRow(): MRow;
 
-  setCurrentRow(row: MRow): void;
+  setCurrentRow(row: MRow): MRow;
 
   getCurrentRow(): MRow;
 }
@@ -29,6 +30,7 @@ export interface IAbstractRenderer {
   readonly gutter: IRendererGutter;
   readonly body: IRendererBody;
 
+  textLayer: MTextLayer;
   editor: IRendererEditorController;
 
   onAddRow(row: MRow): void;

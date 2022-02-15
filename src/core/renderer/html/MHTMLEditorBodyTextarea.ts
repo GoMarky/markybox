@@ -1,6 +1,8 @@
 import { MDomObject } from '@/core/renderer/html/MDomObject';
 import { Emitter, IEvent } from '@/base/event';
 import { toPixel } from '@/base/dom';
+import { isSystemChar } from '@/core/renderer/common';
+import { Char } from '@/base/char';
 
 export class MHTMLEditorBodyTextarea extends MDomObject {
   private readonly _onDidUpdate: Emitter<string> = new Emitter<string>();
@@ -36,14 +38,19 @@ export class MHTMLEditorBodyTextarea extends MDomObject {
 
     const { _el } = this;
 
-    this._el.style.left = toPixel(42);
+    _el.style.left = toPixel(42);
 
-    _el.addEventListener('input', (evt) => {
-      const event = evt as InputEvent;
-      const { data } = event;
-      const str = data as string;
+    window.addEventListener('keydown', (evt) => {
+      const event = evt as KeyboardEvent;
+      const { key } = event;
 
-      this._onDidUpdate.fire(str);
+      const isSystemKey = isSystemChar(key as Char);
+
+      if (isSystemKey) {
+        return;
+      }
+
+      this._onDidUpdate.fire(key);
     })
   }
 }

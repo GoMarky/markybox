@@ -26,28 +26,27 @@ export class MEditor extends MObject implements IRendererEditorController {
     this.renderer.editor = this;
   }
 
-  public setCurrentRow(row: MRow): this {
+  public setCurrentRow(row: MRow): MRow {
     this._currentRow = row;
 
-    return this;
+    return row;
   }
 
   public getCurrentRow(): MRow {
     return this._currentRow;
   }
 
-  public addEmptyRow(): this {
+  public addEmptyRow(): MRow {
     const { rows, renderer } = this;
     const { el } = renderer.textLayer
     const row = new MRow(el, rows.length);
 
-    // TODO
     this._currentRow = row;
 
     rows.push(row);
     renderer.onAddRow(row);
 
-    return this;
+    return row;
   }
 
   public addRowWithContent(content: string): this {

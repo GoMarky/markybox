@@ -1,7 +1,10 @@
+/**
+ * @enum KeyboardEvent['key']
+ */
 export enum Char {
   Enter = 'Enter',
   Backspace = 'Backspace',
-  ShiftLeft = 'ShiftLeft',
-  ShiftRight = 'ShiftRight',
-  ControlLeft = 'ControlLeft',
+  Shift = 'Shift',
+  CapsLock = 'CapsLock',
+  Meta = 'Meta',
 }

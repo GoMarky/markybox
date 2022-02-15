@@ -9,10 +9,7 @@ import { MTextLayer } from '@/core/renderer/html/layers/MTextLayer';
 import { MCaretLayer } from '@/core/renderer/html/layers/MCaretLayer';
 import { IPosition } from '@/core/renderer/common';
 import { IDOMPosition } from '@/core/renderer/html/helpers';
-
-function hasPressedSpecialKey(code: Char): boolean {
-  return Object.values(Char).includes(code);
-}
+import { MHTMLEditorBodyNavigator } from '@/core/renderer/html/MHTMLEditorBodyNavigator';
 
 export class MHTMLRenderer extends MObject implements IAbstractRenderer {
   public readonly display: IRendererDisplay;
@@ -20,15 +17,16 @@ export class MHTMLRenderer extends MObject implements IAbstractRenderer {
   public readonly body: IRendererBody;
   public readonly textLayer: MTextLayer;
   public readonly caretLayer: MCaretLayer;
+  public readonly navigator: MHTMLEditorBodyNavigator;
 
   public editor: IRendererEditorController
 
   constructor(public readonly root: HTMLElement) {
     super();
-
     this.display = new HTMLDisplayRenderer(this);
     this.gutter = new MHTMLEditorGutter(this);
     this.body = new MHTMLEditorBody(this);
+    this.navigator = new MHTMLEditorBodyNavigator(this);
 
     this.textLayer = new MTextLayer(this);
     this.caretLayer = new MCaretLayer(this);
@@ -39,19 +37,13 @@ export class MHTMLRenderer extends MObject implements IAbstractRenderer {
   private onSpecialKeyDown = (event: KeyboardEvent) => {
     const code = event.code as Char;
 
-    const mustPreventEvent = hasPressedSpecialKey(code);
-
-    if (mustPreventEvent) {
-      event.preventDefault();
-      event.stopPropagation();
-    }
-
     switch (code) {
       case Char.Backspace:
         this.body.removeLastLetterFromCurrentRow();
         break;
       case Char.Enter:
-        this.editor.addEmptyRow();
+        const row = this.editor.addEmptyRow();
+        this.caretLayer.setPosition({ row: row.index, column: 0 });
         break;
     }
   }
@@ -64,7 +56,7 @@ export class MHTMLRenderer extends MObject implements IAbstractRenderer {
     const { row, column } = position;
 
     return {
-      top: row * 19,
+      top: row * 16,
       left: column * 7.2,
     }
   }

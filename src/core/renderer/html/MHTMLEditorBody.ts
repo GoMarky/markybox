@@ -28,10 +28,8 @@ export class MHTMLEditorBody extends MDomObject implements IRendererBody {
 
     const x = currentRow.width + 40;
 
-    console.log(x);
-
     this.textarea.setLeftPosition(x);
-    this.renderer.caretLayer.setPosition({ row: 0, column: rawText.length });
+    this.renderer.navigator.setPosition({ row: currentRow.index, column: rawText.length });
   }
 
   private init(): void {
