@@ -12,6 +12,9 @@ import { MHTMLEditorBody } from '@/core/renderer/html/editor/MHTMLEditorBody';
 import { IDOMPosition } from '@/core/renderer/html/common/helpers';
 import { WindowLocalShortcut } from '@/core/extensions/window-local-shortcut/window-local-shortcut';
 import { MEditor } from '@/core';
+import { MHTMLClipboard } from '@/core/renderer/html/system/MHTMLClipboard';
+import { SecurityError } from '@/core/app/errors';
+import { MHTMLEditorSelection } from '@/core/renderer/html/editor/MHTMLEditorSelection';
 
 export class MHTMLRenderer extends MObject implements IAbstractRenderer {
   public readonly display: IRendererDisplay;
@@ -20,18 +23,24 @@ export class MHTMLRenderer extends MObject implements IAbstractRenderer {
   public readonly textLayer: MTextLayer;
   public readonly caretLayer: MCaretLayer;
   public readonly navigator: MHTMLEditorBodyNavigator;
+  public readonly selection: MHTMLEditorSelection;
 
   public editor: MEditor;
   private readonly shortcuts: WindowLocalShortcut;
+  private readonly clipboard: MHTMLClipboard;
 
   constructor(public readonly root: HTMLElement) {
     super();
+
+    this.isSecureContext();
+
     this.shortcuts = new WindowLocalShortcut();
     this.display = new HTMLDisplayRenderer(this);
     this.gutter = new MHTMLEditorGutter(this);
     this.body = new MHTMLEditorBody(this);
+    this.selection = new MHTMLEditorSelection(this);
     this.navigator = new MHTMLEditorBodyNavigator(this);
-
+    this.clipboard = new MHTMLClipboard();
     this.textLayer = new MTextLayer(this);
     this.caretLayer = new MCaretLayer(this);
 
@@ -76,12 +85,18 @@ export class MHTMLRenderer extends MObject implements IAbstractRenderer {
 
   private registerShortcuts(): void {
     this.shortcuts.registerShortcut('Meta+A', () => {
-      console.log(this.editor.rows);
+      this.selection.selectAll();
     })
   }
 
   private activateSpecialKeysHandler() {
     window.addEventListener('keydown', this.onSpecialKeyDown)
+  }
+
+  private isSecureContext(): void {
+    if (!window.isSecureContext) {
+      throw new SecurityError(`markybox works only in security context. Please, enable HTTPS`);
+    }
   }
 
   public toDOMPosition(position: IPosition): IDOMPosition {

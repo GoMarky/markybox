@@ -1,5 +1,7 @@
 import { isUndefinedOrNull } from '@/base/types';
 
+export type Mime = 'text/plain';
+
 export function removeLastLetter(text: string): string {
   if (isUndefinedOrNull(text)) {
     return '';

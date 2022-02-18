@@ -1,9 +1,11 @@
 <template>
-  <div id="root" class="marky" />
+  <div id="root" class="marky">
+    <div v-if="errorMessage.length > 0"></div>
+  </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, nextTick, onMounted } from 'vue';
+import { defineComponent, nextTick, onMounted, ref } from 'vue';
 import * as markybox from '@/core';
 import { ILogService } from '@/platform/log/common/log';
 
@@ -13,9 +15,9 @@ export default window.workbench.createComponent((accessor) => {
   return defineComponent({
     name: 'AppLayout',
     setup() {
-      onMounted(async () => {
-        await nextTick();
+      const errorMessage = ref('');
 
+      function initEditor(): void {
         const root = document.querySelector<HTMLElement>('#root') as HTMLElement;
 
         const renderer = new markybox.MHTMLRenderer(root);
@@ -26,7 +28,25 @@ export default window.workbench.createComponent((accessor) => {
         });
 
         editor.addEmptyRow()
+      }
+
+      onMounted(async () => {
+        await nextTick();
+
+        try {
+          initEditor();
+        } catch (error) {
+          if (error instanceof Error) {
+            const { name, message } = error;
+
+            errorMessage.value = `Name: ${name}. Message: ${message}`;
+          }
+        }
       })
+
+      return {
+        errorMessage,
+      }
     }
   })
 })
