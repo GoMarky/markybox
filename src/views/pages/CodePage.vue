@@ -53,6 +53,10 @@ export default window.workbench.createComponent((accessor) => {
 </script>
 
 <style>
+:root {
+  --z-index-selection: 10;
+}
+
 .marky {
   display: flex;
   position: relative;
@@ -107,6 +111,7 @@ export default window.workbench.createComponent((accessor) => {
   display: flex;
   flex-direction: column;
   height: 100%;
+  user-select: none;
 }
 
 .m-editor__layer-caret {
@@ -139,6 +144,13 @@ export default window.workbench.createComponent((accessor) => {
 
 .m-editor__keyword-function {
   color: #c800a4;
+}
+
+.m-editor__selection {
+  position: absolute;
+  border-radius: 3px;
+  background-color: #b5d5ff;
+  z-index: var(--z-index-selection);
 }
 
 @keyframes blinker {

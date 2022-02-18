@@ -32,7 +32,7 @@ export class MHTMLRenderer extends MObject implements IAbstractRenderer {
   constructor(public readonly root: HTMLElement) {
     super();
 
-    this.isSecureContext();
+    this.runChecks();
 
     this.shortcuts = new WindowLocalShortcut();
     this.display = new HTMLDisplayRenderer(this);
@@ -84,16 +84,25 @@ export class MHTMLRenderer extends MObject implements IAbstractRenderer {
   }
 
   private registerShortcuts(): void {
-    this.shortcuts.registerShortcut('Meta+A', () => {
-      this.selection.selectAll();
-    })
+    this.disposables.add(
+      this.shortcuts.registerShortcut('Meta+A', () => {
+        this.selection.selectAll();
+      })
+    );
+
+    this.disposables.add(
+      this.shortcuts.registerShortcut('Meta+C', () => {
+        const text = this.selection.getSelectedText();
+        void this.clipboard.write(text);
+      }));
   }
 
   private activateSpecialKeysHandler() {
-    window.addEventListener('keydown', this.onSpecialKeyDown)
+    window.addEventListener('keydown', this.onSpecialKeyDown);
   }
 
-  private isSecureContext(): void {
+  private runChecks(): void {
+    // We use clipboard API, that only compactible with https.
     if (!window.isSecureContext) {
       throw new SecurityError(`markybox works only in security context. Please, enable HTTPS`);
     }
