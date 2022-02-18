@@ -53,12 +53,12 @@ export class MEditor extends MObject implements IRendererEditorController {
     return row;
   }
 
-  public getRowByPosition(row: number): MRow {
-    return this._rows[row];
-  }
-
   public getCurrentRow(): MRow {
     return this._currentRow;
+  }
+
+  public getRowByPosition(row: number): MRow {
+    return this._rows[row];
   }
 
   public addEmptyRow(): MRow {

@@ -4,7 +4,8 @@ import { isEmptyString } from '@/base/string';
 
 export const Regexp = {
   [JavascriptKeyword.Class]: /^(class$)/,
-  [JavascriptKeyword.Function]: /^(function$)/
+  [JavascriptKeyword.Function]: /^(function$)/,
+  [JavascriptKeyword.Const]: /^(const$)/,
 };
 
 export class JavascriptCodeFormatter extends BaseFormatter implements ICodeFormatter {
@@ -69,6 +70,7 @@ export class JavascriptCodeFormatter extends BaseFormatter implements ICodeForma
 function parseKeyword(word: string): IParsedFormatterWord {
   const classResult = Regexp.class.test(word);
   const functionResult = Regexp.function.test(word);
+  const constResult = Regexp.const.test(word);
 
   let result: IParsedFormatterWord;
 
@@ -84,6 +86,12 @@ function parseKeyword(word: string): IParsedFormatterWord {
       className: 'm-editor__keyword-function',
       data: word + ' ',
     };
+  } else if (constResult) {
+    result = {
+      keyword: JavascriptKeyword.Const,
+      className: 'm-editor__keyword-default',
+      data: word + ' ',
+    }
   } else {
     result = {
       keyword: JavascriptKeyword.Plain,

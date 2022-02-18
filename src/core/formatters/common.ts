@@ -20,7 +20,7 @@ export type JavascriptClassName =
   | 'm-editor__plain'
   | 'm-editor__keyword-class-name'
   | 'm-editor__keyword-function-name'
-  ;
+  | 'm-editor__keyword-default';
 
 export interface IParsedFormatterWord {
   keyword: JavascriptKeyword

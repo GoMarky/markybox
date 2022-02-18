@@ -3,7 +3,6 @@ import { IAbstractRenderer, IRendererBody, IRendererDisplay, IRendererGutter } f
 import { Char } from '@/base/char';
 import { MRow } from '@/core/objects/MRow';
 import { MTextLayer } from '@/core/renderer/html/layers/MTextLayer';
-import { MCaretLayer } from '@/core/renderer/html/layers/MCaretLayer';
 import { IPosition } from '@/core/renderer/common';
 import { MHTMLEditorBodyNavigator } from '@/core/renderer/html/editor/MHTMLEditorBodyNavigator';
 import { HTMLDisplayRenderer } from '@/core/renderer/html/system/MHTMLDisplayRenderer';
@@ -28,9 +27,10 @@ export class MHTMLRenderer extends MObject implements IAbstractRenderer {
   public readonly gutter: IRendererGutter;
   public readonly body: IRendererBody;
   public readonly textLayer: MTextLayer;
-  public readonly caretLayer: MCaretLayer;
   public readonly navigator: MHTMLEditorBodyNavigator;
   public readonly selection: MHTMLEditorSelection;
+
+  private navigators: MHTMLEditorBodyNavigator[] = [];
 
   public editor: MEditor;
   private readonly shortcuts: WindowLocalShortcut;
@@ -46,10 +46,9 @@ export class MHTMLRenderer extends MObject implements IAbstractRenderer {
     this.gutter = new MHTMLEditorGutter(this);
     this.body = new MHTMLEditorBody(this);
     this.selection = new MHTMLEditorSelection(this);
-    this.navigator = new MHTMLEditorBodyNavigator(this);
+    this.navigator = new MHTMLEditorBodyNavigator(this, 'user');
     this.clipboard = new MHTMLClipboard();
     this.textLayer = new MTextLayer(this);
-    this.caretLayer = new MCaretLayer(this);
 
     this.registerShortcuts();
     this.activateSpecialKeysHandler();
@@ -132,6 +131,16 @@ export class MHTMLRenderer extends MObject implements IAbstractRenderer {
     if (state === 'denied') {
       throw new AccessError('markybox must have access to you clipboard for work.')
     }
+  }
+
+  public addNavigator(name: string): void {
+    const navigator = new MHTMLEditorBodyNavigator(this, name);
+
+    this.navigators.push(navigator);
+  }
+
+  public removeNavigator(name: string): void {
+    console.log(name);
   }
 
   public toDOMPosition(position: IPosition): IDOMPosition {

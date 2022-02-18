@@ -1,13 +1,18 @@
 import { MHTMLRenderer } from '@/core';
 import { MObject } from '@/core/objects/MObject';
 import { IPosition } from '@/core/renderer/common';
+import { MCaretLayer } from '@/core/renderer/html/layers/MCaretLayer';
 
 export class MHTMLEditorBodyNavigator extends MObject {
   private _currentPosition: IPosition;
+  private layer: MCaretLayer;
+  private name: string;
 
-  constructor(private readonly renderer: MHTMLRenderer) {
+  constructor(private readonly renderer: MHTMLRenderer, name: string) {
     super();
 
+    this.name = name;
+    this.layer = new MCaretLayer(this.renderer);
     this.init();
   }
 
@@ -54,9 +59,9 @@ export class MHTMLEditorBodyNavigator extends MObject {
   }
 
   private doSetPosition(position: IPosition): void {
-    const { caretLayer } = this.renderer;
+    const { layer } = this;
 
-    caretLayer.setPosition(position);
+    layer.setPosition(position);
     this._currentPosition = position;
   }
 
