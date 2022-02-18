@@ -13,7 +13,7 @@ export interface IEditorOptions {
 
 export class MEditor extends MObject implements IRendererEditorController {
   private readonly renderer: IAbstractRenderer;
-  private readonly rows: MRow[] = [];
+  private readonly _rows: MRow[] = [];
   private _currentRow: MRow;
   private _currentFormatter: ICodeFormatter;
 
@@ -39,8 +39,12 @@ export class MEditor extends MObject implements IRendererEditorController {
     return this._currentFormatter;
   }
 
+  public get rows(): MRow[] {
+    return this._rows;
+  }
+
   public get rowsCount(): number {
-    return this.rows.length;
+    return this._rows.length;
   }
 
   public setCurrentRow(row: MRow): MRow {
@@ -50,7 +54,7 @@ export class MEditor extends MObject implements IRendererEditorController {
   }
 
   public getRowByPosition(row: number): MRow {
-    return this.rows[row];
+    return this._rows[row];
   }
 
   public getCurrentRow(): MRow {
@@ -58,13 +62,13 @@ export class MEditor extends MObject implements IRendererEditorController {
   }
 
   public addEmptyRow(): MRow {
-    const { rows, renderer } = this;
+    const { _rows, renderer } = this;
     const { el } = renderer.textLayer
-    const row = new MRow(el, rows.length);
+    const row = new MRow(el, _rows.length);
 
     this._currentRow = row;
 
-    rows.push(row);
+    _rows.push(row);
     renderer.onAddRow(row);
 
     return row;

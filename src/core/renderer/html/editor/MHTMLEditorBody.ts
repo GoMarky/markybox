@@ -1,9 +1,9 @@
-import { MDomObject } from '@/core/renderer/html/MDomObject';
 import { IRendererBody } from '@/core/renderer/renderer';
-import { MHTMLEditorBodyTextarea } from '@/core/renderer/html/MHTMLEditorBodyTextarea';
 import { MHTMLRenderer } from '@/core';
 import { removeLastLetter } from '@/base/string';
 import { splitAtIndex } from '@/core/renderer/common';
+import { MDomObject } from '@/core/renderer/html/common/MDomObject';
+import { MHTMLEditorBodyTextarea } from '@/core/renderer/html/editor/MHTMLEditorBodyTextarea';
 
 export class MHTMLEditorBody extends MDomObject implements IRendererBody {
   private textarea: MHTMLEditorBodyTextarea;

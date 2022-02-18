@@ -11,3 +11,19 @@ export function removeLastLetter(text: string): string {
 export function isEmptyString(str?: string): boolean {
   return str?.length === 0;
 }
+
+export function toUppercase(str?: string): string {
+  if (!str) {
+    return '';
+  }
+
+  return str.toUpperCase();
+}
+
+export function toLowerCase(str?: string): string {
+  if (!str) {
+    return '';
+  }
+
+  return str.toLowerCase();
+}

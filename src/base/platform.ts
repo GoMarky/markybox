@@ -32,3 +32,5 @@ export const buildNumber: string = (process.env.BUILD_NUMBER as unknown) as stri
 export const buildDate: string = (process.env.BUILD_DATE as unknown) as string;
 export const ROUTER_MODE = isDev ? 'hash' : process.env.ROUTER_MODE;
 export const isMobileDevice = /Mobi/i.test(navigator.userAgent);
+
+

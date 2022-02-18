@@ -1,6 +1,6 @@
 import { MObject } from '@/core/objects/MObject';
-import { MDomObject } from '@/core/renderer/html/MDomObject';
 import { IParsedFormatterWord } from '@/core/formatters/common';
+import { MDomObject } from '@/core/renderer/html/common/MDomObject';
 
 class MRowContent extends MObject {
   private _text = '';

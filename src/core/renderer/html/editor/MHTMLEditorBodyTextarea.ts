@@ -1,4 +1,4 @@
-import { MDomObject } from '@/core/renderer/html/MDomObject';
+import { MDomObject } from '@/core/renderer/html/common/MDomObject';
 import { Emitter, IEvent } from '@/base/event';
 import { toPixel } from '@/base/dom';
 import { isSystemChar } from '@/core/renderer/common';

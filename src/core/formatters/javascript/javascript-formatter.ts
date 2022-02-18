@@ -7,38 +7,6 @@ export const Regexp = {
   [JavascriptKeyword.Function]: /^(function$)/
 };
 
-const plainRegexp = /^(?!class|function$)/
-
-function parseKeyword(word: string): IParsedFormatterWord {
-  const classResult = Regexp.class.test(word);
-  const functionResult = Regexp.function.test(word);
-  const plainResult = plainRegexp.test(word);
-
-  let result: IParsedFormatterWord;
-
-  if (classResult) {
-    result = {
-      keyword: JavascriptKeyword.Class,
-      className: 'm-editor__keyword-class',
-      data: word + ' ',
-    };
-  } else if (functionResult) {
-    result = {
-      keyword: JavascriptKeyword.Function,
-      className: 'm-editor__keyword-function',
-      data: word + ' ',
-    };
-  } else {
-    result = {
-      keyword: JavascriptKeyword.Plain,
-      className: 'm-editor__plain',
-      data: word + ' ',
-    }
-  }
-
-  return result;
-}
-
 export class JavascriptCodeFormatter extends BaseFormatter implements ICodeFormatter {
   constructor() {
     super();
@@ -96,4 +64,33 @@ export class JavascriptCodeFormatter extends BaseFormatter implements ICodeForma
 
     return result.keyword === JavascriptKeyword.Class;
   }
+}
+
+function parseKeyword(word: string): IParsedFormatterWord {
+  const classResult = Regexp.class.test(word);
+  const functionResult = Regexp.function.test(word);
+
+  let result: IParsedFormatterWord;
+
+  if (classResult) {
+    result = {
+      keyword: JavascriptKeyword.Class,
+      className: 'm-editor__keyword-class',
+      data: word + ' ',
+    };
+  } else if (functionResult) {
+    result = {
+      keyword: JavascriptKeyword.Function,
+      className: 'm-editor__keyword-function',
+      data: word + ' ',
+    };
+  } else {
+    result = {
+      keyword: JavascriptKeyword.Plain,
+      className: 'm-editor__plain',
+      data: word + ' ',
+    }
+  }
+
+  return result;
 }

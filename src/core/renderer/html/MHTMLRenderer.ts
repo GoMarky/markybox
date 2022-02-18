@@ -1,15 +1,17 @@
 import { MObject } from '@/core/objects/MObject';
-import { IAbstractRenderer, IRendererBody, IRendererDisplay, IRendererEditorController, IRendererGutter } from '@/core/renderer/renderer';
-import { MHTMLEditorGutter } from '@/core/renderer/html/MHTMLEditorGutter';
-import { MHTMLEditorBody } from '@/core/renderer/html/MHTMLEditorBody';
+import { IAbstractRenderer, IRendererBody, IRendererDisplay, IRendererGutter } from '@/core/renderer/renderer';
 import { Char } from '@/base/char';
 import { MRow } from '@/core/objects/MRow';
-import { HTMLDisplayRenderer } from '@/core/renderer/html/MHTMLDisplayRenderer';
 import { MTextLayer } from '@/core/renderer/html/layers/MTextLayer';
 import { MCaretLayer } from '@/core/renderer/html/layers/MCaretLayer';
 import { IPosition } from '@/core/renderer/common';
-import { IDOMPosition } from '@/core/renderer/html/helpers';
-import { MHTMLEditorBodyNavigator } from '@/core/renderer/html/MHTMLEditorBodyNavigator';
+import { MHTMLEditorBodyNavigator } from '@/core/renderer/html/editor/MHTMLEditorBodyNavigator';
+import { HTMLDisplayRenderer } from '@/core/renderer/html/system/MHTMLDisplayRenderer';
+import { MHTMLEditorGutter } from '@/core/renderer/html/editor/MHTMLEditorGutter';
+import { MHTMLEditorBody } from '@/core/renderer/html/editor/MHTMLEditorBody';
+import { IDOMPosition } from '@/core/renderer/html/common/helpers';
+import { WindowLocalShortcut } from '@/core/extensions/window-local-shortcut/window-local-shortcut';
+import { MEditor } from '@/core';
 
 export class MHTMLRenderer extends MObject implements IAbstractRenderer {
   public readonly display: IRendererDisplay;
@@ -19,10 +21,12 @@ export class MHTMLRenderer extends MObject implements IAbstractRenderer {
   public readonly caretLayer: MCaretLayer;
   public readonly navigator: MHTMLEditorBodyNavigator;
 
-  public editor: IRendererEditorController
+  public editor: MEditor;
+  private readonly shortcuts: WindowLocalShortcut;
 
   constructor(public readonly root: HTMLElement) {
     super();
+    this.shortcuts = new WindowLocalShortcut();
     this.display = new HTMLDisplayRenderer(this);
     this.gutter = new MHTMLEditorGutter(this);
     this.body = new MHTMLEditorBody(this);
@@ -31,6 +35,7 @@ export class MHTMLRenderer extends MObject implements IAbstractRenderer {
     this.textLayer = new MTextLayer(this);
     this.caretLayer = new MCaretLayer(this);
 
+    this.registerShortcuts();
     this.activateSpecialKeysHandler();
   }
 
@@ -67,6 +72,12 @@ export class MHTMLRenderer extends MObject implements IAbstractRenderer {
         return this.navigator.setPosition({ row: index, column: 0 })
       }
     }
+  }
+
+  private registerShortcuts(): void {
+    this.shortcuts.registerShortcut('Meta+A', () => {
+      console.log(this.editor.rows);
+    })
   }
 
   private activateSpecialKeysHandler() {
