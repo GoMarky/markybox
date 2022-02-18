@@ -16,13 +16,13 @@ export class MHTMLEditorSelection extends MObject {
   private readonly layer: MSelectionLayer;
 
   private _started = false;
-  private startX = 0;
-  private startY = 0;
+  private startPosition: IPosition | null;
+  private lastPosition: IPosition | null;
 
   constructor(private readonly renderer: MHTMLRenderer) {
     super();
 
-    this.layer = new MSelectionLayer();
+    this.layer = new MSelectionLayer(renderer.body.el);
 
     this.init();
   }
@@ -47,7 +47,9 @@ export class MHTMLEditorSelection extends MObject {
   }
 
   public setPosition(position: ISelectionPosition): void {
-    console.log(position);
+    const { start, end } = position;
+
+    this.layer.addSelectionRow(end);
   }
 
   private static rowToText(row: MRow): string {
@@ -59,8 +61,11 @@ export class MHTMLEditorSelection extends MObject {
 
     const { clientX, clientY } = event;
 
-    this.startX = clientX;
-    this.startY = clientY;
+    if (this.startPosition) {
+      this.lastPosition = null;
+    }
+
+    this.startPosition = this.renderer.toEditorPosition({ left: clientX, top: clientY });
   }
 
   private onSelectionMove(event: MouseEvent): void {
@@ -69,13 +74,14 @@ export class MHTMLEditorSelection extends MObject {
     }
 
     const { clientX, clientY } = event;
+
+    this.lastPosition = this.renderer.toEditorPosition({ left: clientX, top: clientY });
+
+    this.setPosition({ start: this.startPosition as IPosition, end: this.lastPosition });
   }
 
   private onSelectionEnd(_: MouseEvent): void {
     this._started = false;
-
-    this.startX = 0;
-    this.startY = 0;
   }
 
   private init(): void {

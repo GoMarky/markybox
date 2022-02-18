@@ -16,6 +16,13 @@ import { MHTMLClipboard } from '@/core/renderer/html/system/MHTMLClipboard';
 import { SecurityError } from '@/core/app/errors';
 import { MHTMLEditorSelection } from '@/core/renderer/html/editor/MHTMLEditorSelection';
 
+// TODO: do not use clientX
+
+const EDITOR_OFFSET_POSITION: IDOMPosition = {
+  top: 35,
+  left: 40,
+}
+
 export class MHTMLRenderer extends MObject implements IAbstractRenderer {
   public readonly display: IRendererDisplay;
   public readonly gutter: IRendererGutter;
@@ -114,6 +121,18 @@ export class MHTMLRenderer extends MObject implements IAbstractRenderer {
     return {
       top: row * 16,
       left: column * 7.2,
+    }
+  }
+
+  public toEditorPosition(position: IDOMPosition): IPosition {
+    let { top, left } = position;
+
+    top -= EDITOR_OFFSET_POSITION.top;
+    left -= EDITOR_OFFSET_POSITION.left;
+
+    return {
+      row: Math.round(top / 16),
+      column: Math.round(left / 7.2),
     }
   }
 
