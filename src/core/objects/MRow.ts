@@ -1,6 +1,7 @@
 import { MObject } from '@/core/objects/MObject';
 import { IParsedFormatterWord } from '@/core/formatters/common';
 import { MDomObject } from '@/core/renderer/html/common/MDomObject';
+import { removeChildren } from '@/base/dom';
 
 class MRowContent extends MObject {
   private _text = '';
@@ -15,7 +16,7 @@ class MRowContent extends MObject {
     let text = '';
 
     // TODO: edit elements, instead of removing
-    MRowContent.removeAllElements(el);
+    removeChildren(el);
 
     for (const { className, data } of keywords) {
       text += data;
@@ -29,10 +30,6 @@ class MRowContent extends MObject {
 
   public get text(): string {
     return this._text;
-  }
-
-  private static removeAllElements(element: HTMLElement): void {
-    Array.from(element.children).forEach((element) => element.remove());
   }
 
   private static createSpanElement(data: string, className: string): HTMLElement {

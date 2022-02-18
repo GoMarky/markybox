@@ -5,3 +5,9 @@ export class SecurityError extends ApplicationError {
     super(message);
   }
 }
+
+export class AccessError extends ApplicationError {
+  constructor(message?: string) {
+    super(message);
+  }
+}

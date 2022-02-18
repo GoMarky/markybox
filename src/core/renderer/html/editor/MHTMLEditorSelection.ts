@@ -22,7 +22,7 @@ export class MHTMLEditorSelection extends MObject {
   constructor(private readonly renderer: MHTMLRenderer) {
     super();
 
-    this.layer = new MSelectionLayer(renderer.body.el);
+    this.layer = new MSelectionLayer(renderer);
 
     this.init();
   }
@@ -35,9 +35,7 @@ export class MHTMLEditorSelection extends MObject {
     // TODO: select rows
     const { rows } = this.renderer.editor;
 
-    const text = rows.map((row) => MHTMLEditorSelection.rowToText(row)).join(endl);
-
-    return text;
+    return rows.map((row) => MHTMLEditorSelection.rowToText(row)).join(endl);
   }
 
   public selectAll(): void {
@@ -47,6 +45,7 @@ export class MHTMLEditorSelection extends MObject {
   }
 
   public setPosition(position: ISelectionPosition): void {
+    this._currentPosition = position;
     const { start, end } = position;
 
     this.layer.addSelectionRow(end);

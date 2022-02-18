@@ -13,7 +13,7 @@ import { IDOMPosition } from '@/core/renderer/html/common/helpers';
 import { WindowLocalShortcut } from '@/core/extensions/window-local-shortcut/window-local-shortcut';
 import { MEditor } from '@/core';
 import { MHTMLClipboard } from '@/core/renderer/html/system/MHTMLClipboard';
-import { SecurityError } from '@/core/app/errors';
+import { AccessError, SecurityError } from '@/core/app/errors';
 import { MHTMLEditorSelection } from '@/core/renderer/html/editor/MHTMLEditorSelection';
 
 // TODO: do not use clientX
@@ -39,7 +39,7 @@ export class MHTMLRenderer extends MObject implements IAbstractRenderer {
   constructor(public readonly root: HTMLElement) {
     super();
 
-    this.runChecks();
+    void this.runChecks();
 
     this.shortcuts = new WindowLocalShortcut();
     this.display = new HTMLDisplayRenderer(this);
@@ -101,17 +101,36 @@ export class MHTMLRenderer extends MObject implements IAbstractRenderer {
       this.shortcuts.registerShortcut('Meta+C', () => {
         const text = this.selection.getSelectedText();
         void this.clipboard.write(text);
-      }));
+      })
+    );
+
+    this.disposables.add(
+      this.shortcuts.registerShortcut('Meta+V', async () => {
+        const text = await this.clipboard.read();
+
+        console.log(text);
+      })
+    );
   }
 
   private activateSpecialKeysHandler() {
     window.addEventListener('keydown', this.onSpecialKeyDown);
   }
 
-  private runChecks(): void {
+  private async runChecks(): Promise<void> {
     // We use clipboard API, that only compactible with https.
     if (!window.isSecureContext) {
       throw new SecurityError(`markybox works only in security context. Please, enable HTTPS`);
+    }
+
+    const name = 'clipboard-read' as PermissionName;
+    const result = await window.navigator.permissions.query({ name });
+
+    // request clipboard api.
+    const { state } = result;
+
+    if (state === 'denied') {
+      throw new AccessError('markybox must have access to you clipboard for work.')
     }
   }
 

@@ -146,7 +146,7 @@ export default window.workbench.createComponent((accessor) => {
   color: #c800a4;
 }
 
-.m-editor__selection {
+.m-editor__selection-row {
   position: absolute;
   border-radius: 3px;
   background-color: #b5d5ff;
