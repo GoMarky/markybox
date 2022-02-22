@@ -1,3 +1,4 @@
+import windowShortcut from '@gomarky/window-shortcut';
 import { MObject } from '@/core/objects/MObject';
 import { IAbstractRenderer, IRendererBody, IRendererDisplay, IRendererGutter } from '@/core/renderer/renderer';
 import { Char } from '@/base/char';
@@ -9,7 +10,6 @@ import { HTMLDisplayRenderer } from '@/core/renderer/html/system/MHTMLDisplayRen
 import { MHTMLEditorGutter } from '@/core/renderer/html/editor/MHTMLEditorGutter';
 import { MHTMLEditorBody } from '@/core/renderer/html/editor/MHTMLEditorBody';
 import { IDOMPosition } from '@/core/renderer/html/common/helpers';
-import { WindowLocalShortcut } from '@/core/extensions/window-local-shortcut/window-local-shortcut';
 import { MEditor } from '@/core';
 import { MHTMLClipboard } from '@/core/renderer/html/system/MHTMLClipboard';
 import { AccessError, SecurityError } from '@/core/app/errors';
@@ -33,7 +33,6 @@ export class MHTMLRenderer extends MObject implements IAbstractRenderer {
   private navigators: MHTMLEditorBodyNavigator[] = [];
 
   public editor: MEditor;
-  private readonly shortcuts: WindowLocalShortcut;
   private readonly clipboard: MHTMLClipboard;
 
   constructor(public readonly root: HTMLElement) {
@@ -41,7 +40,6 @@ export class MHTMLRenderer extends MObject implements IAbstractRenderer {
 
     void this.runChecks();
 
-    this.shortcuts = new WindowLocalShortcut();
     this.display = new HTMLDisplayRenderer(this);
     this.gutter = new MHTMLEditorGutter(this);
     this.body = new MHTMLEditorBody(this);
@@ -91,20 +89,20 @@ export class MHTMLRenderer extends MObject implements IAbstractRenderer {
 
   private registerShortcuts(): void {
     this.disposables.add(
-      this.shortcuts.registerShortcut('Meta+A', () => {
+      windowShortcut.registerShortcut('Meta+A', () => {
         this.selection.selectAll();
       })
     );
 
     this.disposables.add(
-      this.shortcuts.registerShortcut('Meta+C', () => {
+      windowShortcut.registerShortcut('Meta+C', () => {
         const text = this.selection.getSelectedText();
         void this.clipboard.write(text);
       })
     );
 
     this.disposables.add(
-      this.shortcuts.registerShortcut('Meta+V', async () => {
+      windowShortcut.registerShortcut('Meta+V', async () => {
         const text = await this.clipboard.read();
 
         console.log(text);

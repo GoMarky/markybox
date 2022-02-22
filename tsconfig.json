@@ -6,6 +6,7 @@
     "baseUrl": ".",
     "moduleResolution": "node",
     "lib": [
+      "es2015",
       "es6",
       "dom",
       "es2017",
@@ -22,6 +23,7 @@
     "noUnusedParameters": true,
     "removeComments": false,
     "noImplicitAny": true,
+    "allowJs": true,
     "strict": true,
     "useUnknownInCatchVariables": false,
     "jsx": "preserve",
@@ -38,6 +40,7 @@
     }
   },
   "include": [
+    "*.js",
     "*.ts",
     "*.tsx",
     "*.vue",
