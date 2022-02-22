@@ -66,10 +66,6 @@ module.exports = ({ mode } = { mode: 'production' }) => {
 
   const plugins = [
     new VueLoaderPlugin(),
-
-    new WebpackManifestPlugin({
-      fileName: path.resolve(_path, 'manifest.json'),
-    }),
   ];
 
   plugins.push(new HtmlWebpackPlugin(htmlWebpackPluginOptions));
@@ -79,7 +75,7 @@ module.exports = ({ mode } = { mode: 'production' }) => {
        * @see https://github.com/TypeStrong/ts-loader#transpileonly
        */
       new IgnoreNotFoundExportPlugin(),
-      new webpack.DefinePlugin({
+      new webpack.ProvidePlugin({
         'process.env.BUILD_NUMBER': JSON.stringify(EnvironmentVariable.buildNumber),
         'process.env.BUILD_DATE': JSON.stringify(new Date().toString()),
         'process.env.APP_VERSION': JSON.stringify(EnvironmentVariable.appVersion),
@@ -189,16 +185,16 @@ module.exports = ({ mode } = { mode: 'production' }) => {
         module: {
           rules: [
             {
+              test: /\.vue$/,
+              use: Array.from(vueLoaders.values()),
+            },
+            {
               test: /\.tsx?$/,
               use: Array.from(tsLoaders.values()),
             },
             {
               test: /\.html$/,
               use: 'vue-html-loader',
-            },
-            {
-              test: /\.vue$/,
-              use: Array.from(vueLoaders.values()),
             },
             {
               test: /\.css$/,
@@ -212,9 +208,6 @@ module.exports = ({ mode } = { mode: 'production' }) => {
               test: /\.js$/,
               exclude: /node_modules/,
               loader: 'babel-loader',
-              query: {
-                presets: ['es2015']
-              }
             },
             {
               test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,

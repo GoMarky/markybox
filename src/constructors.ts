@@ -22,7 +22,7 @@ const lifecycleService = new LifecycleService(logService);
 services.set(ILifecycleService, lifecycleService);
 
 const environmentOptions: IEnvironmentConfig = {
-  version: process.env.buildVersion as string,
+  version: '0.0.1',
   development: isDev,
 };
 
