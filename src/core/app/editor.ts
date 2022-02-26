@@ -57,8 +57,10 @@ export class MEditor extends MObject implements IRendererEditorController {
     return this._currentRow;
   }
 
-  public getRowByPosition(row: number): MRow {
-    return this._rows[row];
+  public getRowByPosition(rowIndex: number): MRow | undefined {
+    const row = this._rows[rowIndex];
+
+    return row;
   }
 
   public addEmptyRow(): MRow {

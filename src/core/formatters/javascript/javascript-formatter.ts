@@ -8,6 +8,7 @@ export const Regexp = {
   [JavascriptKeyword.Const]: /^(const$)/,
 };
 
+
 export class JavascriptCodeFormatter extends BaseFormatter implements ICodeFormatter {
   constructor() {
     super();
@@ -15,6 +16,10 @@ export class JavascriptCodeFormatter extends BaseFormatter implements ICodeForma
 
   public get name(): string {
     return 'javascript';
+  }
+
+  public createKeywordsSchema(input: string): void {
+    console.log(input);
   }
 
   public parseKeywords(input: string): IParsedFormatterWord[] {

@@ -22,7 +22,7 @@ export interface IRendererEditorController {
 
   getCurrentRow(): MRow;
 
-  getRowByPosition(row: number): MRow;
+  getRowByPosition(rowIndex: number): MRow | undefined;
 }
 
 export interface IRendererGutter extends IDOMElement {

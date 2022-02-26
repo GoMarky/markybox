@@ -10,6 +10,14 @@ export function removeLastLetter(text: string): string {
   return text.slice(0, -1);
 }
 
+export function getLastLetter(text: string): string {
+  if (!text?.length) {
+    return '';
+  }
+
+  return text[text.length - 1];
+}
+
 export function isEmptyString(str?: string): boolean {
   return str?.length === 0;
 }

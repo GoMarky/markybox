@@ -12,6 +12,8 @@ export enum JavascriptKeyword {
   Const = 'const',
   Var = 'var',
   Let = 'let',
+  Public = 'public',
+  Static = 'static',
 }
 
 export type JavascriptClassName =

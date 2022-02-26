@@ -114,12 +114,20 @@ export default window.workbench.createComponent((accessor) => {
   user-select: none;
 }
 
+.m-editor__layer-caret-container {
+  width: 50px;
+  height: 16px;
+  pointer-events: none;
+  position: absolute;
+  overflow: hidden;
+}
+
 .m-editor__layer-caret {
   font-size: 12px;
   background-color: blue;
   color: blue;
-  position: absolute;
   opacity: 0.5;
+  position: absolute;
   height: 1.5em;
   width: 3px;
   max-width: 3px;
@@ -128,6 +136,19 @@ export default window.workbench.createComponent((accessor) => {
   display: inline-block;
   text-decoration: blink;
   animation: blinker 1s linear infinite;
+}
+
+.m-editor__layer-caret-label {
+  background: rgba(137, 184, 117, .3);
+  position: absolute;
+  z-index: 100;
+  padding: 0 2px;
+  font-size: 50%;
+  white-space: nowrap;
+  pointer-events: none;
+  color: rgba(0,0,0,.5);
+  border-top-right-radius: 2px;
+  border-bottom-right-radius: 2px;
 }
 
 .m-editor__keyword-class {

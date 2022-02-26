@@ -21,8 +21,29 @@ export class MCaretLayer extends MLayer {
     const { renderer } = this;
 
     const bodyElement = document.createElement('div');
-    bodyElement.classList.add('m-editor__layer-caret')
+    bodyElement.classList.add('m-editor__layer-caret-container')
     this._el = bodyElement;
     renderer.body.el.appendChild(bodyElement);
+
+    this.createCaretElement();
+    this.createUserLabelElement();
+  }
+
+  private createCaretElement(): void {
+    const caretElement = document.createElement('div');
+    caretElement.classList.add('m-editor__layer-caret')
+
+    this._el.appendChild(caretElement);
+  }
+
+  private createUserLabelElement(): void {
+    const { renderer } = this;
+
+    const labelElement = document.createElement('div');
+    labelElement.classList.add('m-editor__layer-caret-label')
+    labelElement.textContent = 'Andrew';
+    renderer.body.el.appendChild(labelElement);
+
+    this._el.appendChild(labelElement);
   }
 }

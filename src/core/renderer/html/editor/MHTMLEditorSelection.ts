@@ -48,7 +48,7 @@ export class MHTMLEditorSelection extends MObject {
     this._currentPosition = position;
     const { start, end } = position;
 
-    this.layer.addSelectionRow(end);
+    // this.layer.addSelectionRow(end);
   }
 
   private static rowToText(row: MRow): string {

@@ -12,8 +12,10 @@ import { MHTMLEditorBody } from '@/core/renderer/html/editor/MHTMLEditorBody';
 import { IDOMPosition } from '@/core/renderer/html/common/helpers';
 import { MEditor } from '@/core';
 import { MHTMLClipboard } from '@/core/renderer/html/system/MHTMLClipboard';
-import { AccessError, SecurityError } from '@/core/app/errors';
+import { SecurityError } from '@/core/app/errors';
 import { MHTMLEditorSelection } from '@/core/renderer/html/editor/MHTMLEditorSelection';
+import { getLastLetter } from '@/base/string';
+import { JavascriptKeyword } from '@/core/formatters/common';
 
 // TODO: do not use clientX
 
@@ -38,7 +40,10 @@ export class MHTMLRenderer extends MObject implements IAbstractRenderer {
   constructor(public readonly root: HTMLElement) {
     super();
 
-    void this.runChecks();
+    // We use clipboard API, that only compactible with https.
+    if (!window.isSecureContext) {
+      throw new SecurityError(`markybox works only in security context. Please, enable HTTPS`);
+    }
 
     this.display = new HTMLDisplayRenderer(this);
     this.gutter = new MHTMLEditorGutter(this);
@@ -48,11 +53,20 @@ export class MHTMLRenderer extends MObject implements IAbstractRenderer {
     this.clipboard = new MHTMLClipboard();
     this.textLayer = new MTextLayer(this);
 
-    this.registerShortcuts();
-    this.activateSpecialKeysHandler();
+    this.registerListeners();
   }
 
-  private onSpecialKeyDown = (event: KeyboardEvent) => {
+  private onClick(event: MouseEvent): void {
+    const { clientX, clientY } = event;
+    const position = this.toEditorPosition({ top: clientY, left: clientX });
+    const row = this.editor.getRowByPosition(position.row);
+
+    if (row) {
+      this.navigator.setPosition({ row: position.row, column: 0 });
+    }
+  }
+
+  private onSpecialKeyDown(event: KeyboardEvent): void {
     const code = event.code as Char;
 
     const { rowsCount } = this.editor;
@@ -80,20 +94,36 @@ export class MHTMLRenderer extends MObject implements IAbstractRenderer {
         this.navigator.prevColumn();
         return this.body.removeLastLetterFromCurrentRow();
       case Char.Enter: {
-        const { index } = this.editor.addEmptyRow();
+        const currentRow = this.editor.getCurrentRow();
+        const lastLetter = getLastLetter(currentRow.content.text.trim());
+        const newRow = this.editor.addEmptyRow();
+
+        if (lastLetter === '{') {
+          newRow.content.setContentWithFormat([{
+            keyword: JavascriptKeyword.Plain,
+            className: 'm-editor__plain',
+            data: '}'
+          }]);
+        }
+
         this.navigator.nextRow();
-        return this.navigator.setPosition({ row: index, column: 0 })
+        return this.navigator.setPosition({ row: newRow.index, column: 0 })
       }
     }
   }
 
-  private registerShortcuts(): void {
+  private registerListeners(): void {
+    window.addEventListener('click', this.onClick.bind(this));
+    window.addEventListener('keydown', this.onSpecialKeyDown.bind(this));
+
+    // Select all code
     this.disposables.add(
       windowShortcut.registerShortcut('Meta+A', () => {
         this.selection.selectAll();
       })
     );
 
+    // Copy all code
     this.disposables.add(
       windowShortcut.registerShortcut('Meta+C', () => {
         const text = this.selection.getSelectedText();
@@ -101,6 +131,7 @@ export class MHTMLRenderer extends MObject implements IAbstractRenderer {
       })
     );
 
+    // Paste all code from clipboard
     this.disposables.add(
       windowShortcut.registerShortcut('Meta+V', async () => {
         const text = await this.clipboard.read();
@@ -108,27 +139,6 @@ export class MHTMLRenderer extends MObject implements IAbstractRenderer {
         console.log(text);
       })
     );
-  }
-
-  private activateSpecialKeysHandler() {
-    window.addEventListener('keydown', this.onSpecialKeyDown);
-  }
-
-  private async runChecks(): Promise<void> {
-    // We use clipboard API, that only compactible with https.
-    if (!window.isSecureContext) {
-      throw new SecurityError(`markybox works only in security context. Please, enable HTTPS`);
-    }
-
-    const name = 'clipboard-read' as PermissionName;
-    const result = await window.navigator.permissions.query({ name });
-
-    // request clipboard api.
-    const { state } = result;
-
-    if (state === 'denied') {
-      throw new AccessError('markybox must have access to you clipboard for work.')
-    }
   }
 
   public addNavigator(name: string): void {
