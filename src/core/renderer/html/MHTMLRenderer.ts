@@ -16,6 +16,7 @@ import { SecurityError } from '@/core/app/errors';
 import { MHTMLEditorSelection } from '@/core/renderer/html/editor/MHTMLEditorSelection';
 import { getLastLetter } from '@/base/string';
 import { JavascriptKeyword } from '@/core/formatters/common';
+import { MMarkerLayer } from '@/core/renderer/html/layers/MMarkerLayer';
 
 // TODO: do not use clientX
 
@@ -29,6 +30,7 @@ export class MHTMLRenderer extends MObject implements IAbstractRenderer {
   public readonly gutter: IRendererGutter;
   public readonly body: IRendererBody;
   public readonly textLayer: MTextLayer;
+  public readonly markerLayer: MMarkerLayer;
   public readonly navigator: MHTMLEditorBodyNavigator;
   public readonly selection: MHTMLEditorSelection;
 
@@ -52,6 +54,7 @@ export class MHTMLRenderer extends MObject implements IAbstractRenderer {
     this.navigator = new MHTMLEditorBodyNavigator(this, 'user');
     this.clipboard = new MHTMLClipboard();
     this.textLayer = new MTextLayer(this);
+    this.markerLayer = new MMarkerLayer(this);
 
     this.registerListeners();
   }
@@ -62,6 +65,8 @@ export class MHTMLRenderer extends MObject implements IAbstractRenderer {
     const row = this.editor.getRowByPosition(position.row);
 
     if (row) {
+      const domPosition = this.toDOMPosition(position);
+      this.markerLayer.setTopPosition(domPosition.top)
       this.navigator.setPosition({ row: position.row, column: 0 });
     }
   }
@@ -78,6 +83,8 @@ export class MHTMLRenderer extends MObject implements IAbstractRenderer {
       case Char.ArrowRight:
         return this.navigator.nextColumn();
       case Char.ArrowUp: {
+        const domPosition = this.toDOMPosition({ row: row - 1, column: 0 });
+        this.markerLayer.setTopPosition(domPosition.top);
         return this.navigator.setPosition({ row: row - 1, column: 0 })
       }
       case Char.ArrowDown: {
@@ -85,8 +92,11 @@ export class MHTMLRenderer extends MObject implements IAbstractRenderer {
 
         if (isCurrentPositionHasLastRow) {
           const { index } = this.editor.addEmptyRow();
+          const domPosition = this.toDOMPosition({ row: index, column: 0 });
+          this.markerLayer.setTopPosition(domPosition.top);
           return this.navigator.setPosition({ row: index, column: 0 })
         }
+
 
         return this.navigator.nextRow();
       }
@@ -94,19 +104,11 @@ export class MHTMLRenderer extends MObject implements IAbstractRenderer {
         this.navigator.prevColumn();
         return this.body.removeLastLetterFromCurrentRow();
       case Char.Enter: {
-        const currentRow = this.editor.getCurrentRow();
-        const lastLetter = getLastLetter(currentRow.content.text.trim());
         const newRow = this.editor.addEmptyRow();
 
-        if (lastLetter === '{') {
-          newRow.content.setContentWithFormat([{
-            keyword: JavascriptKeyword.Plain,
-            className: 'm-editor__plain',
-            data: '}'
-          }]);
-        }
-
         this.navigator.nextRow();
+        const domPosition = this.toDOMPosition({ row: newRow.index, column: 0 });
+        this.markerLayer.setTopPosition(domPosition.top);
         return this.navigator.setPosition({ row: newRow.index, column: 0 })
       }
     }

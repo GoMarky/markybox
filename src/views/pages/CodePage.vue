@@ -122,6 +122,28 @@ export default window.workbench.createComponent((accessor) => {
   overflow: hidden;
 }
 
+
+
+.m-editor__layer-marker {
+  z-index: 1;
+  position: absolute;
+  overflow: hidden;
+  word-wrap: normal;
+  white-space: pre;
+  height: 100%;
+  width: 100%;
+  box-sizing: border-box;
+  pointer-events: none;
+}
+
+.m-editor__layer-marker-active-line {
+  position: absolute;
+  height: 16px;
+  left: 0;
+  right: 0;
+  background: rgba(0, 0, 0, 0.071);
+}
+
 .m-editor__layer-caret {
   font-size: 12px;
   background-color: blue;
@@ -146,7 +168,7 @@ export default window.workbench.createComponent((accessor) => {
   font-size: 50%;
   white-space: nowrap;
   pointer-events: none;
-  color: rgba(0,0,0,.5);
+  color: rgba(0, 0, 0, .5);
   border-top-right-radius: 2px;
   border-bottom-right-radius: 2px;
 }

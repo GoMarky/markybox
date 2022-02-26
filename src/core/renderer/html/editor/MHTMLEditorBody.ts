@@ -28,9 +28,13 @@ export class MHTMLEditorBody extends MDomObject implements IRendererBody {
   private onInput = (letter: string) => {
     const { row, column } = this.renderer.navigator.position;
     const currentRow = this.renderer.editor.getRowByPosition(row);
+
+    if (!currentRow) {
+      return;
+    }
+
     const { content } = currentRow;
     const { text } = content;
-
     const [first, last] = splitAtIndex(column)(text);
     const rawText = first + letter + last;
 
