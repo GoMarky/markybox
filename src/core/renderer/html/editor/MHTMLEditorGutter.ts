@@ -1,7 +1,7 @@
 import { toPixel } from '@/base/dom';
 import { MDomObject } from '@/core/renderer/html/common/MDomObject';
 import { IRendererGutter } from '@/core/renderer/renderer';
-import { MRow } from '@/core/objects/MRow';
+import { MRow } from '@/core/objects/MGlyphRow';
 import { MHTMLRenderer } from '@/core';
 import { mRowToGutterElement } from '@/core/renderer/html/common/helpers';
 

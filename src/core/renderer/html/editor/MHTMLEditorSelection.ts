@@ -2,7 +2,7 @@ import { MObject } from '@/core/objects/MObject';
 import { IPosition } from '@/core/renderer/common';
 import { MSelectionLayer } from '@/core/renderer/html/layers/MSelectionLayer';
 import { MHTMLRenderer } from '@/core';
-import { MRow } from '@/core/objects/MRow';
+import { MRow } from '@/core/objects/MGlyphRow';
 
 export interface ISelectionPosition {
   start: IPosition;

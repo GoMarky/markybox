@@ -2,11 +2,12 @@ import { MObject } from '@/core/objects/MObject';
 import { IParsedFormatterWord } from '@/core/formatters/common';
 import { MDomObject } from '@/core/renderer/html/common/MDomObject';
 import { removeChildren } from '@/base/dom';
+import { MGlyph } from '@/core/renderer/html/common/MGlyph';
 
 class MRowContent extends MObject {
   private _text = '';
 
-  constructor(private readonly row: MRow) {
+  constructor(private readonly row: MGlyphRow) {
     super();
   }
 
@@ -41,8 +42,8 @@ class MRowContent extends MObject {
   }
 }
 
-export class MRow extends MDomObject {
-  public readonly content: MRowContent;
+export class MGlyphRow extends MDomObject {
+  private _children: MGlyph[] = [];
 
   constructor(
     public readonly layer: HTMLElement,
@@ -55,8 +56,26 @@ export class MRow extends MDomObject {
 
     this._el = rowElement;
     layer.appendChild(this._el);
+  }
 
-    this.content = new MRowContent(this);
+  public get children(): MGlyph[] {
+    return this._children;
+  }
+
+  public insert(glyph: MGlyph): void {
+    this._children.push(glyph);
+
+    this.draw();
+  }
+
+  public remove(glyph: MGlyph): void {
+    this._children = this._children.filter((child) => child !== glyph);
+
+    this.draw();
+  }
+
+  public draw(): void {
+
   }
 
   public get columns(): number {

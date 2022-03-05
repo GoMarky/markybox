@@ -1,4 +1,4 @@
-import { MRow } from '@/core/objects/MRow';
+import { MRow } from '@/core/objects/MGlyphRow';
 import { toPixel } from '@/base/dom';
 
 

@@ -1,6 +1,5 @@
 import { MObject } from '@/core/objects/MObject';
 import { IAbstractRenderer, IRendererEditorController } from '@/core/renderer/renderer';
-import { MRow } from '@/core/objects/MRow';
 import { ILogger } from '@/core/renderer/common';
 import { ICodeFormatter } from '@/core/formatters/common';
 import { JavascriptCodeFormatter } from '@/core/formatters/javascript/javascript-formatter';

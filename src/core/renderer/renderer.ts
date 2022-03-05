@@ -1,4 +1,4 @@
-import { MRow } from '@/core/objects/MRow';
+import { MRow } from '@/core/objects/MGlyphRow';
 import { MTextLayer } from '@/core/renderer/html/layers/MTextLayer';
 import { ILogger } from '@/core/renderer/common';
 import { ICodeFormatter } from '@/core/formatters/common';

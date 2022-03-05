@@ -2,7 +2,6 @@ import windowShortcut from '@gomarky/window-shortcut';
 import { MObject } from '@/core/objects/MObject';
 import { IAbstractRenderer, IRendererBody, IRendererDisplay, IRendererGutter } from '@/core/renderer/renderer';
 import { Char } from '@/base/char';
-import { MRow } from '@/core/objects/MRow';
 import { MTextLayer } from '@/core/renderer/html/layers/MTextLayer';
 import { IPosition } from '@/core/renderer/common';
 import { MHTMLEditorBodyNavigator } from '@/core/renderer/html/editor/MHTMLEditorBodyNavigator';
