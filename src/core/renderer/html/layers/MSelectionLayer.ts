@@ -19,10 +19,11 @@ export class MSelectionLayer extends MLayer {
   }
 
   public addSelectionRow(position: IPosition): void {
-    const { el } = this;
+    const { el, renderer } = this;
+    const { display } = renderer;
     removeChildren(el);
 
-    const { left, top } = this.renderer.toDOMPosition(position);
+    const { left, top } = display.toDOMPosition(position);
 
     const element = createSelectionRowElement();
     element.style.left = toPixel(left);

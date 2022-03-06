@@ -11,10 +11,6 @@ export class MMarkerLayer extends MLayer {
     this.init();
   }
 
-  public setTopPosition(y: number): void {
-    this._line.style.top = toPixel(y);
-  }
-
   private createActiveLine(): void {
     const lineElement = document.createElement('div');
     lineElement.classList.add('m-editor__layer-marker-active-line');
@@ -26,6 +22,7 @@ export class MMarkerLayer extends MLayer {
 
   private init(): void {
     const { renderer } = this;
+    const { navigator, display } = renderer;
 
     const layerElement = document.createElement('div');
     layerElement.classList.add('m-editor__layer-marker')
@@ -33,5 +30,11 @@ export class MMarkerLayer extends MLayer {
     renderer.body.el.appendChild(layerElement);
 
     this.createActiveLine();
+
+    navigator.onDidUpdatePosition((position) => {
+      const { top } = display.toDOMPosition(position);
+
+      this._line.style.top = toPixel(top);
+    })
   }
 }

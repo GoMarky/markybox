@@ -11,7 +11,8 @@ export class MCaretLayer extends MLayer {
   }
 
   public setPosition(position: IPosition): void {
-    const { left, top } = this.renderer.toDOMPosition(position);
+    const { display } = this.renderer;
+    const { left, top } = display.toDOMPosition(position);
 
     this._el.style.left = toPixel(left);
     this._el.style.top = toPixel(top);

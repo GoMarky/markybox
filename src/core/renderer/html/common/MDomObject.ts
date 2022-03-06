@@ -7,7 +7,4 @@ export class MDomObject extends MObject {
     return this._el;
   }
 
-  constructor() {
-    super();
-  }
 }

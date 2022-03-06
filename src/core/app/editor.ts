@@ -22,5 +22,7 @@ export class MEditor extends MObject {
     if (fullscreen) {
       this.renderer.display.setFullScreen();
     }
+
+    this.renderer.init();
   }
 }

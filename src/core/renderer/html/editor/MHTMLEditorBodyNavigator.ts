@@ -2,11 +2,15 @@ import { MHTMLRenderer } from '@/core';
 import { MObject } from '@/core/objects/MObject';
 import { IPosition } from '@/core/renderer/common';
 import { MCaretLayer } from '@/core/renderer/html/layers/MCaretLayer';
+import { Emitter, IEvent } from '@/base/event';
 
 export class MHTMLEditorBodyNavigator extends MObject {
   private _currentPosition: IPosition;
   private layer: MCaretLayer;
   private name: string;
+
+  private readonly _onDidUpdatePosition: Emitter<IPosition> = new Emitter<IPosition>();
+  public readonly onDidUpdatePosition: IEvent<IPosition> = this._onDidUpdatePosition.event;
 
   constructor(private readonly renderer: MHTMLRenderer, name: string) {
     super();
@@ -60,9 +64,22 @@ export class MHTMLEditorBodyNavigator extends MObject {
 
   private doSetPosition(position: IPosition): void {
     const { layer } = this;
+    let { row, column } = position;
 
-    layer.setPosition(position);
-    this._currentPosition = position;
+    if (row < 0) {
+      row = 0;
+    }
+
+    if (column < 0) {
+      column = 0;
+    }
+
+    const normalizedPosition: IPosition = { row, column };
+
+    layer.setPosition(normalizedPosition);
+    this._currentPosition = normalizedPosition;
+
+    this._onDidUpdatePosition.fire(normalizedPosition);
   }
 
   private init(): void {

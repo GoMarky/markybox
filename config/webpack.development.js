@@ -1,9 +1,6 @@
 const os = require('os');
-const path = require('path');
-
 const platform = os.platform();
 const host = platform === 'win32' ? '127.0.0.1' : 'localhost';
-const contentBase = './dist';
 
 module.exports = (env) => ({
   devtool: 'inline-source-map',
@@ -12,6 +9,9 @@ module.exports = (env) => ({
     host,
     port: 8080,
     open: false,
+    client: {
+      logging: 'none',
+    },
   },
   optimization: {
     splitChunks: {

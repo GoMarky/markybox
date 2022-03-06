@@ -42,7 +42,8 @@ export class MHTMLEditorBody extends MDomObject implements IRendererBody {
   }
 
   private init(): void {
-    const { renderer: { root } } = this;
+    const { renderer } = this;
+    const { currentState, root } = renderer;
 
     const bodyElement = document.createElement('div');
     bodyElement.style.width = '100%';

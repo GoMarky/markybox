@@ -56,6 +56,7 @@ export class MHTMLEditorSelection extends MObject {
   }
 
   private onSelectionStart(event: MouseEvent): void {
+    const { display } = this.renderer;
     this._started = true;
 
     const { clientX, clientY } = event;
@@ -64,7 +65,7 @@ export class MHTMLEditorSelection extends MObject {
       this.lastPosition = null;
     }
 
-    this.startPosition = this.renderer.toEditorPosition({ left: clientX, top: clientY });
+    this.startPosition = display.toEditorPosition({ left: clientX, top: clientY });
   }
 
   private onSelectionMove(event: MouseEvent): void {
@@ -72,9 +73,10 @@ export class MHTMLEditorSelection extends MObject {
       return;
     }
 
+    const { display } = this.renderer;
     const { clientX, clientY } = event;
 
-    this.lastPosition = this.renderer.toEditorPosition({ left: clientX, top: clientY });
+    this.lastPosition = display.toEditorPosition({ left: clientX, top: clientY });
 
     this.setPosition({ start: this.startPosition as IPosition, end: this.lastPosition });
   }
