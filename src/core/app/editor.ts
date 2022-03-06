@@ -25,4 +25,10 @@ export class MEditor extends MObject {
 
     this.renderer.init();
   }
+
+  public lock(): void {
+    this.logger?.warn(`markybox locked`);
+
+    this.renderer.lock();
+  }
 }

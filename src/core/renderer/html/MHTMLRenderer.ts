@@ -16,6 +16,7 @@ import { MHTMLStorage } from '@/core/renderer/html/system/MHTMLStorage';
 import { MHTMLGlyphRow } from '@/core/renderer/html/common/MHTMLGlyphRow';
 import { MHTMLEditorActiveState } from '@/core/renderer/html/state/MHTMLEditorActiveState';
 import { MHTMLEditorState } from '@/core/renderer/html/state/MHTMLEditorState';
+import { MHTMLEditorLockedState } from '@/core/renderer/html/state/MHTMLEditorLockedState';
 
 export class MHTMLRenderer extends MObject implements IAbstractRenderer {
   public readonly display: HTMLDisplayRenderer;
@@ -120,9 +121,18 @@ export class MHTMLRenderer extends MObject implements IAbstractRenderer {
     console.log(name);
   }
 
-  public init(): void {
+  public unlock(): void {
     this.currentState = new MHTMLEditorActiveState();
     this.currentState.setContext(this);
+  }
+
+  public lock(): void {
+    this.currentState = new MHTMLEditorLockedState();
+    this.currentState.setContext(this);
+  }
+
+  public init(): void {
+    this.unlock();
 
     this.registerListeners();
     this.addEmptyRow();

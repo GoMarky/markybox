@@ -124,7 +124,6 @@ export default window.workbench.createComponent((accessor) => {
 }
 
 
-
 .m-editor__layer-marker {
   z-index: 1;
   position: absolute;
