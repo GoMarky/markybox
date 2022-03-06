@@ -1,7 +1,6 @@
 import { toPixel } from '@/base/dom';
 import { MDomObject } from '@/core/renderer/html/common/MDomObject';
 import { IRendererGutter } from '@/core/renderer/renderer';
-import { MRow } from '@/core/objects/MGlyphRow';
 import { MHTMLRenderer } from '@/core';
 import { mRowToGutterElement } from '@/core/renderer/html/common/helpers';
 
@@ -21,9 +20,15 @@ export class MHTMLEditorGutter extends MDomObject implements IRendererGutter {
 
     this._el = gutterElement;
     root.appendChild(gutterElement);
+
+    this.registerListeners();
   }
 
-  public onAddRow(row: MRow): void {
-    this.el.appendChild(mRowToGutterElement(row));
+  private registerListeners(): void {
+    const { storage } = this.renderer;
+
+    storage.onDidAddRow((row) => {
+      this.el.appendChild(mRowToGutterElement(row));
+    })
   }
 }

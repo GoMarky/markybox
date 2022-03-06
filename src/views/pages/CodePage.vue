@@ -21,13 +21,12 @@ export default window.workbench.createComponent((accessor) => {
         const root = document.querySelector<HTMLElement>('#root') as HTMLElement;
 
         const renderer = new markybox.MHTMLRenderer(root);
-        const editor = new markybox.MEditor({
+
+        new markybox.MEditor({
           renderer,
           fullscreen: true,
           logger: logService
         });
-
-        editor.addEmptyRow()
       }
 
       onMounted(async () => {
@@ -40,6 +39,8 @@ export default window.workbench.createComponent((accessor) => {
             const { name, message } = error;
 
             errorMessage.value = `Name: ${name}. Message: ${message}`;
+          } else {
+            console.log(error);
           }
         }
       })

@@ -4,7 +4,6 @@ const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const webpackMerge = require('webpack-merge');
 const { VueLoaderPlugin } = require('vue-loader');
-const WebpackManifestPlugin = require('webpack-manifest-plugin');
 const ExtractCssChunks = require('extract-css-chunks-webpack-plugin');
 const WebpackBar = require('webpackbar');
 const StdEnv = require('std-env');
@@ -243,8 +242,9 @@ module.exports = ({ mode } = { mode: 'production' }) => {
         resolve: {
           alias: {
             '@': path.join(__dirname, 'src'),
-            // Убираем дублирование bn.js
-            'bn.js': path.join(__dirname, 'node_modules/bn.js/lib/bn.js'),
+          },
+          fallback: {
+            url: require.resolve('url'),
           },
           extensions: ['.tsx', '.ts', '.js', '.vue'],
         },

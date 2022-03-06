@@ -1,6 +1,9 @@
-import { MRow } from '@/core/objects/MGlyphRow';
 import { toPixel } from '@/base/dom';
+import { IMRow } from '@/core/objects/MAbstractFactory';
 
+export interface IDOMElement {
+  readonly el: HTMLElement;
+}
 
 export interface IDOMPosition {
   left: number;
@@ -9,7 +12,7 @@ export interface IDOMPosition {
 
 const lineHeight = 16;
 
-export function mRowToGutterElement(row: MRow): HTMLElement {
+export function mRowToGutterElement(row: IMRow): HTMLElement {
   const { index } = row;
 
   const element = document.createElement('span');
@@ -28,7 +31,7 @@ export function createSelectionRowElement(): HTMLElement {
   return element;
 }
 
-export function mRowToBodyElement(row: MRow): HTMLElement {
+export function mRowToBodyElement(row: IMRow): HTMLElement {
   const { index } = row;
 
   const element = document.createElement('span');

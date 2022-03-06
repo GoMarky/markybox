@@ -2,7 +2,7 @@ import { MObject } from '@/core/objects/MObject';
 import { IPosition } from '@/core/renderer/common';
 import { MSelectionLayer } from '@/core/renderer/html/layers/MSelectionLayer';
 import { MHTMLRenderer } from '@/core';
-import { MRow } from '@/core/objects/MGlyphRow';
+import { MHTMLGlyphRow } from '@/core/renderer/html/common/MHTMLGlyphRow';
 
 export interface ISelectionPosition {
   start: IPosition;
@@ -33,13 +33,13 @@ export class MHTMLEditorSelection extends MObject {
 
   public getSelectedText(): string {
     // TODO: select rows
-    const { rows } = this.renderer.editor;
+    const { rows } = this.renderer.storage;
 
-    return rows.map((row) => MHTMLEditorSelection.rowToText(row)).join(endl);
+    return rows.map(() => MHTMLEditorSelection.rowToText()).join(endl);
   }
 
   public selectAll(): void {
-    const { rows } = this.renderer.editor;
+    const { rows } = this.renderer.storage;
 
     console.log(rows);
   }
@@ -51,8 +51,8 @@ export class MHTMLEditorSelection extends MObject {
     // this.layer.addSelectionRow(end);
   }
 
-  private static rowToText(row: MRow): string {
-    return row.content.text;
+  private static rowToText(): string {
+    return '';
   }
 
   private onSelectionStart(event: MouseEvent): void {

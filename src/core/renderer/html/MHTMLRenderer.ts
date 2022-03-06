@@ -13,9 +13,12 @@ import { MEditor } from '@/core';
 import { MHTMLClipboard } from '@/core/renderer/html/system/MHTMLClipboard';
 import { SecurityError } from '@/core/app/errors';
 import { MHTMLEditorSelection } from '@/core/renderer/html/editor/MHTMLEditorSelection';
-import { getLastLetter } from '@/base/string';
-import { JavascriptKeyword } from '@/core/formatters/common';
 import { MMarkerLayer } from '@/core/renderer/html/layers/MMarkerLayer';
+import { ICodeFormatter } from '@/core/formatters/common';
+import { JavascriptCodeFormatter } from '@/core/formatters/javascript/javascript-formatter';
+import { MHTMLStorage } from '@/core/renderer/html/system/MHTMLStorage';
+import { MHTMLGlyphRow } from '@/core/renderer/html/common/MHTMLGlyphRow';
+import { MGlyph } from '@/core/objects/MGlyph';
 
 // TODO: do not use clientX
 
@@ -32,11 +35,13 @@ export class MHTMLRenderer extends MObject implements IAbstractRenderer {
   public readonly markerLayer: MMarkerLayer;
   public readonly navigator: MHTMLEditorBodyNavigator;
   public readonly selection: MHTMLEditorSelection;
+  public readonly storage: MHTMLStorage;
 
   private navigators: MHTMLEditorBodyNavigator[] = [];
+  private _currentRow: MHTMLGlyphRow;
 
-  public editor: MEditor;
   private readonly clipboard: MHTMLClipboard;
+  private readonly _currentFormatter: ICodeFormatter;
 
   constructor(public readonly root: HTMLElement) {
     super();
@@ -46,6 +51,7 @@ export class MHTMLRenderer extends MObject implements IAbstractRenderer {
       throw new SecurityError(`markybox works only in security context. Please, enable HTTPS`);
     }
 
+    this.storage = new MHTMLStorage();
     this.display = new HTMLDisplayRenderer(this);
     this.gutter = new MHTMLEditorGutter(this);
     this.body = new MHTMLEditorBody(this);
@@ -55,13 +61,36 @@ export class MHTMLRenderer extends MObject implements IAbstractRenderer {
     this.textLayer = new MTextLayer(this);
     this.markerLayer = new MMarkerLayer(this);
 
+    this._currentFormatter = new JavascriptCodeFormatter();
+
     this.registerListeners();
+    this.addEmptyRow();
+  }
+
+  public get formatter(): ICodeFormatter {
+    return this._currentFormatter;
+  }
+
+  public addEmptyRow(): MHTMLGlyphRow {
+    const { rows } = this.storage;
+    const { el } = this.textLayer
+    const row = new MHTMLGlyphRow(el, rows.length);
+
+    this._currentRow = row;
+
+    this.storage.addRow(row);
+
+    return row;
+  }
+
+  public getCurrentRow(): MHTMLGlyphRow {
+    return this._currentRow;
   }
 
   private onClick(event: MouseEvent): void {
     const { clientX, clientY } = event;
     const position = this.toEditorPosition({ top: clientY, left: clientX });
-    const row = this.editor.getRowByPosition(position.row);
+    const row = this.storage.at(position.row);
 
     if (row) {
       const domPosition = this.toDOMPosition(position);
@@ -73,7 +102,7 @@ export class MHTMLRenderer extends MObject implements IAbstractRenderer {
   private onSpecialKeyDown(event: KeyboardEvent): void {
     const code = event.code as Char;
 
-    const { rowsCount } = this.editor;
+    const rowsCount = this.storage.count;
     const { position: { row } } = this.navigator;
 
     switch (code) {
@@ -90,7 +119,7 @@ export class MHTMLRenderer extends MObject implements IAbstractRenderer {
         const isCurrentPositionHasLastRow = (row + 1) === rowsCount;
 
         if (isCurrentPositionHasLastRow) {
-          const { index } = this.editor.addEmptyRow();
+          const { index } = this.addEmptyRow();
           const domPosition = this.toDOMPosition({ row: index, column: 0 });
           this.markerLayer.setTopPosition(domPosition.top);
           return this.navigator.setPosition({ row: index, column: 0 })
@@ -103,7 +132,7 @@ export class MHTMLRenderer extends MObject implements IAbstractRenderer {
         this.navigator.prevColumn();
         return this.body.removeLastLetterFromCurrentRow();
       case Char.Enter: {
-        const newRow = this.editor.addEmptyRow();
+        const newRow = this.addEmptyRow();
 
         this.navigator.nextRow();
         const domPosition = this.toDOMPosition({ row: newRow.index, column: 0 });
@@ -142,6 +171,12 @@ export class MHTMLRenderer extends MObject implements IAbstractRenderer {
     );
   }
 
+  public setCurrentRow(row: MHTMLGlyphRow): MHTMLGlyphRow {
+    this._currentRow = row;
+
+    return row;
+  }
+
   public addNavigator(name: string): void {
     const navigator = new MHTMLEditorBodyNavigator(this, name);
 
@@ -171,9 +206,5 @@ export class MHTMLRenderer extends MObject implements IAbstractRenderer {
       row: Math.round(top / 16),
       column: Math.round(left / 7.2),
     }
-  }
-
-  public onAddRow(row: MRow): void {
-    this.gutter.onAddRow(row);
   }
 }

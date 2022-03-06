@@ -2,12 +2,12 @@ import { MObject } from '@/core/objects/MObject';
 import { IParsedFormatterWord } from '@/core/formatters/common';
 import { MDomObject } from '@/core/renderer/html/common/MDomObject';
 import { removeChildren } from '@/base/dom';
-import { MGlyph } from '@/core/renderer/html/common/MGlyph';
+import { MGlyph } from '@/core/objects/MGlyph';
 
 class MRowContent extends MObject {
   private _text = '';
 
-  constructor(private readonly row: MGlyphRow) {
+  constructor(private readonly row: MHTMLGlyphRow) {
     super();
   }
 
@@ -42,7 +42,7 @@ class MRowContent extends MObject {
   }
 }
 
-export class MGlyphRow extends MDomObject {
+export class MHTMLGlyphRow extends MDomObject {
   private _children: MGlyph[] = [];
 
   constructor(

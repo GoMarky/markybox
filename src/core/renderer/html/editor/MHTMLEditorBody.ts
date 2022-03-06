@@ -15,37 +15,30 @@ export class MHTMLEditorBody extends MDomObject implements IRendererBody {
   }
 
   public removeLastLetterFromCurrentRow(): void {
-    const currentRow = this.renderer.editor.getCurrentRow();
-    const { text } = currentRow.content;
-
-    const formattedText = removeLastLetter(text);
-
-    const keywords = this.renderer.editor.formatter.parseKeywords(formattedText);
-
-    currentRow.content.setContentWithFormat(keywords)
+    //
   }
 
-  private onInput = (letter: string) => {
+  private onInput = (_letter: string) => {
     const { row, column } = this.renderer.navigator.position;
-    const currentRow = this.renderer.editor.getRowByPosition(row);
+    const currentRow = this.renderer.storage.at(row);
 
     if (!currentRow) {
       return;
     }
 
-    const { content } = currentRow;
-    const { text } = content;
-    const [first, last] = splitAtIndex(column)(text);
-    const rawText = first + letter + last;
-
-    const keywords = this.renderer.editor.formatter.parseKeywords(rawText);
-
-    currentRow.content.setContentWithFormat(keywords)
-
-
-    const x = currentRow.width + 40;
-    this.textarea.setLeftPosition(x);
-    this.renderer.navigator.setPosition({ row, column: column + 1 });
+    // const { content } = currentRow;
+    // const { text } = content;
+    // const [first, last] = splitAtIndex(column)(text);
+    // const rawText = first + letter + last;
+    //
+    // const keywords = this.renderer.formatter.parseKeywords(rawText);
+    //
+    // currentRow.content.setContentWithFormat(keywords)
+    //
+    //
+    // const x = currentRow.width + 40;
+    // this.textarea.setLeftPosition(x);
+    // this.renderer.navigator.setPosition({ row, column: column + 1 });
   }
 
   private init(): void {

@@ -16,7 +16,9 @@ export class MHTMLEditorActiveState extends MHTMLEditorState {
     super(renderer);
   }
 
-  public onInput(letter: string): void {}
+  public onInput(letter: string): void {
+    console.log(letter);
+  }
 
   public onClick(): void {}
 }
@@ -26,7 +28,9 @@ export class MHTMLEditorLockedState extends MHTMLEditorState {
     super(renderer);
   }
 
-  public onInput(letter: string): void {}
+  public onInput(letter: string): void {
+    console.log(letter);
+  }
 
   public onClick(): void {}
 }
