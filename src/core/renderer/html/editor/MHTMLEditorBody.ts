@@ -43,7 +43,7 @@ export class MHTMLEditorBody extends MDomObject implements IRendererBody {
 
   private init(): void {
     const { renderer } = this;
-    const { currentState, root } = renderer;
+    const { root } = renderer;
 
     const bodyElement = document.createElement('div');
     bodyElement.style.width = '100%';
@@ -53,6 +53,6 @@ export class MHTMLEditorBody extends MDomObject implements IRendererBody {
 
     const textarea = new MHTMLEditorBodyTextarea(root);
     this.textarea = textarea;
-    textarea.onDidUpdate(this.onInput);
+    textarea.onDidUpdate((letter) => this.renderer.currentState.onInput(letter));
   }
 }
