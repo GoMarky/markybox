@@ -4,7 +4,7 @@ import { IPosition } from '@/core/renderer/common';
 import { toPixel } from '@/base/dom';
 
 export class MCaretLayer extends MLayer {
-  constructor(private readonly renderer: MHTMLRenderer) {
+  constructor(private readonly renderer: MHTMLRenderer, private readonly label: string) {
     super();
 
     this.init();
@@ -38,11 +38,11 @@ export class MCaretLayer extends MLayer {
   }
 
   private createUserLabelElement(): void {
-    const { renderer } = this;
+    const { renderer, label } = this;
 
     const labelElement = document.createElement('div');
     labelElement.classList.add('m-editor__layer-caret-label')
-    labelElement.textContent = 'Andrew';
+    labelElement.textContent = label;
     renderer.body.el.appendChild(labelElement);
 
     this._el.appendChild(labelElement);

@@ -1,13 +1,9 @@
 import { MObject } from '@/core/objects/MObject';
 
-export class MGlyph extends MObject {
-  private _content: string = '';
-
+export abstract class MGlyph extends MObject {
   protected constructor() {
     super();
   }
 
-  public draw(): void {
-
-  }
+  public abstract draw(): void
 }

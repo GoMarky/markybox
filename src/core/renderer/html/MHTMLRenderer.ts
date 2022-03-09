@@ -17,6 +17,7 @@ import { MHTMLGlyphRow } from '@/core/renderer/html/common/MHTMLGlyphRow';
 import { MHTMLEditorActiveState } from '@/core/renderer/html/state/MHTMLEditorActiveState';
 import { MHTMLEditorState } from '@/core/renderer/html/state/MHTMLEditorState';
 import { MHTMLEditorLockedState } from '@/core/renderer/html/state/MHTMLEditorLockedState';
+import { CriticalError } from '@/base/errors';
 
 export class MHTMLRenderer extends MObject implements IAbstractRenderer {
   public readonly display: HTMLDisplayRenderer;
@@ -29,9 +30,7 @@ export class MHTMLRenderer extends MObject implements IAbstractRenderer {
   public readonly storage: MHTMLStorage;
   public currentState: MHTMLEditorState;
 
-  private navigators: MHTMLEditorBodyNavigator[] = [];
   private _currentRow: MHTMLGlyphRow;
-
   private readonly clipboard: MHTMLClipboard;
   private readonly _currentFormatter: ICodeFormatter;
 
@@ -56,6 +55,10 @@ export class MHTMLRenderer extends MObject implements IAbstractRenderer {
     this._currentFormatter = new JavascriptCodeFormatter();
   }
 
+  public get currentRow(): MHTMLGlyphRow {
+    return this._currentRow;
+  }
+
   public get formatter(): ICodeFormatter {
     return this._currentFormatter;
   }
@@ -72,13 +75,42 @@ export class MHTMLRenderer extends MObject implements IAbstractRenderer {
     return row;
   }
 
-  public getCurrentRow(): MHTMLGlyphRow {
-    return this._currentRow;
+  public setCurrentRow(row: MHTMLGlyphRow): MHTMLGlyphRow {
+    this._currentRow = row;
+
+    return row;
+  }
+
+  public unlock(): void {
+    this.currentState = new MHTMLEditorActiveState();
+    this.currentState.setContext(this);
+  }
+
+  public lock(): void {
+    this.currentState = new MHTMLEditorLockedState();
+    this.currentState.setContext(this);
+  }
+
+  public init(): void {
+    this.unlock();
+
+    this.registerListeners();
+    this.addEmptyRow();
   }
 
   private registerListeners(): void {
     window.addEventListener('click', (event) => this.currentState.onClick(event));
     window.addEventListener('keydown', (event) => this.currentState.onKeyDown(event));
+
+    this.navigator.onDidUpdatePosition((position) => {
+      const row = this.storage.at(position.row);
+
+      if (!row) {
+        throw new CriticalError(`Row at - ${position.row} doesn't exist`);
+      }
+
+      this.setCurrentRow(row);
+    })
 
     // Select all code
     this.disposables.add(
@@ -103,38 +135,5 @@ export class MHTMLRenderer extends MObject implements IAbstractRenderer {
         console.log(text);
       })
     );
-  }
-
-  public setCurrentRow(row: MHTMLGlyphRow): MHTMLGlyphRow {
-    this._currentRow = row;
-
-    return row;
-  }
-
-  public addNavigator(name: string): void {
-    const navigator = new MHTMLEditorBodyNavigator(this, name);
-
-    this.navigators.push(navigator);
-  }
-
-  public removeNavigator(name: string): void {
-    console.log(name);
-  }
-
-  public unlock(): void {
-    this.currentState = new MHTMLEditorActiveState();
-    this.currentState.setContext(this);
-  }
-
-  public lock(): void {
-    this.currentState = new MHTMLEditorLockedState();
-    this.currentState.setContext(this);
-  }
-
-  public init(): void {
-    this.unlock();
-
-    this.registerListeners();
-    this.addEmptyRow();
   }
 }

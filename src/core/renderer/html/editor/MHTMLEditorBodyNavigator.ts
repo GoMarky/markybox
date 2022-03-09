@@ -16,7 +16,7 @@ export class MHTMLEditorBodyNavigator extends MObject {
     super();
 
     this.name = name;
-    this.layer = new MCaretLayer(this.renderer);
+    this.layer = new MCaretLayer(this.renderer, name);
     this.init();
   }
 
@@ -75,6 +75,8 @@ export class MHTMLEditorBodyNavigator extends MObject {
     }
 
     const normalizedPosition: IPosition = { row, column };
+
+    console.log(position);
 
     layer.setPosition(normalizedPosition);
     this._currentPosition = normalizedPosition;

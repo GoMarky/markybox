@@ -1,5 +1,6 @@
 import { Char } from '@/base/char';
 import { MHTMLEditorState } from '@/core/renderer/html/state/MHTMLEditorState';
+import { MHTMLGlyphWord } from '@/core/renderer/html/common/MHTMLGlyphWord';
 
 export class MHTMLEditorActiveState extends MHTMLEditorState {
   constructor() {
@@ -7,7 +8,20 @@ export class MHTMLEditorActiveState extends MHTMLEditorState {
   }
 
   public onInput(letter: string): void {
-    console.log(letter);
+    const { currentRow, navigator } = this.renderer;
+    const { position: { column, row } } = navigator;
+
+    const glyph = currentRow.getGlyphByColumn(column) as MHTMLGlyphWord;
+
+    if (glyph) {
+      glyph.text += letter;
+    } else {
+      const textGlyph = new MHTMLGlyphWord(column, column + 1);
+      currentRow.insert(textGlyph);
+      textGlyph.text = letter;
+    }
+
+    navigator.setPosition({ row, column: column + 1 });
   }
 
   public onClick(event: MouseEvent): void {
@@ -50,7 +64,7 @@ export class MHTMLEditorActiveState extends MHTMLEditorState {
       }
       case Char.Backspace:
         navigator.prevColumn();
-        return body.removeLastLetterFromCurrentRow();
+        return;
       case Char.Enter: {
         const newRow = this.renderer.addEmptyRow();
         navigator.nextRow();

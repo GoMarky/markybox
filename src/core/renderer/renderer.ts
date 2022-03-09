@@ -6,7 +6,6 @@ export interface IRendererGutter {
 }
 
 export interface IRendererBody {
-  removeLastLetterFromCurrentRow(): void;
 }
 
 export interface IAbstractRenderer {

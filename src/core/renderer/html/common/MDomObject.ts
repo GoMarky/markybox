@@ -6,5 +6,4 @@ export class MDomObject extends MObject {
   public get el(): HTMLElement {
     return this._el;
   }
-
 }
