@@ -62,7 +62,8 @@ export class MHTMLEditorBodyNavigator extends MObject {
   }
 
   private doSetPosition(position: IPosition): void {
-    const { layer } = this;
+    const { layer, renderer } = this;
+    const { controller } = renderer;
     let { row, column } = position;
 
     if (row < 0) {

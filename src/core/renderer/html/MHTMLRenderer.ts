@@ -11,11 +11,11 @@ import { SecurityError } from '@/core/app/errors';
 import { MHTMLEditorSelection } from '@/core/renderer/html/editor/MHTMLEditorSelection';
 import { MMarkerLayer } from '@/core/renderer/html/layers/MMarkerLayer';
 import { MHTMLStorage } from '@/core/renderer/html/system/MHTMLStorage';
-import { MHTMLGlyphRow } from '@/core/renderer/html/common/MHTMLGlyphRow';
 import { MHTMLEditorActiveState } from '@/core/renderer/html/state/MHTMLEditorActiveState';
 import { MHTMLEditorState } from '@/core/renderer/html/state/MHTMLEditorState';
 import { MHTMLEditorLockedState } from '@/core/renderer/html/state/MHTMLEditorLockedState';
 import { CriticalError } from '@/base/errors';
+import { MHTMLRowController } from '@/core/renderer/html/editor/MHTMLRowController';
 
 export class MHTMLRenderer extends MObject implements IAbstractRenderer {
   public readonly display: HTMLDisplayRenderer;
@@ -26,9 +26,9 @@ export class MHTMLRenderer extends MObject implements IAbstractRenderer {
   public readonly navigator: MHTMLEditorBodyNavigator;
   public readonly selection: MHTMLEditorSelection;
   public readonly storage: MHTMLStorage;
+  public readonly controller: MHTMLRowController;
   public currentState: MHTMLEditorState;
 
-  private _currentRow: MHTMLGlyphRow;
   private readonly clipboard: MHTMLClipboard;
 
   constructor(public readonly root: HTMLElement) {
@@ -48,27 +48,7 @@ export class MHTMLRenderer extends MObject implements IAbstractRenderer {
     this.clipboard = new MHTMLClipboard();
     this.textLayer = new MTextLayer(this);
     this.markerLayer = new MMarkerLayer(this);
-  }
-
-  public get currentRow(): MHTMLGlyphRow {
-    return this._currentRow;
-  }
-
-  public addEmptyRow(): MHTMLGlyphRow {
-    const { rows } = this.storage;
-    const row = new MHTMLGlyphRow(rows.length);
-    this._currentRow = row;
-    this.storage.addRow(row);
-
-    this.textLayer.el.appendChild(row.el);
-
-    return row;
-  }
-
-  public setCurrentRow(row: MHTMLGlyphRow): MHTMLGlyphRow {
-    this._currentRow = row;
-
-    return row;
+    this.controller = new MHTMLRowController(this);
   }
 
   public unlock(): void {
@@ -85,7 +65,7 @@ export class MHTMLRenderer extends MObject implements IAbstractRenderer {
     this.unlock();
 
     this.registerListeners();
-    this.addEmptyRow();
+    this.controller.addEmptyRow();
   }
 
   private registerListeners(): void {
@@ -99,7 +79,7 @@ export class MHTMLRenderer extends MObject implements IAbstractRenderer {
         throw new CriticalError(`Row at - ${position.row} doesn't exist`);
       }
 
-      this.setCurrentRow(row);
+      this.controller.setCurrentRow(row);
     })
 
     // Select all code

@@ -23,6 +23,11 @@ export class MHTMLStorage extends MObject {
     this._onDidAddRow.fire(row);
   }
 
+  public addRowAt(row: MHTMLGlyphRow, index: number): void {
+    this._rows.splice(index, 0, row);
+    this._onDidAddRow.fire(row);
+  }
+
   public removeRow(row: MHTMLGlyphRow): void {
     const index = this._rows.findIndex((r) => r === row);
 

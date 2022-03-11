@@ -22,6 +22,28 @@ export class MHTMLGlyphRow extends MDomObject {
     this._el = rowElement;
   }
 
+  public get columns(): number {
+    return this._text.length;
+  }
+
+  public get text(): string {
+    return this._text;
+  }
+
+  public empty(): boolean {
+    return this._children.length === 0;
+  }
+
+  public setText(text: string): void {
+    this._text = text;
+
+    this.render();
+  }
+
+  public contains(column: number): boolean {
+    return column <= this.columns - 1;
+  }
+
   public clearLetterByPosition(index: number): void {
     const { _text } = this;
     const [first, last] = array.splitAtIndex(index)(_text);

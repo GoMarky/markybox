@@ -8,8 +8,9 @@ export class MHTMLEditorActiveState extends MHTMLEditorState {
   }
 
   public onInput(char: MChar): void {
-    const { currentRow, navigator } = this.renderer;
+    const { controller, navigator } = this.renderer;
     const { position: { column, row } } = navigator;
+    const { currentRow } = controller;
 
     currentRow.inputAt(char, column);
     navigator.setPosition({ row, column: column + 1 });
@@ -28,17 +29,19 @@ export class MHTMLEditorActiveState extends MHTMLEditorState {
   }
 
   public onKeyDown(event: KeyboardEvent): void {
-    const { storage, navigator } = this.renderer;
+    const { storage, navigator, controller } = this.renderer;
     const code = event.code as Char;
 
     const rowsCount = storage.count;
-    const { position: { row } } = navigator;
+    const { position: { row, column } } = navigator;
 
     switch (code) {
-      case Char.ArrowLeft:
+      case Char.ArrowLeft: {
         return navigator.prevColumn();
-      case Char.ArrowRight:
+      }
+      case Char.ArrowRight: {
         return navigator.nextColumn();
+      }
       case Char.ArrowUp: {
         return navigator.setPosition({ row: row - 1, column: 0 })
       }
@@ -46,22 +49,27 @@ export class MHTMLEditorActiveState extends MHTMLEditorState {
         const isCurrentPositionHasLastRow = (row + 1) === rowsCount;
 
         if (isCurrentPositionHasLastRow) {
-          const { index } = this.renderer.addEmptyRow();
+          const { index } = controller.addEmptyRow();
           return navigator.setPosition({ row: index, column: 0 })
         }
 
 
         return navigator.nextRow();
       }
-      case Char.Backspace:
+      case Char.Backspace: {
         navigator.prevColumn();
         const position = navigator.position;
-        this.renderer.currentRow.clearLetterByPosition(position.column);
+        controller.currentRow.clearLetterByPosition(position.column);
         return;
+      }
       case Char.Enter: {
-        const newRow = this.renderer.addEmptyRow();
-        navigator.nextRow();
-        return navigator.setPosition({ row: newRow.index, column: 0 })
+        if (controller.isCurrentColumnInsideGlyph()) {
+          controller.splitCurrentRow(column);
+        } else {
+          const newRow = controller.addEmptyRow();
+          navigator.nextRow();
+          return navigator.setPosition({ row: newRow.index, column: 0 })
+        }
       }
     }
   }
