@@ -1,6 +1,5 @@
 import { Char } from '@/base/char';
 import { MHTMLEditorState } from '@/core/renderer/html/state/MHTMLEditorState';
-import { MHTMLGlyphWord } from '@/core/renderer/html/common/MHTMLGlyphWord';
 import { MChar } from '@/core/renderer/html/editor/MHTMLEditorBodyTextarea';
 
 export class MHTMLEditorActiveState extends MHTMLEditorState {
@@ -12,8 +11,7 @@ export class MHTMLEditorActiveState extends MHTMLEditorState {
     const { currentRow, navigator } = this.renderer;
     const { position: { column, row } } = navigator;
 
-    currentRow.input(char);
-
+    currentRow.inputAt(char, column);
     navigator.setPosition({ row, column: column + 1 });
   }
 
@@ -25,12 +23,12 @@ export class MHTMLEditorActiveState extends MHTMLEditorState {
     const row = storage.at(position.row);
 
     if (row) {
-      navigator.setPosition({ row: position.row, column: 0 });
+      navigator.setPosition({ row: position.row, column: position.column });
     }
   }
 
   public onKeyDown(event: KeyboardEvent): void {
-    const { storage, navigator, body } = this.renderer;
+    const { storage, navigator } = this.renderer;
     const code = event.code as Char;
 
     const rowsCount = storage.count;
@@ -57,6 +55,8 @@ export class MHTMLEditorActiveState extends MHTMLEditorState {
       }
       case Char.Backspace:
         navigator.prevColumn();
+        const position = navigator.position;
+        this.renderer.currentRow.clearLetterByPosition(position.column);
         return;
       case Char.Enter: {
         const newRow = this.renderer.addEmptyRow();

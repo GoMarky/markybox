@@ -40,8 +40,6 @@ export class MHTMLEditorSelection extends MObject {
 
   public selectAll(): void {
     const { rows } = this.renderer.storage;
-
-    console.log(rows);
   }
 
   public setPosition(position: ISelectionPosition): void {

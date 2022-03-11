@@ -10,8 +10,7 @@ export class JSONCodeFormatter extends MObject {
     return 'json';
   }
 
-  public parseKeywords(input: string): IParsedFormatterWord[] {
-    console.log(input);
+  public parseKeywords(_: string): IParsedFormatterWord[] {
     return [];
   }
 }

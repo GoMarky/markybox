@@ -5,15 +5,15 @@ export class MHTMLEditorLockedState extends MHTMLEditorState {
     super();
   }
 
-  public onInput(letter: string): void {
-    console.log(letter);
+  public onInput(_: string): void {
+    //
   }
 
-  public onClick(event: MouseEvent): void {
-    console.log(event);
+  public onClick(_: MouseEvent): void {
+    //
   }
 
-  public onKeyDown(event: KeyboardEvent): void {
-    console.log(event);
+  public onKeyDown(_: KeyboardEvent): void {
+    //
   }
 }

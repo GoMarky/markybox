@@ -1,7 +1,5 @@
 import { IRendererBody } from '@/core/renderer/renderer';
 import { MHTMLRenderer } from '@/core';
-import { removeLastLetter } from '@/base/string';
-import { splitAtIndex } from '@/core/renderer/common';
 import { MDomObject } from '@/core/renderer/html/common/MDomObject';
 import { MHTMLEditorBodyTextarea } from '@/core/renderer/html/editor/MHTMLEditorBodyTextarea';
 

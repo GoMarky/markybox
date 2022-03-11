@@ -121,8 +121,6 @@ export class MHTMLRenderer extends MObject implements IAbstractRenderer {
     this.disposables.add(
       windowShortcut.registerShortcut('Meta+V', async () => {
         const text = await this.clipboard.read();
-
-        console.log(text);
       })
     );
   }

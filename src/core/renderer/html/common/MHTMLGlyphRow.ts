@@ -2,6 +2,8 @@ import { MDomObject } from '@/core/renderer/html/common/MDomObject';
 import { MHTMLGlyphWord } from '@/core/renderer/html/common/MHTMLGlyphWord';
 import { MChar } from '@/core/renderer/html/editor/MHTMLEditorBodyTextarea';
 import { JavascriptCodeFormatter } from '@/core/formatters/javascript/javascript-formatter';
+import { splitAtIndex } from '@/core/renderer/common';
+import { removeFirstLetter } from '@/base/string';
 
 export class MHTMLGlyphRow extends MDomObject {
   private _children: MHTMLGlyphWord[] = [];
@@ -19,12 +21,17 @@ export class MHTMLGlyphRow extends MDomObject {
     this._el = rowElement;
   }
 
-  public get text(): string {
-    return this._children.join('');
+  public clearLetterByPosition(index: number): void {
+    const { _text } = this;
+    const [first, last] = splitAtIndex(index)(_text);
+    this._text = first + removeFirstLetter(last);
+
+    this.render();
   }
 
-  public input(char: MChar): void {
-    this._text += char;
+  public inputAt(char: MChar, index: number): void {
+    const [first, last] = splitAtIndex(index)(this._text);
+    this._text = first + char + last;
 
     this.render();
   }
