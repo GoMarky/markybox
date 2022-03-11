@@ -10,8 +10,6 @@ import { MHTMLClipboard } from '@/core/renderer/html/system/MHTMLClipboard';
 import { SecurityError } from '@/core/app/errors';
 import { MHTMLEditorSelection } from '@/core/renderer/html/editor/MHTMLEditorSelection';
 import { MMarkerLayer } from '@/core/renderer/html/layers/MMarkerLayer';
-import { ICodeFormatter } from '@/core/formatters/common';
-import { JavascriptCodeFormatter } from '@/core/formatters/javascript/javascript-formatter';
 import { MHTMLStorage } from '@/core/renderer/html/system/MHTMLStorage';
 import { MHTMLGlyphRow } from '@/core/renderer/html/common/MHTMLGlyphRow';
 import { MHTMLEditorActiveState } from '@/core/renderer/html/state/MHTMLEditorActiveState';
@@ -32,7 +30,6 @@ export class MHTMLRenderer extends MObject implements IAbstractRenderer {
 
   private _currentRow: MHTMLGlyphRow;
   private readonly clipboard: MHTMLClipboard;
-  private readonly _currentFormatter: ICodeFormatter;
 
   constructor(public readonly root: HTMLElement) {
     super();
@@ -51,26 +48,19 @@ export class MHTMLRenderer extends MObject implements IAbstractRenderer {
     this.clipboard = new MHTMLClipboard();
     this.textLayer = new MTextLayer(this);
     this.markerLayer = new MMarkerLayer(this);
-
-    this._currentFormatter = new JavascriptCodeFormatter();
   }
 
   public get currentRow(): MHTMLGlyphRow {
     return this._currentRow;
   }
 
-  public get formatter(): ICodeFormatter {
-    return this._currentFormatter;
-  }
-
   public addEmptyRow(): MHTMLGlyphRow {
     const { rows } = this.storage;
-    const { el } = this.textLayer
-    const row = new MHTMLGlyphRow(el, rows.length);
-
+    const row = new MHTMLGlyphRow(rows.length);
     this._currentRow = row;
-
     this.storage.addRow(row);
+
+    this.textLayer.el.appendChild(row.el);
 
     return row;
   }

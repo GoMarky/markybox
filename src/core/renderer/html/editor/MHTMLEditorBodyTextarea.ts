@@ -4,6 +4,8 @@ import { toPixel } from '@/base/dom';
 import { isSystemChar } from '@/core/renderer/common';
 import { Char } from '@/base/char';
 
+export type MChar = string;
+
 export class MHTMLEditorBodyTextarea extends MDomObject {
   private readonly _onDidUpdate: Emitter<string> = new Emitter<string>();
   public readonly onDidUpdate: IEvent<string> = this._onDidUpdate.event;
@@ -12,10 +14,6 @@ export class MHTMLEditorBodyTextarea extends MDomObject {
     super();
 
     this.init();
-  }
-
-  public setLeftPosition(x: number): void {
-    this._el.style.left = toPixel(x);
   }
 
   private createTextareaElement(): void {

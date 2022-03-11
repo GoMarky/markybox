@@ -1,4 +1,4 @@
-import { ICodeFormatter, IParsedFormatterWord, JavascriptClassName, JavascriptKeyword } from '@/core/formatters/common';
+import { IParsedFormatterWord, KeywordClassName, JavascriptKeyword } from '@/core/formatters/common';
 import { BaseFormatter } from '@/core/formatters/formatter/base-formatter';
 import { isEmptyString } from '@/base/string';
 
@@ -9,20 +9,16 @@ export const Regexp = {
 };
 
 
-export class JavascriptCodeFormatter extends BaseFormatter implements ICodeFormatter {
+export class JavascriptCodeFormatter extends BaseFormatter {
   constructor() {
     super();
   }
 
-  public get name(): string {
+  public static get formatterName(): string {
     return 'javascript';
   }
 
-  public createKeywordsSchema(input: string): void {
-    console.log(input);
-  }
-
-  public parseKeywords(input: string): IParsedFormatterWord[] {
+  public static parseKeywords(input: string): IParsedFormatterWord[] {
     const keywords: IParsedFormatterWord[] = [];
     const words = input.split(' ');
 
@@ -35,7 +31,7 @@ export class JavascriptCodeFormatter extends BaseFormatter implements ICodeForma
       const isPreviousWordClass = JavascriptCodeFormatter.isClassKeyword(previousWord);
 
       if (isPreviousWordClass || isPreviousWordFunction) {
-        const className: JavascriptClassName = isPreviousWordClass ? 'm-editor__keyword-class-name' : 'm-editor__keyword-function-name';
+        const className: KeywordClassName = isPreviousWordClass ? 'm-editor__keyword-class-name' : 'm-editor__keyword-function-name';
 
         result = {
           keyword: JavascriptKeyword.Identifier,

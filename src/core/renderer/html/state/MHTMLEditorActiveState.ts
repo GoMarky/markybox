@@ -1,25 +1,18 @@
 import { Char } from '@/base/char';
 import { MHTMLEditorState } from '@/core/renderer/html/state/MHTMLEditorState';
 import { MHTMLGlyphWord } from '@/core/renderer/html/common/MHTMLGlyphWord';
+import { MChar } from '@/core/renderer/html/editor/MHTMLEditorBodyTextarea';
 
 export class MHTMLEditorActiveState extends MHTMLEditorState {
   constructor() {
     super();
   }
 
-  public onInput(letter: string): void {
+  public onInput(char: MChar): void {
     const { currentRow, navigator } = this.renderer;
     const { position: { column, row } } = navigator;
 
-    const glyph = currentRow.getGlyphByColumn(column) as MHTMLGlyphWord;
-
-    if (glyph) {
-      glyph.text += letter;
-    } else {
-      const textGlyph = new MHTMLGlyphWord(column, column + 1);
-      currentRow.insert(textGlyph);
-      textGlyph.text = letter;
-    }
+    currentRow.input(char);
 
     navigator.setPosition({ row, column: column + 1 });
   }

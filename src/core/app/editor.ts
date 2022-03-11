@@ -23,6 +23,8 @@ export class MEditor extends MObject {
       this.renderer.display.setFullScreen();
     }
 
+    console.log(1);
+
     this.renderer.init();
   }
 
@@ -30,5 +32,9 @@ export class MEditor extends MObject {
     this.logger?.warn(`markybox locked`);
 
     this.renderer.lock();
+  }
+
+  public unlock(): void {
+    this.renderer.unlock();
   }
 }

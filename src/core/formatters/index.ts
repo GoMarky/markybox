@@ -1,5 +1,3 @@
-import { ICodeFormatter } from '@/core/formatters/common';
-
-const formatters: ICodeFormatter[] = [];
+const formatters: unknown = [];
 
 export default formatters;

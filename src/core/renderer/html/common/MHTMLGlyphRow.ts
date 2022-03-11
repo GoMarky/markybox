@@ -1,11 +1,14 @@
 import { MDomObject } from '@/core/renderer/html/common/MDomObject';
 import { MHTMLGlyphWord } from '@/core/renderer/html/common/MHTMLGlyphWord';
+import { MChar } from '@/core/renderer/html/editor/MHTMLEditorBodyTextarea';
+import { JavascriptCodeFormatter } from '@/core/formatters/javascript/javascript-formatter';
 
 export class MHTMLGlyphRow extends MDomObject {
   private _children: MHTMLGlyphWord[] = [];
 
+  private _text: string = '';
+
   constructor(
-    public readonly layer: HTMLElement,
     public readonly index: number
   ) {
     super();
@@ -14,33 +17,28 @@ export class MHTMLGlyphRow extends MDomObject {
     rowElement.classList.add('m-editor__row')
 
     this._el = rowElement;
-    layer.appendChild(this._el);
   }
 
-  public get children(): MHTMLGlyphWord[] {
-    return this._children;
+  public get text(): string {
+    return this._children.join('');
   }
 
-  public insert(glyph: MHTMLGlyphWord): void {
-    this._children.push(glyph);
-    this._el.appendChild(glyph.el);
+  public input(char: MChar): void {
+    this._text += char;
 
-    this.draw();
+    this.render();
   }
 
-  public remove(glyph: MHTMLGlyphWord): void {
-    this._children = this._children.filter((child) => child !== glyph);
+  private render(): void {
+    const { _el, _text, _children } = this;
+    const words = JavascriptCodeFormatter.parseKeywords(_text);
 
-    this.draw();
-  }
+    // Очищаем старые
+    _children.forEach((glyph) => glyph.dispose());
 
-  public getGlyphByColumn(column: number): MHTMLGlyphWord | undefined {
-    return this._children.find((glyph) => glyph.startColumn <= column && glyph.endColumn >= column);
-  }
-
-  public draw(): void {
-    for (const glyph of this._children) {
-      glyph.draw();
+    for (const { data, className } of words) {
+      const glyph = new MHTMLGlyphWord(_el, data, className);
+      this._children.push(glyph);
     }
   }
 }

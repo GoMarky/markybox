@@ -1,8 +1,3 @@
-export interface ICodeFormatter {
-  readonly name: string;
-
-  parseKeywords(input: string): IParsedFormatterWord[];
-}
 
 export enum JavascriptKeyword {
   Identifier = 'identifier',
@@ -16,7 +11,7 @@ export enum JavascriptKeyword {
   Static = 'static',
 }
 
-export type JavascriptClassName =
+export type KeywordClassName =
   'm-editor__keyword-class'
   | 'm-editor__keyword-function'
   | 'm-editor__plain'
@@ -27,5 +22,5 @@ export type JavascriptClassName =
 export interface IParsedFormatterWord {
   keyword: JavascriptKeyword
   data: string;
-  className: JavascriptClassName;
+  className: KeywordClassName;
 }

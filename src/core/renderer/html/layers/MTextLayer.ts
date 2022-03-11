@@ -10,7 +10,6 @@ export class MTextLayer extends MLayer {
 
   private init(): void {
     const { renderer } = this;
-
     const bodyElement = document.createElement('div');
     bodyElement.style.width = '100%';
     bodyElement.classList.add('m-editor__layer-text')

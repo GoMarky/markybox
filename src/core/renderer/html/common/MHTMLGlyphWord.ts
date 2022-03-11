@@ -1,33 +1,26 @@
 import { MGlyph } from '@/core/objects/MGlyph';
+import { KeywordClassName } from '@/core/formatters/common';
 
 export class MHTMLGlyphWord extends MGlyph {
-  private _text: string = '';
   private readonly _el: HTMLSpanElement;
 
-  constructor(public startColumn: number, public endColumn: number) {
+  constructor(parent: HTMLElement, private _text: string, className: KeywordClassName = 'm-editor__plain') {
     super();
 
     const element = document.createElement('span');
-    element.classList.add('m-editor__plain');
+    element.classList.add(className);
 
     this._el = element;
+    this._el.textContent = this._text;
+    parent.appendChild(this._el);
   }
 
-  public set text(data: string) {
-    this._text = data;
+  public dispose(): void {
+    super.dispose();
 
-    this.draw();
-  }
+    this.disposables.clear();
 
-  public get el(): HTMLElement {
-    return this._el;
-  }
-
-  public get text(): string {
-    return this._text;
-  }
-
-  public draw(): void {
-    this._el.textContent = this.text;
+    this._text = '';
+    this._el.remove();
   }
 }

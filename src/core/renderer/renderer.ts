@@ -13,6 +13,7 @@ export interface IAbstractRenderer {
   readonly gutter: IRendererGutter;
   readonly body: IRendererBody;
 
+  unlock(): void;
   lock(): void;
   init(): void;
 }

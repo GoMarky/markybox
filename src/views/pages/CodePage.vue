@@ -17,12 +17,14 @@ export default window.workbench.createComponent((accessor) => {
     setup() {
       const errorMessage = ref('');
 
+      let editor: markybox.MEditor;
+
       function initEditor(): void {
         const root = document.querySelector<HTMLElement>('#root') as HTMLElement;
 
         const renderer = new markybox.MHTMLRenderer(root);
 
-        new markybox.MEditor({
+        editor = new markybox.MEditor({
           renderer,
           fullscreen: true,
           logger: logService

@@ -37,3 +37,15 @@ export function toLowerCase(str?: string): string {
 
   return str.toLowerCase();
 }
+
+export function ensureEndSlash(string: string) {
+  return string.endsWith('/') ? string : `${string}/`;
+}
+
+export function ensureNoFirstSlash(str: string): string {
+  if (str === '/') {
+    return '/';
+  }
+
+  return str[0] === '/' ? str.slice(1) : str;
+}

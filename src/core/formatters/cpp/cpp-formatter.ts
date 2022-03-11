@@ -1,7 +1,7 @@
 import { MObject } from '@/core/objects/MObject';
-import { ICodeFormatter, IParsedFormatterWord } from '@/core/formatters/common';
+import { IParsedFormatterWord } from '@/core/formatters/common';
 
-export class CppCodeFormatter extends MObject implements ICodeFormatter {
+export class CppCodeFormatter extends MObject {
   constructor() {
     super();
   }

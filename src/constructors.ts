@@ -7,11 +7,13 @@ import { ILifecycleService, LifecycleService } from '@/platform/lifecycle/browse
 import { isDev } from '@/base/platform';
 import { EnvironmentService, IEnvironmentConfig } from '@/platform/environment/browser/environmentService';
 import { IEnvironmentService } from '@/platform/environment/common/environment';
+import { HTTPRequestService } from '@/platform/request/browser/requestService';
+import { IHTTPRequestService } from '@/platform/request/common/requestService';
 
 const services = new ServiceCollection();
 
 // Instantiation service
-new InstantiationService(services, true);
+const instantiationService = new InstantiationService(services, true);
 
 // Service for logging
 const logService = new ConsoleLogService(LogLevel.Info);
@@ -29,5 +31,8 @@ const environmentOptions: IEnvironmentConfig = {
 // Environment service
 const environmentService = new EnvironmentService(environmentOptions, logService, lifecycleService);
 services.set(IEnvironmentService, environmentService);
+
+const requestService = new HTTPRequestService(logService, lifecycleService, instantiationService);
+services.set(IHTTPRequestService, requestService);
 
 export default services;

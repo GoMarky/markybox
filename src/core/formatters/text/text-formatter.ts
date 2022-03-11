@@ -1,7 +1,6 @@
 import { MObject } from '@/core/objects/MObject';
-import { ICodeFormatter } from '@/core/formatters/common';
 
-export class TextCodeFormatter extends MObject implements ICodeFormatter {
+export class TextCodeFormatter extends MObject  {
   constructor() {
     super();
   }

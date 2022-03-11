@@ -5,7 +5,7 @@ import { MCaretLayer } from '@/core/renderer/html/layers/MCaretLayer';
 import { Emitter, IEvent } from '@/base/event';
 
 export class MHTMLEditorBodyNavigator extends MObject {
-  private _currentPosition: IPosition;
+  private _currentPosition: IPosition = { row: 0, column: 0 };
   private layer: MCaretLayer;
   private name: string;
 
@@ -16,8 +16,7 @@ export class MHTMLEditorBodyNavigator extends MObject {
     super();
 
     this.name = name;
-    this.layer = new MCaretLayer(this.renderer, name);
-    this.init();
+    this.layer = new MCaretLayer(renderer, name);
   }
 
   public get position(): IPosition {
@@ -76,15 +75,9 @@ export class MHTMLEditorBodyNavigator extends MObject {
 
     const normalizedPosition: IPosition = { row, column };
 
-    console.log(position);
-
     layer.setPosition(normalizedPosition);
     this._currentPosition = normalizedPosition;
 
     this._onDidUpdatePosition.fire(normalizedPosition);
-  }
-
-  private init(): void {
-    this._currentPosition = { row: 0, column: 0 };
   }
 }
