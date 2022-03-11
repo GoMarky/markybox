@@ -57,3 +57,19 @@ export function ensureNoFirstSlash(str: string): string {
 
   return str[0] === '/' ? str.slice(1) : str;
 }
+
+export function isLeftParen(char: string): boolean {
+  if (char.length > 1) {
+    return false;
+  }
+
+  return char === '[' || char === '{';
+}
+
+export function isRightParen(char: string): boolean {
+  if (char.length > 1) {
+    return false;
+  }
+
+  return char === ']' || char === '}';
+}

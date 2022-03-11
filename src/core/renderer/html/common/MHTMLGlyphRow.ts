@@ -2,8 +2,9 @@ import { MDomObject } from '@/core/renderer/html/common/MDomObject';
 import { MHTMLGlyphWord } from '@/core/renderer/html/common/MHTMLGlyphWord';
 import { MChar } from '@/core/renderer/html/editor/MHTMLEditorBodyTextarea';
 import { JavascriptCodeFormatter } from '@/core/formatters/javascript/javascript-formatter';
-import { splitAtIndex } from '@/core/renderer/common';
-import { removeFirstLetter } from '@/base/string';
+import * as array from '@/core/renderer/common';
+import * as string from '@/base/string';
+import { MHTMLGlyphParen } from '@/core/renderer/html/common/MHTMLGlyphParen';
 
 export class MHTMLGlyphRow extends MDomObject {
   private _children: MHTMLGlyphWord[] = [];
@@ -23,14 +24,14 @@ export class MHTMLGlyphRow extends MDomObject {
 
   public clearLetterByPosition(index: number): void {
     const { _text } = this;
-    const [first, last] = splitAtIndex(index)(_text);
-    this._text = first + removeFirstLetter(last);
+    const [first, last] = array.splitAtIndex(index)(_text);
+    this._text = first + string.removeFirstLetter(last);
 
     this.render();
   }
 
   public inputAt(char: MChar, index: number): void {
-    const [first, last] = splitAtIndex(index)(this._text);
+    const [first, last] = array.splitAtIndex(index)(this._text);
     this._text = first + char + last;
 
     this.render();
@@ -44,8 +45,18 @@ export class MHTMLGlyphRow extends MDomObject {
     _children.forEach((glyph) => glyph.dispose());
 
     for (const { data, className } of words) {
-      const glyph = new MHTMLGlyphWord(_el, data, className);
-      this._children.push(glyph);
+      const isLeftParen = string.isLeftParen(data.trim());
+
+      if (isLeftParen) {
+        const lParenGlyph = new MHTMLGlyphParen(_el, '{');
+        const rParenGlyph = new MHTMLGlyphParen(_el, '}');
+
+        this._children.push(lParenGlyph);
+        this._children.push(rParenGlyph);
+      } else {
+        const glyph = new MHTMLGlyphWord(_el, data, className);
+        this._children.push(glyph);
+      }
     }
   }
 }

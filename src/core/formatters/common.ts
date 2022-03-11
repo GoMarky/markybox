@@ -1,4 +1,3 @@
-
 export enum JavascriptKeyword {
   Identifier = 'identifier',
   Plain = 'plain',
@@ -9,6 +8,7 @@ export enum JavascriptKeyword {
   Let = 'let',
   Public = 'public',
   Static = 'static',
+  LParen = 'lparen'
 }
 
 export type KeywordClassName =
