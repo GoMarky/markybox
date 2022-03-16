@@ -5,9 +5,13 @@ import { JavascriptCodeFormatter } from '@/core/formatters/javascript/javascript
 import * as array from '@/core/renderer/common';
 import * as string from '@/base/string';
 import { MHTMLGlyphParen } from '@/core/renderer/html/common/MHTMLGlyphParen';
+import { MHTMLGlyphTextNode } from '@/core/renderer/html/common/MHTMLGlyphTextNode';
+import { JavascriptKeyword } from '@/core/formatters/common';
+
+type RowChild = MHTMLGlyphTextNode | MHTMLGlyphWord;
 
 export class MHTMLGlyphRow extends MDomObject {
-  private _children: MHTMLGlyphWord[] = [];
+  private _children: RowChild[] = [];
 
   private _text: string = '';
 
@@ -63,21 +67,32 @@ export class MHTMLGlyphRow extends MDomObject {
     const { _el, _text, _children } = this;
     const words = JavascriptCodeFormatter.parseKeywords(_text);
 
+    console.log(this._text);
+    console.log(words);
+
     // Очищаем старые
     _children.forEach((glyph) => glyph.dispose());
 
-    for (const { data, className } of words) {
+    for (const { data, className, keyword } of words) {
+      if (keyword === JavascriptKeyword.Whitespace) {
+        const textNode = new MHTMLGlyphTextNode(_el, data);
+
+        _children.push(textNode);
+
+        continue;
+      }
+
       const isLeftParen = string.isLeftParen(data.trim());
 
       if (isLeftParen) {
         const lParenGlyph = new MHTMLGlyphParen(_el, '{');
         const rParenGlyph = new MHTMLGlyphParen(_el, '}');
 
-        this._children.push(lParenGlyph);
-        this._children.push(rParenGlyph);
+        _children.push(lParenGlyph);
+        _children.push(rParenGlyph);
       } else {
         const glyph = new MHTMLGlyphWord(_el, data, className);
-        this._children.push(glyph);
+        _children.push(glyph);
       }
     }
   }

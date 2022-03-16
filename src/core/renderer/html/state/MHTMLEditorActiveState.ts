@@ -24,7 +24,7 @@ export class MHTMLEditorActiveState extends MHTMLEditorState {
     const row = storage.at(position.row);
 
     if (row) {
-      navigator.setPosition({ row: position.row, column: position.column });
+      navigator.setPosition(position);
     }
   }
 

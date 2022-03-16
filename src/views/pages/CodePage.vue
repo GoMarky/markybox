@@ -105,28 +105,10 @@ export default window.workbench.createComponent((accessor) => {
 
 .m-editor__row {
   height: 16px;
-  display: inline-block;
-  word-wrap: normal;
-  white-space: pre;
+  display: block;
 }
 
-.m-editor__layer-text {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  user-select: none;
-}
-
-.m-editor__layer-caret-container {
-  width: 50px;
-  height: 16px;
-  pointer-events: none;
-  position: absolute;
-  overflow: hidden;
-}
-
-
-.m-editor__layer-marker {
+.m-editor__layer {
   z-index: 1;
   position: absolute;
   overflow: hidden;
@@ -136,6 +118,18 @@ export default window.workbench.createComponent((accessor) => {
   width: 100%;
   box-sizing: border-box;
   pointer-events: none;
+}
+
+.m-editor__layer-text {
+  font: inherit !important;
+}
+
+.m-editor__layer-caret-container {
+  width: 50px;
+  height: 16px;
+  pointer-events: none;
+  position: absolute;
+  overflow: hidden;
 }
 
 .m-editor__layer-marker-active-line {
@@ -151,7 +145,6 @@ export default window.workbench.createComponent((accessor) => {
   background-color: blue;
   color: blue;
   opacity: 0.5;
-  position: absolute;
   height: 1.5em;
   width: 3px;
   max-width: 3px;

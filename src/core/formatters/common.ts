@@ -8,7 +8,8 @@ export enum JavascriptKeyword {
   Let = 'let',
   Public = 'public',
   Static = 'static',
-  LParen = 'lparen'
+  LParen = 'lparen',
+  Whitespace = 'whitespace',
 }
 
 export type KeywordClassName =

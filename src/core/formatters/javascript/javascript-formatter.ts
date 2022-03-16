@@ -1,4 +1,4 @@
-import { IParsedFormatterWord, KeywordClassName, JavascriptKeyword } from '@/core/formatters/common';
+import { IParsedFormatterWord, JavascriptKeyword, KeywordClassName } from '@/core/formatters/common';
 import { BaseFormatter } from '@/core/formatters/formatter/base-formatter';
 import { isEmptyString } from '@/base/string';
 
@@ -6,6 +6,7 @@ export const Regexp = {
   [JavascriptKeyword.Class]: /^(class$)/,
   [JavascriptKeyword.Function]: /^(function$)/,
   [JavascriptKeyword.Const]: /^(const$)/,
+  [JavascriptKeyword.Whitespace]: /^\s*$/,
 };
 
 
@@ -20,25 +21,10 @@ export class JavascriptCodeFormatter extends BaseFormatter {
 
   public static parseKeywords(input: string): IParsedFormatterWord[] {
     const keywords: IParsedFormatterWord[] = [];
-    const words = input.split(' ');
+    const words = input.split(/(\s+)/)
 
     for (const [index, word] of words.entries()) {
       let result = parseKeyword(word);
-
-      const previousWord = words[index - 1];
-
-      const isPreviousWordFunction = JavascriptCodeFormatter.isFunctionKeyword(previousWord);
-      const isPreviousWordClass = JavascriptCodeFormatter.isClassKeyword(previousWord);
-
-      if (isPreviousWordClass || isPreviousWordFunction) {
-        const className: KeywordClassName = isPreviousWordClass ? 'm-editor__keyword-class-name' : 'm-editor__keyword-function-name';
-
-        result = {
-          keyword: JavascriptKeyword.Identifier,
-          className,
-          data: result.data
-        }
-      }
 
       keywords.push(result);
     }
@@ -73,31 +59,39 @@ function parseKeyword(word: string): IParsedFormatterWord {
   const functionResult = Regexp.function.test(word);
   const constResult = Regexp.const.test(word);
 
+  const isWhitespace = word.trim().length === 0;
+
   let result: IParsedFormatterWord;
 
   if (classResult) {
     result = {
       keyword: JavascriptKeyword.Class,
       className: 'm-editor__keyword-class',
-      data: word + ' ',
+      data: word,
     };
   } else if (functionResult) {
     result = {
       keyword: JavascriptKeyword.Function,
       className: 'm-editor__keyword-function',
-      data: word + ' ',
+      data: word,
     };
   } else if (constResult) {
     result = {
       keyword: JavascriptKeyword.Const,
       className: 'm-editor__keyword-default',
-      data: word + ' ',
+      data: word,
+    }
+  } else if (isWhitespace) {
+    result = {
+      keyword: JavascriptKeyword.Whitespace,
+      className: 'm-editor__plain',
+      data: word,
     }
   } else {
     result = {
       keyword: JavascriptKeyword.Plain,
       className: 'm-editor__plain',
-      data: word + ' ',
+      data: word,
     }
   }
 

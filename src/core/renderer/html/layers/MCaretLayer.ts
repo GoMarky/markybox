@@ -32,6 +32,7 @@ export class MCaretLayer extends MLayer {
 
   private createCaretElement(): void {
     const caretElement = document.createElement('div');
+    caretElement.classList.add('m-editor__layer');
     caretElement.classList.add('m-editor__layer-caret')
 
     this._el.appendChild(caretElement);

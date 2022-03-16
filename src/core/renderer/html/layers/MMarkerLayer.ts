@@ -25,6 +25,7 @@ export class MMarkerLayer extends MLayer {
     const { navigator, display } = renderer;
 
     const layerElement = document.createElement('div');
+    layerElement.classList.add('m-editor__layer');
     layerElement.classList.add('m-editor__layer-marker')
     this._el = layerElement;
     renderer.body.el.appendChild(layerElement);
