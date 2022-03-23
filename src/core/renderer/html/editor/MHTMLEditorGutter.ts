@@ -1,10 +1,9 @@
 import { toPixel } from '@/base/dom';
-import { MDomObject } from '@/core/renderer/html/common/MDomObject';
-import { IRendererGutter } from '@/core/renderer/renderer';
 import { MHTMLRenderer } from '@/core';
 import { mRowToGutterElement } from '@/core/renderer/html/common/helpers';
+import { MHTMLGlyphDOM } from '@/core/renderer/html/common/MHTMLGlyphDOM';
 
-export class MHTMLEditorGutter extends MDomObject implements IRendererGutter {
+export class MHTMLEditorGutter extends MHTMLGlyphDOM {
   constructor(private readonly renderer: MHTMLRenderer) {
     super();
 

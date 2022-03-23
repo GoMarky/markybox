@@ -1,16 +1,14 @@
-import { MGlyph } from '@/core/objects/MGlyph';
+import { MHTMLGlyphDOM } from '@/core/renderer/html/common/MHTMLGlyphDOM';
 
-export class MHTMLGlyphTextNode extends MGlyph {
-  private readonly _el: Text;
-
-  constructor(parent: HTMLElement, private _text: string) {
+export class MHTMLGlyphTextNode extends MHTMLGlyphDOM<Text> {
+  constructor(private _text: string) {
     super();
 
-    const element = document.createTextNode(_text);
+
+    const element: Text = document.createTextNode(_text);
 
     this._el = element;
     this._el.textContent = this._text;
-    parent.appendChild(this._el);
   }
 
   public dispose(): void {

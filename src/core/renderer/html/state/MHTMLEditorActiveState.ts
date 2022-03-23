@@ -24,7 +24,9 @@ export class MHTMLEditorActiveState extends MHTMLEditorState {
     const row = storage.at(position.row);
 
     if (row) {
-      navigator.setPosition(position);
+      const column = position.column > row.columnsCount ? row.columnsCount : position.column;
+
+      navigator.setPosition({ row: position.row, column });
     }
   }
 
@@ -63,13 +65,9 @@ export class MHTMLEditorActiveState extends MHTMLEditorState {
         return;
       }
       case Char.Enter: {
-        if (controller.isCurrentColumnInsideGlyph()) {
-          controller.splitCurrentRow(column);
-        } else {
-          const newRow = controller.addEmptyRow();
-          navigator.nextRow();
-          return navigator.setPosition({ row: newRow.index, column: 0 })
-        }
+        const newRow = controller.addEmptyRow();
+        navigator.nextRow();
+        return navigator.setPosition({ row: newRow.index, column: 0 })
       }
     }
   }

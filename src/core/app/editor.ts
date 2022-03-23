@@ -1,6 +1,6 @@
 import { MObject } from '@/core/objects/MObject';
-import { IAbstractRenderer } from '@/core/renderer/renderer';
-import { ILogger } from '@/core/renderer/common';
+import { IAbstractRenderer } from '@/core/app/renderer';
+import { ILogger } from '@/core/app/common';
 
 export interface IEditorOptions {
   readonly renderer: IAbstractRenderer;

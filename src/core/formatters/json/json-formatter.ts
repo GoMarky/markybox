@@ -1,5 +1,4 @@
 import { MObject } from '@/core/objects/MObject';
-import { IParsedFormatterWord } from '@/core/formatters/common';
 
 export class JSONCodeFormatter extends MObject {
   constructor() {
@@ -10,7 +9,7 @@ export class JSONCodeFormatter extends MObject {
     return 'json';
   }
 
-  public parseKeywords(_: string): IParsedFormatterWord[] {
+  public parseKeywords(_: string) {
     return [];
   }
 }

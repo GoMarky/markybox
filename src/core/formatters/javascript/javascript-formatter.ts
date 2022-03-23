@@ -1,4 +1,4 @@
-import { IParsedFormatterWord, JavascriptKeyword, KeywordClassName } from '@/core/formatters/common';
+import { JavascriptKeyword } from '@/core/formatters/common';
 import { BaseFormatter } from '@/core/formatters/formatter/base-formatter';
 import { isEmptyString } from '@/base/string';
 
@@ -6,7 +6,6 @@ export const Regexp = {
   [JavascriptKeyword.Class]: /^(class$)/,
   [JavascriptKeyword.Function]: /^(function$)/,
   [JavascriptKeyword.Const]: /^(const$)/,
-  [JavascriptKeyword.Whitespace]: /^\s*$/,
 };
 
 
@@ -19,8 +18,8 @@ export class JavascriptCodeFormatter extends BaseFormatter {
     return 'javascript';
   }
 
-  public static parseKeywords(input: string): IParsedFormatterWord[] {
-    const keywords: IParsedFormatterWord[] = [];
+  public static parseKeywords(input: string) {
+    const keywords = [];
     const words = input.split(/(\s+)/)
 
     for (const [index, word] of words.entries()) {
@@ -39,7 +38,7 @@ export class JavascriptCodeFormatter extends BaseFormatter {
 
     const result = parseKeyword(word);
 
-    return result.keyword === JavascriptKeyword.Function;
+    return result?.keyword === JavascriptKeyword.Function;
   }
 
 
@@ -50,18 +49,16 @@ export class JavascriptCodeFormatter extends BaseFormatter {
 
     const result = parseKeyword(word);
 
-    return result.keyword === JavascriptKeyword.Class;
+    return result?.keyword === JavascriptKeyword.Class;
   }
 }
 
-function parseKeyword(word: string): IParsedFormatterWord {
+function parseKeyword(word: string) {
   const classResult = Regexp.class.test(word);
   const functionResult = Regexp.function.test(word);
   const constResult = Regexp.const.test(word);
 
-  const isWhitespace = word.trim().length === 0;
-
-  let result: IParsedFormatterWord;
+  let result;
 
   if (classResult) {
     result = {
@@ -79,18 +76,6 @@ function parseKeyword(word: string): IParsedFormatterWord {
     result = {
       keyword: JavascriptKeyword.Const,
       className: 'm-editor__keyword-default',
-      data: word,
-    }
-  } else if (isWhitespace) {
-    result = {
-      keyword: JavascriptKeyword.Whitespace,
-      className: 'm-editor__plain',
-      data: word,
-    }
-  } else {
-    result = {
-      keyword: JavascriptKeyword.Plain,
-      className: 'm-editor__plain',
       data: word,
     }
   }

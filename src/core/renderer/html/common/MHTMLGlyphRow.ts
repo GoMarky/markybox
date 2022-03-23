@@ -1,21 +1,43 @@
-import { MDomObject } from '@/core/renderer/html/common/MDomObject';
 import { MHTMLGlyphWord } from '@/core/renderer/html/common/MHTMLGlyphWord';
 import { MChar } from '@/core/renderer/html/editor/MHTMLEditorBodyTextarea';
-import { JavascriptCodeFormatter } from '@/core/formatters/javascript/javascript-formatter';
-import * as array from '@/core/renderer/common';
 import * as string from '@/base/string';
-import { MHTMLGlyphParen } from '@/core/renderer/html/common/MHTMLGlyphParen';
 import { MHTMLGlyphTextNode } from '@/core/renderer/html/common/MHTMLGlyphTextNode';
-import { JavascriptKeyword } from '@/core/formatters/common';
+import { MHTMLGlyphDOM } from '@/core/renderer/html/common/MHTMLGlyphDOM';
+import { MHTMLRenderer } from '@/core';
+import { splitAtIndex } from '@/core/app/common';
 
-type RowChild = MHTMLGlyphTextNode | MHTMLGlyphWord;
+interface IInputParseResult {
+  type: 'whitespace' | 'text';
+  data: string;
+}
 
-export class MHTMLGlyphRow extends MDomObject {
-  private _children: RowChild[] = [];
+export class MHTMLNodeFragment extends MHTMLGlyphDOM<DocumentFragment> {
+  constructor(private _children: MHTMLGlyphDOM[]) {
+    super();
 
+    this._el = document.createDocumentFragment();
+
+    for (const glyph of this._children) {
+      this._el.appendChild(glyph.el);
+    }
+  }
+
+  public get children(): MHTMLGlyphDOM[] {
+    return this._children;
+  }
+
+  public dispose(): void {
+    super.dispose();
+    this._children = [];
+  }
+}
+
+export class MHTMLGlyphRow extends MHTMLGlyphDOM<HTMLDivElement> {
+  private fragment: MHTMLNodeFragment;
   private _text: string = '';
 
   constructor(
+    private readonly renderer: MHTMLRenderer,
     public readonly index: number
   ) {
     super();
@@ -26,7 +48,7 @@ export class MHTMLGlyphRow extends MDomObject {
     this._el = rowElement;
   }
 
-  public get columns(): number {
+  public get columnsCount(): number {
     return this._text.length;
   }
 
@@ -35,7 +57,7 @@ export class MHTMLGlyphRow extends MDomObject {
   }
 
   public empty(): boolean {
-    return this._children.length === 0;
+    return this._text.length === 0;
   }
 
   public setText(text: string): void {
@@ -45,55 +67,76 @@ export class MHTMLGlyphRow extends MDomObject {
   }
 
   public contains(column: number): boolean {
-    return column <= this.columns - 1;
+    return (this.columnsCount - 1) >= column;
   }
 
   public clearLetterByPosition(index: number): void {
     const { _text } = this;
-    const [first, last] = array.splitAtIndex(index)(_text);
+    const [first, last] = splitAtIndex(index)(_text);
     this._text = first + string.removeFirstLetter(last);
 
     this.render();
   }
 
   public inputAt(char: MChar, index: number): void {
-    const [first, last] = array.splitAtIndex(index)(this._text);
+    const [first, last] = splitAtIndex(index)(this._text);
     this._text = first + char + last;
 
     this.render();
   }
 
-  private render(): void {
-    const { _el, _text, _children } = this;
-    const words = JavascriptCodeFormatter.parseKeywords(_text);
+  private static parse(text: string): IInputParseResult[] {
+    const result: IInputParseResult[] = [];
+    const words = text.split(/(\s+)/)
 
-    console.log(this._text);
-    console.log(words);
+    for (const word of words) {
+      const isWhitespace = word.trim().length === 0;
+
+      const type: IInputParseResult['type'] = isWhitespace ? 'whitespace' : 'text';
+
+      result.push({
+        type,
+        data: word,
+      });
+    }
+
+    return result;
+  }
+
+  private setFragment(fragment: MHTMLNodeFragment): void {
+    this.fragment = fragment;
+    this._el.appendChild(fragment.el);
+  }
+
+  private render(): void {
+    const { _text, fragment } = this;
+    const words = MHTMLGlyphRow.parse(_text);
 
     // Очищаем старые
-    _children.forEach((glyph) => glyph.dispose());
+    if (fragment) {
+      this._el.replaceChildren();
+      fragment.dispose();
+    }
 
-    for (const { data, className, keyword } of words) {
-      if (keyword === JavascriptKeyword.Whitespace) {
-        const textNode = new MHTMLGlyphTextNode(_el, data);
+    const children: MHTMLGlyphDOM[] = [];
 
-        _children.push(textNode);
-
-        continue;
-      }
-
-      const isLeftParen = string.isLeftParen(data.trim());
-
-      if (isLeftParen) {
-        const lParenGlyph = new MHTMLGlyphParen(_el, '{');
-        const rParenGlyph = new MHTMLGlyphParen(_el, '}');
-
-        _children.push(lParenGlyph);
-        _children.push(rParenGlyph);
-      } else {
-        const glyph = new MHTMLGlyphWord(_el, data, className);
-        _children.push(glyph);
+    for (const { data, type } of words) {
+      switch (type) {
+        case 'whitespace': {
+          const textNode = new MHTMLGlyphTextNode(data);
+          children.push(textNode);
+          break;
+        }
+        case 'text': {
+          const wordNode = new MHTMLGlyphWord(data);
+          children.push(wordNode);
+          break;
+        }
       }
     }
+
+    const nodeFragment = new MHTMLNodeFragment(children);
+
+    this.setFragment(nodeFragment);
   }
 }

@@ -1,8 +1,7 @@
 import { MObject } from '@/core/objects/MObject';
-import { IPosition } from '@/core/renderer/common';
+import { IPosition } from '@/core/app/common';
 import { MSelectionLayer } from '@/core/renderer/html/layers/MSelectionLayer';
 import { MHTMLRenderer } from '@/core';
-import { MHTMLGlyphRow } from '@/core/renderer/html/common/MHTMLGlyphRow';
 
 export interface ISelectionPosition {
   start: IPosition;

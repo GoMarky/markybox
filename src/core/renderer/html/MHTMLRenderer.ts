@@ -15,7 +15,7 @@ import { MHTMLEditorActiveState } from '@/core/renderer/html/state/MHTMLEditorAc
 import { MHTMLEditorState } from '@/core/renderer/html/state/MHTMLEditorState';
 import { MHTMLEditorLockedState } from '@/core/renderer/html/state/MHTMLEditorLockedState';
 import { CriticalError } from '@/base/errors';
-import { MHTMLRowController } from '@/core/renderer/html/editor/MHTMLRowController';
+import { MHTMLEditorRowController } from '@/core/renderer/html/editor/MHTMLEditorRowController';
 
 export class MHTMLRenderer extends MObject implements IAbstractRenderer {
   public readonly display: HTMLDisplayRenderer;
@@ -26,7 +26,7 @@ export class MHTMLRenderer extends MObject implements IAbstractRenderer {
   public readonly navigator: MHTMLEditorBodyNavigator;
   public readonly selection: MHTMLEditorSelection;
   public readonly storage: MHTMLStorage;
-  public readonly controller: MHTMLRowController;
+  public readonly controller: MHTMLEditorRowController;
   public currentState: MHTMLEditorState;
 
   private readonly clipboard: MHTMLClipboard;
@@ -34,7 +34,6 @@ export class MHTMLRenderer extends MObject implements IAbstractRenderer {
   constructor(public readonly root: HTMLElement) {
     super();
 
-    // We use clipboard API, that only compactible with https.
     if (!window.isSecureContext) {
       throw new SecurityError(`markybox works only in security context. Please, enable HTTPS`);
     }
@@ -48,7 +47,7 @@ export class MHTMLRenderer extends MObject implements IAbstractRenderer {
     this.clipboard = new MHTMLClipboard();
     this.textLayer = new MTextLayer(this);
     this.markerLayer = new MMarkerLayer(this);
-    this.controller = new MHTMLRowController(this);
+    this.controller = new MHTMLEditorRowController(this);
   }
 
   public unlock(): void {
@@ -69,14 +68,11 @@ export class MHTMLRenderer extends MObject implements IAbstractRenderer {
   }
 
   private registerListeners(): void {
-    window.addEventListener('click', (event) => this.currentState.onClick(event));
-    window.addEventListener('keydown', (event) => this.currentState.onKeyDown(event));
-
     this.navigator.onDidUpdatePosition((position) => {
       const row = this.storage.at(position.row);
 
       if (!row) {
-        throw new CriticalError(`Row at - ${position.row} doesn't exist`);
+        throw new CriticalError(`Expected row at position: ${position.row}. Got undefined`);
       }
 
       this.controller.setCurrentRow(row);
@@ -100,8 +96,11 @@ export class MHTMLRenderer extends MObject implements IAbstractRenderer {
     // Paste all code from clipboard
     this.disposables.add(
       windowShortcut.registerShortcut('Meta+V', async () => {
-        const text = await this.clipboard.read();
+        await this.clipboard.read();
       })
     );
+
+    window.addEventListener('click', (event) => this.currentState.onClick(event));
+    window.addEventListener('keydown', (event) => this.currentState.onKeyDown(event));
   }
 }

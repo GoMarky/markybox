@@ -1,8 +1,8 @@
 import { MHTMLRenderer } from '@/core';
 import { MObject } from '@/core/objects/MObject';
-import { IPosition } from '@/core/renderer/common';
 import { MCaretLayer } from '@/core/renderer/html/layers/MCaretLayer';
 import { Emitter, IEvent } from '@/base/event';
+import { IPosition } from '@/core/app/common';
 
 export class MHTMLEditorBodyNavigator extends MObject {
   private _currentPosition: IPosition = { row: 0, column: 0 };

@@ -1,6 +1,6 @@
 import { MLayer } from '@/core/renderer/html/layers/MLayer';
 import { MHTMLRenderer } from '@/core';
-import { IPosition } from '@/core/renderer/common';
+import { IPosition } from '@/core/app/common';
 import { toPixel } from '@/base/dom';
 
 export class MCaretLayer extends MLayer {

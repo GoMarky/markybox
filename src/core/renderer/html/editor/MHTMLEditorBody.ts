@@ -1,9 +1,8 @@
-import { IRendererBody } from '@/core/renderer/renderer';
 import { MHTMLRenderer } from '@/core';
-import { MDomObject } from '@/core/renderer/html/common/MDomObject';
 import { MHTMLEditorBodyTextarea } from '@/core/renderer/html/editor/MHTMLEditorBodyTextarea';
+import { MHTMLGlyphDOM } from '@/core/renderer/html/common/MHTMLGlyphDOM';
 
-export class MHTMLEditorBody extends MDomObject implements IRendererBody {
+export class MHTMLEditorBody extends MHTMLGlyphDOM {
   private textarea: MHTMLEditorBodyTextarea;
 
   constructor(private readonly renderer: MHTMLRenderer) {

@@ -1,9 +1,9 @@
 import { MObject } from '@/core/objects/MObject';
-import { IRendererDisplay } from '@/core/renderer/renderer';
 import { toPixel } from '@/base/dom';
 import { MHTMLRenderer } from '@/core';
-import { IPosition } from '@/core/renderer/common';
+import { IPosition } from '@/core/app/common';
 import { IDOMPosition } from '@/core/renderer/html/common/helpers';
+import { IRendererDisplay } from '@/core/app/renderer';
 
 // TODO: do not use clientX
 const EDITOR_OFFSET_POSITION: IDOMPosition = {

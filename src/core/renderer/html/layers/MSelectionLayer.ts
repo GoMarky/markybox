@@ -1,11 +1,11 @@
 import { MLayer } from '@/core/renderer/html/layers/MLayer';
-import { MDomObject } from '@/core/renderer/html/common/MDomObject';
-import { IPosition } from '@/core/renderer/common';
+import { IPosition } from '@/core/app/common';
 import { removeChildren, toPixel } from '@/base/dom';
 import { createSelectionRowElement } from '@/core/renderer/html/common/helpers';
 import { MHTMLRenderer } from '@/core';
+import { MHTMLGlyphDOM } from '@/core/renderer/html/common/MHTMLGlyphDOM';
 
-export class MSelectionRowLayer extends MDomObject {
+export class MSelectionRowLayer extends MHTMLGlyphDOM {
   constructor() {
     super();
   }

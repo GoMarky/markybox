@@ -1,9 +1,9 @@
 import { MObject } from '@/core/objects/MObject';
 import { MHTMLRenderer } from '@/core';
 import { MHTMLGlyphRow } from '@/core/renderer/html/common/MHTMLGlyphRow';
-import * as array from '@/core/renderer/common';
+import { splitAtIndex } from '@/core/app/common';
 
-export class MHTMLRowController extends MObject {
+export class MHTMLEditorRowController extends MObject {
   private _currentRow: MHTMLGlyphRow;
 
   constructor(private readonly renderer: MHTMLRenderer) {
@@ -18,7 +18,7 @@ export class MHTMLRowController extends MObject {
     const { currentRow } = this;
     const { text } = currentRow;
 
-    const [first, last] = array.splitAtIndex(column)(text);
+    const [first, last] = splitAtIndex(column)(text);
 
     currentRow.setText(first);
 
@@ -37,7 +37,7 @@ export class MHTMLRowController extends MObject {
   public addRowAt(index: number): MHTMLGlyphRow {
     const { renderer } = this;
     const { storage } = renderer;
-    const row = new MHTMLGlyphRow(index);
+    const row = new MHTMLGlyphRow(renderer, index);
     this._currentRow = row;
     storage.addRowAt(row, index);
 
@@ -49,7 +49,7 @@ export class MHTMLRowController extends MObject {
   public addEmptyRow(): MHTMLGlyphRow {
     const { renderer } = this;
     const { storage } = renderer;
-    const row = new MHTMLGlyphRow(storage.count);
+    const row = new MHTMLGlyphRow(renderer, storage.count);
     this._currentRow = row;
     storage.addRow(row);
 
