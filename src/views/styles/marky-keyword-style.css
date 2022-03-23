@@ -1,0 +1,23 @@
+.m-editor__keyword-class {
+    color: #c800a4;
+}
+
+.m-editor__keyword-class-name {
+    color: #c79229;
+}
+
+.m-editor__keyword-function-name {
+    color: #2858b3;
+}
+
+.m-editor__keyword-function {
+    color: #c800a4;
+}
+
+.m-editor__keyword-identifier-name {
+    color: #2858b3;
+}
+
+.m-editor__keyword-identifier {
+    color: #c800a4;
+}

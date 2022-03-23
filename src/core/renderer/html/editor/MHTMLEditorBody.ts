@@ -1,14 +1,25 @@
 import { MHTMLRenderer } from '@/core';
 import { MHTMLEditorBodyTextarea } from '@/core/renderer/html/editor/MHTMLEditorBodyTextarea';
 import { MHTMLGlyphDOM } from '@/core/renderer/html/common/MHTMLGlyphDOM';
+import { MHTMLNodeFragment } from '@/core/renderer/html/common/MHTMLGlyphRow';
+
+export interface IVisitor {
+  visit(fragment: MHTMLNodeFragment): void;
+}
 
 export class MHTMLEditorBody extends MHTMLGlyphDOM {
   private textarea: MHTMLEditorBodyTextarea;
+
+  public visitors: IVisitor[] = [];
 
   constructor(private readonly renderer: MHTMLRenderer) {
     super();
 
     this.init();
+  }
+
+  public addVisitor(visitor: IVisitor): void {
+    this.visitors.push(visitor);
   }
 
   private init(): void {

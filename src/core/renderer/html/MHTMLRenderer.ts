@@ -1,6 +1,5 @@
 import windowShortcut from '@gomarky/window-shortcut';
 import { MObject } from '@/core/objects/MObject';
-import { IAbstractRenderer } from '@/core/renderer/renderer';
 import { MTextLayer } from '@/core/renderer/html/layers/MTextLayer';
 import { MHTMLEditorBodyNavigator } from '@/core/renderer/html/editor/MHTMLEditorBodyNavigator';
 import { HTMLDisplayRenderer } from '@/core/renderer/html/system/MHTMLDisplayRenderer';
@@ -16,6 +15,10 @@ import { MHTMLEditorState } from '@/core/renderer/html/state/MHTMLEditorState';
 import { MHTMLEditorLockedState } from '@/core/renderer/html/state/MHTMLEditorLockedState';
 import { CriticalError } from '@/base/errors';
 import { MHTMLEditorRowController } from '@/core/renderer/html/editor/MHTMLEditorRowController';
+import { IAbstractRenderer } from '@/core/app/renderer';
+import { MHTMLTextHintVisitor } from '@/core/renderer/html/visitors/MHTMLTextHintVisitor';
+import { MHTMLTextIndentVisitor } from '@/core/renderer/html/visitors/MHTMLTextIndentVisitor';
+import { MHTMLHighlightKeywordVisitor } from '@/core/renderer/html/visitors/MHTMLHighlightKeywordVisitor';
 
 export class MHTMLRenderer extends MObject implements IAbstractRenderer {
   public readonly display: HTMLDisplayRenderer;
@@ -62,6 +65,10 @@ export class MHTMLRenderer extends MObject implements IAbstractRenderer {
 
   public init(): void {
     this.unlock();
+
+    this.body.addVisitor(new MHTMLTextHintVisitor());
+    this.body.addVisitor(new MHTMLTextIndentVisitor());
+    this.body.addVisitor(new MHTMLHighlightKeywordVisitor());
 
     this.registerListeners();
     this.controller.addEmptyRow();

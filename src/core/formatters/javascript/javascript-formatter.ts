@@ -1,11 +1,19 @@
-import { JavascriptKeyword } from '@/core/formatters/common';
-import { BaseFormatter } from '@/core/formatters/formatter/base-formatter';
-import { isEmptyString } from '@/base/string';
+import { BaseFormatter, CodeStatement } from '@/core/formatters/formatter/base-formatter';
+
+export enum JavascriptKeyword {
+  Class = 'class',
+  Function = 'function',
+  Const = 'const',
+  Var = 'var',
+  Let = 'let',
+  Public = 'public',
+  Static = 'static',
+}
+
+export type StatementClassName = 'm-editor__plain' | 'm-editor__keyword-identifier' | 'm-editor__keyword-identifier-name';
 
 export const Regexp = {
-  [JavascriptKeyword.Class]: /^(class$)/,
-  [JavascriptKeyword.Function]: /^(function$)/,
-  [JavascriptKeyword.Const]: /^(const$)/,
+  VariableStatement: /^(const|let|var|class|function$)/,
 };
 
 
@@ -18,67 +26,15 @@ export class JavascriptCodeFormatter extends BaseFormatter {
     return 'javascript';
   }
 
-  public static parseKeywords(input: string) {
-    const keywords = [];
-    const words = input.split(/(\s+)/)
+  public static parseKeyword(input: string): CodeStatement | undefined {
+    const isVariableStatement = Regexp.VariableStatement.test(input);
 
-    for (const [index, word] of words.entries()) {
-      let result = parseKeyword(word);
-
-      keywords.push(result);
+    switch (true) {
+      case isVariableStatement:
+        return CodeStatement.VariableDeclaration;
+      default:
+        return undefined;
     }
-
-    return keywords;
-  }
-
-  private static isFunctionKeyword(word: string): boolean {
-    if (isEmptyString(word)) {
-      return false;
-    }
-
-    const result = parseKeyword(word);
-
-    return result?.keyword === JavascriptKeyword.Function;
-  }
-
-
-  private static isClassKeyword(word: string): boolean {
-    if (isEmptyString(word)) {
-      return false;
-    }
-
-    const result = parseKeyword(word);
-
-    return result?.keyword === JavascriptKeyword.Class;
   }
 }
 
-function parseKeyword(word: string) {
-  const classResult = Regexp.class.test(word);
-  const functionResult = Regexp.function.test(word);
-  const constResult = Regexp.const.test(word);
-
-  let result;
-
-  if (classResult) {
-    result = {
-      keyword: JavascriptKeyword.Class,
-      className: 'm-editor__keyword-class',
-      data: word,
-    };
-  } else if (functionResult) {
-    result = {
-      keyword: JavascriptKeyword.Function,
-      className: 'm-editor__keyword-function',
-      data: word,
-    };
-  } else if (constResult) {
-    result = {
-      keyword: JavascriptKeyword.Const,
-      className: 'm-editor__keyword-default',
-      data: word,
-    }
-  }
-
-  return result;
-}

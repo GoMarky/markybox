@@ -1,10 +1,6 @@
 import { toPixel } from '@/base/dom';
 import { IMRow } from '@/core/objects/MAbstractFactory';
 
-export interface IDOMElement {
-  readonly el: HTMLElement;
-}
-
 export interface IDOMPosition {
   left: number;
   top: number;

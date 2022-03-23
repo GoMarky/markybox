@@ -1,12 +1,12 @@
 import { Emitter, IEvent } from '@/base/event';
 import { toPixel } from '@/base/dom';
-import { isSystemChar } from '@/core/renderer/common';
 import { Char } from '@/base/char';
 import { MHTMLGlyphDOM } from '@/core/renderer/html/common/MHTMLGlyphDOM';
+import { isSystemChar } from '@/core/app/common';
 
 export type MChar = string;
 
-export class MHTMLEditorBodyTextarea extends MHTMLGlyphDOM {
+export class MHTMLEditorBodyTextarea extends MHTMLGlyphDOM<HTMLTextAreaElement> {
   private readonly _onDidUpdate: Emitter<string> = new Emitter<string>();
   public readonly onDidUpdate: IEvent<string> = this._onDidUpdate.event;
 

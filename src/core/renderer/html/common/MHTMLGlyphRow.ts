@@ -5,6 +5,7 @@ import { MHTMLGlyphTextNode } from '@/core/renderer/html/common/MHTMLGlyphTextNo
 import { MHTMLGlyphDOM } from '@/core/renderer/html/common/MHTMLGlyphDOM';
 import { MHTMLRenderer } from '@/core';
 import { splitAtIndex } from '@/core/app/common';
+import { IVisitor } from '@/core/renderer/html/editor/MHTMLEditorBody';
 
 interface IInputParseResult {
   type: 'whitespace' | 'text';
@@ -85,6 +86,12 @@ export class MHTMLGlyphRow extends MHTMLGlyphDOM<HTMLDivElement> {
     this.render();
   }
 
+  public accept(visitors: IVisitor[]): void {
+    const { fragment } = this;
+
+    visitors.forEach((visitor) => visitor.visit(fragment));
+  }
+
   private static parse(text: string): IInputParseResult[] {
     const result: IInputParseResult[] = [];
     const words = text.split(/(\s+)/)
@@ -103,13 +110,10 @@ export class MHTMLGlyphRow extends MHTMLGlyphDOM<HTMLDivElement> {
     return result;
   }
 
-  private setFragment(fragment: MHTMLNodeFragment): void {
-    this.fragment = fragment;
-    this._el.appendChild(fragment.el);
-  }
-
   private render(): void {
-    const { _text, fragment } = this;
+    const { _text, fragment, renderer } = this;
+    const { body } = renderer;
+    const { visitors } = body;
     const words = MHTMLGlyphRow.parse(_text);
 
     // Очищаем старые
@@ -136,7 +140,10 @@ export class MHTMLGlyphRow extends MHTMLGlyphDOM<HTMLDivElement> {
     }
 
     const nodeFragment = new MHTMLNodeFragment(children);
+    this.fragment = nodeFragment;
 
-    this.setFragment(nodeFragment);
+    this.accept(visitors);
+
+    this._el.appendChild(nodeFragment.el);
   }
 }

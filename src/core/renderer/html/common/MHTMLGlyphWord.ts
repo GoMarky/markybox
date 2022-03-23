@@ -1,13 +1,13 @@
 import { MHTMLGlyphDOM } from '@/core/renderer/html/common/MHTMLGlyphDOM';
 
 export class MHTMLGlyphWord extends MHTMLGlyphDOM<HTMLSpanElement> {
-  constructor(private _text: string) {
+  constructor(public text: string) {
     super();
 
     const element = document.createElement('span');
 
     this._el = element;
-    this._el.textContent = this._text;
+    this._el.textContent = this.text;
   }
 
   public dispose(): void {
@@ -15,7 +15,7 @@ export class MHTMLGlyphWord extends MHTMLGlyphDOM<HTMLSpanElement> {
 
     this.disposables.clear();
 
-    this._text = '';
+    this.text = '';
     this._el.remove();
   }
 }
