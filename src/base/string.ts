@@ -63,13 +63,31 @@ export function isLeftParen(char: string): boolean {
     return false;
   }
 
-  return char === '[' || char === '{';
+  return char === '[' || char === '{' || char === '(';
 }
 
-export function isRightParen(char: string): boolean {
+function isRightParen(char: string): boolean {
   if (char.length > 1) {
     return false;
   }
 
-  return char === ']' || char === '}';
+  return char === ']' || char === '}' || char === ')';
+}
+
+export function isParen(char?: string): boolean {
+  if (!char) {
+    return false;
+  }
+
+  return isLeftParen(char) || isRightParen(char);
+}
+
+export function containsParen(text: string): boolean {
+  for (let i = 0; i < text.length; i++) {
+    if (isParen(text.charAt(i))) {
+      return true;
+    }
+  }
+
+  return false;
 }

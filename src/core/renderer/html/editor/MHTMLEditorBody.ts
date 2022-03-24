@@ -1,7 +1,7 @@
 import { MHTMLRenderer } from '@/core';
 import { MHTMLEditorBodyTextarea } from '@/core/renderer/html/editor/MHTMLEditorBodyTextarea';
 import { MHTMLGlyphDOM } from '@/core/renderer/html/common/MHTMLGlyphDOM';
-import { MHTMLNodeFragment } from '@/core/renderer/html/common/MHTMLGlyphRow';
+import { MHTMLNodeFragment } from '@/core/renderer/html/common/MHTMLNodeFragment';
 
 export interface IVisitor {
   visit(fragment: MHTMLNodeFragment): void;

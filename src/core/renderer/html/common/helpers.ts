@@ -12,7 +12,7 @@ export function mRowToGutterElement(row: IMRow): HTMLElement {
   const { index } = row;
 
   const element = document.createElement('span');
-  element.textContent = `${index}`;
+  element.textContent = `${index + 1}`;
   element.classList.add('m-editor__gutter-cell');
   element.style.height = toPixel(lineHeight);
 

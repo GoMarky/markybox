@@ -1,9 +1,9 @@
-import { MHTMLNodeFragment } from '@/core/renderer/html/common/MHTMLGlyphRow';
 import { MObject } from '@/core/objects/MObject';
 import { IVisitor } from '@/core/renderer/html/editor/MHTMLEditorBody';
 import { MHTMLGlyphWord } from '@/core/renderer/html/common/MHTMLGlyphWord';
 import { JavascriptCodeFormatter, StatementClassName } from '@/core/formatters/javascript/javascript-formatter';
 import { CodeStatement } from '@/core/formatters/formatter/base-formatter';
+import { MHTMLNodeFragment } from '@/core/renderer/html/common/MHTMLNodeFragment';
 
 function getClassNameByStatement(statement?: CodeStatement): StatementClassName | undefined {
   if (!statement) {
@@ -45,7 +45,7 @@ export class MHTMLHighlightKeywordVisitor extends MObject implements IVisitor {
     }
 
     if (JavascriptCodeFormatter.parseKeyword(previous.text)) {
-      current.el.classList.add('m-editor__keyword-identifier-name');
+      this.doAddClassName(current, 'm-editor__keyword-identifier-name');
     }
   }
 

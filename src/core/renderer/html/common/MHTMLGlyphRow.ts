@@ -6,31 +6,14 @@ import { MHTMLGlyphDOM } from '@/core/renderer/html/common/MHTMLGlyphDOM';
 import { MHTMLRenderer } from '@/core';
 import { splitAtIndex } from '@/core/app/common';
 import { IVisitor } from '@/core/renderer/html/editor/MHTMLEditorBody';
+import { MHTMLNodeFragment } from '@/core/renderer/html/common/MHTMLNodeFragment';
+import { containsParen, isParen } from '@/base/string';
+import { MHTMLGlyphParen } from '@/core/renderer/html/common/MHTMLGlyphParen';
+import { CriticalError } from '@/base/errors';
 
 interface IInputParseResult {
-  type: 'whitespace' | 'text';
+  type: 'whitespace' | 'text' | 'paren';
   data: string;
-}
-
-export class MHTMLNodeFragment extends MHTMLGlyphDOM<DocumentFragment> {
-  constructor(private _children: MHTMLGlyphDOM[]) {
-    super();
-
-    this._el = document.createDocumentFragment();
-
-    for (const glyph of this._children) {
-      this._el.appendChild(glyph.el);
-    }
-  }
-
-  public get children(): MHTMLGlyphDOM[] {
-    return this._children;
-  }
-
-  public dispose(): void {
-    super.dispose();
-    this._children = [];
-  }
 }
 
 export class MHTMLGlyphRow extends MHTMLGlyphDOM<HTMLDivElement> {
@@ -92,14 +75,63 @@ export class MHTMLGlyphRow extends MHTMLGlyphDOM<HTMLDivElement> {
     visitors.forEach((visitor) => visitor.visit(fragment));
   }
 
-  private static parse(text: string): IInputParseResult[] {
+  private static parseWord(word: string): IInputParseResult[] {
+    const result: IInputParseResult[] = [];
+    const chars = word.split('');
+
+    let tempString = '';
+
+    while (chars.length) {
+      const currentChar = chars.shift();
+
+      if (!currentChar) {
+        throw new CriticalError(`MHTMLGlyphRow.parseWord - expected currentChar to be defined.`);
+      }
+
+      if (isParen(currentChar)) {
+        if (tempString.length) {
+          result.push({
+            type: 'text',
+            data: tempString,
+          })
+          tempString = '';
+        }
+
+        result.push({ type: 'paren', data: currentChar })
+      } else {
+        tempString += currentChar;
+      }
+    }
+
+    return result;
+  }
+
+  private static parseText(text: string): IInputParseResult[] {
     const result: IInputParseResult[] = [];
     const words = text.split(/(\s+)/)
 
     for (const word of words) {
       const isWhitespace = word.trim().length === 0;
 
-      const type: IInputParseResult['type'] = isWhitespace ? 'whitespace' : 'text';
+      let type: IInputParseResult['type'];
+
+      switch (true) {
+        case isWhitespace:
+          type = 'whitespace';
+          break;
+        case isParen(word):
+          type = 'paren'
+          break;
+        default: {
+          if (containsParen(word)) {
+            result.push(...MHTMLGlyphRow.parseWord(word));
+            continue;
+          }
+
+          type = 'text';
+          break;
+        }
+      }
 
       result.push({
         type,
@@ -114,7 +146,7 @@ export class MHTMLGlyphRow extends MHTMLGlyphDOM<HTMLDivElement> {
     const { _text, fragment, renderer } = this;
     const { body } = renderer;
     const { visitors } = body;
-    const words = MHTMLGlyphRow.parse(_text);
+    const words = MHTMLGlyphRow.parseText(_text);
 
     // Очищаем старые
     if (fragment) {
@@ -136,6 +168,10 @@ export class MHTMLGlyphRow extends MHTMLGlyphDOM<HTMLDivElement> {
           children.push(wordNode);
           break;
         }
+        case 'paren':
+          const parenNode = new MHTMLGlyphParen(data);
+          children.push(parenNode);
+          break;
       }
     }
 
