@@ -65,9 +65,8 @@ export class MHTMLEditorActiveState extends MHTMLEditorState {
         return;
       }
       case Char.Enter: {
-        const newRow = controller.addEmptyRow();
-        navigator.nextRow();
-        return navigator.setPosition({ row: newRow.index, column: 0 })
+        controller.splitCurrentRow(column);
+        return navigator.setPosition({ row: controller.currentRow.index, column: 0 })
       }
     }
   }

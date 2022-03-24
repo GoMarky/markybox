@@ -22,7 +22,7 @@ export class MHTMLGlyphRow extends MHTMLGlyphDOM<HTMLDivElement> {
 
   constructor(
     private readonly renderer: MHTMLRenderer,
-    public readonly index: number
+    public index: number
   ) {
     super();
 
@@ -42,6 +42,10 @@ export class MHTMLGlyphRow extends MHTMLGlyphDOM<HTMLDivElement> {
 
   public empty(): boolean {
     return this._text.length === 0;
+  }
+
+  public updateIndex(index: number): void {
+    this.index = index;
   }
 
   public setText(text: string): void {
@@ -108,7 +112,7 @@ export class MHTMLGlyphRow extends MHTMLGlyphDOM<HTMLDivElement> {
 
   private static parseText(text: string): IInputParseResult[] {
     const result: IInputParseResult[] = [];
-    const words = text.split(/(\s+)/)
+    const words = text.split(/(\s+)/);
 
     for (const word of words) {
       const isWhitespace = word.trim().length === 0;
