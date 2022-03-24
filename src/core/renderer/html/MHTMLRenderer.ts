@@ -19,6 +19,7 @@ import { IAbstractRenderer } from '@/core/app/renderer';
 import { MHTMLTextHintVisitor } from '@/core/renderer/html/visitors/MHTMLTextHintVisitor';
 import { MHTMLTextIndentVisitor } from '@/core/renderer/html/visitors/MHTMLTextIndentVisitor';
 import { MHTMLHighlightKeywordVisitor } from '@/core/renderer/html/visitors/MHTMLHighlightKeywordVisitor';
+import { MPartitionLayer } from '@/core/renderer/html/layers/MPartionLayer';
 
 export class MHTMLRenderer extends MObject implements IAbstractRenderer {
   public readonly display: HTMLDisplayRenderer;
@@ -33,6 +34,7 @@ export class MHTMLRenderer extends MObject implements IAbstractRenderer {
   public currentState: MHTMLEditorState;
 
   private readonly clipboard: MHTMLClipboard;
+  private partitionLayer: MPartitionLayer;
 
   constructor(public readonly root: HTMLElement) {
     super();
@@ -50,6 +52,7 @@ export class MHTMLRenderer extends MObject implements IAbstractRenderer {
     this.clipboard = new MHTMLClipboard();
     this.textLayer = new MTextLayer(this);
     this.markerLayer = new MMarkerLayer(this);
+    this.partitionLayer = new MPartitionLayer(this);
     this.controller = new MHTMLEditorRowController(this);
   }
 
