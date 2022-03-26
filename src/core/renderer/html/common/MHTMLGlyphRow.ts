@@ -10,6 +10,7 @@ import { MHTMLNodeFragment } from '@/core/renderer/html/common/MHTMLNodeFragment
 import { containsParen, isParen } from '@/base/string';
 import { MHTMLGlyphParen } from '@/core/renderer/html/common/MHTMLGlyphParen';
 import { CriticalError } from '@/base/errors';
+import { MHTMLGlyphRowGutter } from '@/core/renderer/html/common/MHTMLGlyphRowGutter';
 
 interface IInputParseResult {
   type: 'whitespace' | 'text' | 'paren';
@@ -20,6 +21,8 @@ export class MHTMLGlyphRow extends MHTMLGlyphDOM<HTMLDivElement> {
   private fragment: MHTMLNodeFragment;
   private _text: string = '';
 
+  private readonly gutterElement: MHTMLGlyphRowGutter;
+
   constructor(
     private readonly renderer: MHTMLRenderer,
     public index: number
@@ -27,7 +30,11 @@ export class MHTMLGlyphRow extends MHTMLGlyphDOM<HTMLDivElement> {
     super();
 
     const rowElement = document.createElement('div');
-    rowElement.classList.add('m-editor__row')
+    rowElement.classList.add('m-editor__row');
+
+    this.gutterElement = new MHTMLGlyphRowGutter(index);
+
+    this.renderer.gutter.el.appendChild(this.gutterElement.el);
 
     this._el = rowElement;
   }
@@ -44,8 +51,9 @@ export class MHTMLGlyphRow extends MHTMLGlyphDOM<HTMLDivElement> {
     return this._text.length === 0;
   }
 
-  public updateIndex(index: number): void {
+  public setIndex(index: number): void {
     this.index = index;
+    this.gutterElement.index = index;
   }
 
   public setText(text: string): void {
@@ -185,5 +193,12 @@ export class MHTMLGlyphRow extends MHTMLGlyphDOM<HTMLDivElement> {
     this.accept(visitors);
 
     this._el.appendChild(nodeFragment.el);
+  }
+
+  public dispose(): void {
+    super.dispose();
+
+    this.gutterElement.dispose();
+    this.fragment.dispose();
   }
 }

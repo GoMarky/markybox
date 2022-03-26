@@ -70,7 +70,7 @@ export class MHTMLRenderer extends MObject implements IAbstractRenderer {
     this.unlock();
 
     this.body.addVisitor(new MHTMLTextHintVisitor());
-    this.body.addVisitor(new MHTMLTextIndentVisitor());
+    this.body.addVisitor(new MHTMLTextIndentVisitor(this));
     this.body.addVisitor(new MHTMLHighlightKeywordVisitor());
 
     this.registerListeners();

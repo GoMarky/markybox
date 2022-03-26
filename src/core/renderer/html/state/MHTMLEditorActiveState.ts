@@ -59,9 +59,7 @@ export class MHTMLEditorActiveState extends MHTMLEditorState {
         return navigator.nextRow();
       }
       case Char.Backspace: {
-        navigator.prevColumn();
-        const position = navigator.position;
-        controller.currentRow.clearLetterByPosition(position.column);
+        this.backspace();
         return;
       }
       case Char.Enter: {
@@ -69,5 +67,21 @@ export class MHTMLEditorActiveState extends MHTMLEditorState {
         return navigator.setPosition({ row: controller.currentRow.index, column: 0 })
       }
     }
+  }
+
+  private backspace(): void {
+    const { navigator, controller, storage } = this.renderer;
+    const { currentRow } = controller;
+
+    if (currentRow.empty()) {
+      controller.removeLastRow();
+      const lastRow = storage.last();
+      navigator.setPosition({ row: lastRow.index, column: 0 })
+      return;
+    }
+
+    navigator.prevColumn();
+    const position = navigator.position;
+    controller.currentRow.clearLetterByPosition(position.column);
   }
 }

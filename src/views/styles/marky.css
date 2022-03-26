@@ -30,7 +30,7 @@
 }
 
 .m-editor__gutter-cell {
-    padding-right: 13px;
+    padding-right: 12px;
     padding-left: 19px;
 }
 
@@ -110,4 +110,17 @@
     border-radius: 3px;
     background-color: #b5d5ff;
     z-index: var(--z-index-selection);
+}
+
+.m-editor__gutter-cell-widget {
+    margin: 0 -12px 0 1px;
+    display: inline-block;
+    width: 11px;
+    vertical-align: top;
+    background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAANElEQVR42mWKsQ0AMAzC8ixLlrzQjzmBiEjp0A6WwBCSPgKAXoLkqSot7nN3yMwR7pZ32NzpKkVoDBUxKAAAAABJRU5ErkJggg==);
+    background-repeat: no-repeat;
+    background-position: center;
+    border-radius: 3px;
+    border: 1px solid transparent;
+    cursor: pointer;
 }

@@ -58,6 +58,15 @@ export class MHTMLEditorRowController extends MObject {
     return row;
   }
 
+  public removeLastRow(): void {
+    const { renderer } = this;
+    const { storage } = renderer;
+
+    const lastRow = storage.last();
+    storage.removeRow(lastRow);
+    this._currentRow = storage.last();
+  }
+
   public setCurrentRow(row: MHTMLGlyphRow): MHTMLGlyphRow {
     this._currentRow = row;
 

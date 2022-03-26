@@ -31,13 +31,24 @@ export class MHTMLStorage extends MObject {
   public removeRow(row: MHTMLGlyphRow): void {
     const index = this._rows.findIndex((r) => r === row);
 
+    // Если удаляемая строчка последняя - то не удаляем ее.
+    if (index === 0) {
+      return;
+    }
+
     if (indexOutOfRange(index)) {
       throw new CriticalError(`Cant find row: ${row}`);
     }
 
     this._rows.splice(index, 1);
 
+    row.dispose();
+
     this._onDidRemoveRow.fire(row);
+  }
+
+  public last(): MHTMLGlyphRow {
+    return this._rows[this.count - 1];
   }
 
   public at(index: number): MHTMLGlyphRow | null {
