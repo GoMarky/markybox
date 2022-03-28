@@ -63,7 +63,7 @@ export class MHTMLEditorBodyNavigator extends MObject {
 
   private doSetPosition(position: IPosition): void {
     const { layer, renderer } = this;
-    const { controller } = renderer;
+    const { controller, storage } = renderer;
     let { row, column } = position;
 
     if (row < 0) {
@@ -72,6 +72,16 @@ export class MHTMLEditorBodyNavigator extends MObject {
 
     if (column < 0) {
       column = 0;
+    }
+
+    const matchedRow = storage.at(row);
+
+    if (matchedRow) {
+      if (matchedRow.empty()) {
+        column = 0;
+      } else if (column > matchedRow.columnsCount) {
+        column = matchedRow.columnsCount;
+      }
     }
 
     const normalizedPosition: IPosition = { row, column };

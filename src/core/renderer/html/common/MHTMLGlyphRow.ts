@@ -192,6 +192,8 @@ export class MHTMLGlyphRow extends MHTMLGlyphDOM<HTMLDivElement> {
 
     this.accept(visitors);
 
+    this.gutterElement.expandable = nodeFragment.hasLeftParen;
+
     this._el.appendChild(nodeFragment.el);
   }
 
