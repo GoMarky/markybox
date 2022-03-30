@@ -14,7 +14,7 @@ import { MHTMLEditorActiveState } from '@/core/renderer/html/state/MHTMLEditorAc
 import { MHTMLEditorState } from '@/core/renderer/html/state/MHTMLEditorState';
 import { MHTMLEditorLockedState } from '@/core/renderer/html/state/MHTMLEditorLockedState';
 import { CriticalError } from '@/base/errors';
-import { MHTMLEditorRowController } from '@/core/renderer/html/editor/MHTMLEditorRowController';
+import { MHTMLEditorController } from '@/core/renderer/html/editor/MHTMLEditorController';
 import { IAbstractRenderer } from '@/core/app/renderer';
 import { MHTMLTextHintVisitor } from '@/core/renderer/html/visitors/MHTMLTextHintVisitor';
 import { MHTMLTextIndentVisitor } from '@/core/renderer/html/visitors/MHTMLTextIndentVisitor';
@@ -30,11 +30,11 @@ export class MHTMLRenderer extends MObject implements IAbstractRenderer {
   public readonly navigator: MHTMLEditorBodyNavigator;
   public readonly selection: MHTMLEditorSelection;
   public readonly storage: MHTMLStorage;
-  public readonly controller: MHTMLEditorRowController;
+  public readonly controller: MHTMLEditorController;
   public currentState: MHTMLEditorState;
 
   private readonly clipboard: MHTMLClipboard;
-  private partitionLayer: MPartitionLayer;
+  private readonly partitionLayer: MPartitionLayer;
 
   constructor(public readonly root: HTMLElement) {
     super();
@@ -53,7 +53,7 @@ export class MHTMLRenderer extends MObject implements IAbstractRenderer {
     this.textLayer = new MTextLayer(this);
     this.markerLayer = new MMarkerLayer(this);
     this.partitionLayer = new MPartitionLayer(this);
-    this.controller = new MHTMLEditorRowController(this);
+    this.controller = new MHTMLEditorController(this);
   }
 
   public unlock(): void {
@@ -66,7 +66,7 @@ export class MHTMLRenderer extends MObject implements IAbstractRenderer {
     this.currentState.setContext(this);
   }
 
-  public init(): void {
+  public init(text?: string): void {
     this.unlock();
 
     this.body.addVisitor(new MHTMLTextHintVisitor());
@@ -74,7 +74,12 @@ export class MHTMLRenderer extends MObject implements IAbstractRenderer {
     this.body.addVisitor(new MHTMLHighlightKeywordVisitor());
 
     this.registerListeners();
-    this.controller.addEmptyRow();
+
+    if (text) {
+      this.controller.setWholeText(text);
+    } else {
+      this.controller.addEmptyRow();
+    }
   }
 
   private registerListeners(): void {

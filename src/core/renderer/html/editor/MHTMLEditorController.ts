@@ -3,7 +3,7 @@ import { MHTMLRenderer } from '@/core';
 import { MHTMLGlyphRow } from '@/core/renderer/html/common/MHTMLGlyphRow';
 import { splitAtIndex } from '@/core/app/common';
 
-export class MHTMLEditorRowController extends MObject {
+export class MHTMLEditorController extends MObject {
   private _currentRow: MHTMLGlyphRow;
 
   constructor(private readonly renderer: MHTMLRenderer) {
@@ -47,12 +47,24 @@ export class MHTMLEditorRowController extends MObject {
 
   public addRowAt(index: number): MHTMLGlyphRow {
     const { renderer } = this;
-    const { storage } = renderer;
+    const { storage, textLayer } = renderer;
     const row = new MHTMLGlyphRow(renderer, index);
     this._currentRow = row;
     storage.addRowAt(row, index);
 
-    renderer.textLayer.el.appendChild(row.el);
+    textLayer.el.appendChild(row.el);
+
+    return row;
+  }
+
+  public addRow(text: string): MHTMLGlyphRow {
+    const { renderer } = this;
+    const { storage, textLayer } = renderer;
+    const row = new MHTMLGlyphRow(renderer, storage.count);
+    row.setText(text);
+    storage.addRow(row);
+
+    textLayer.el.appendChild(row.el);
 
     return row;
   }
@@ -63,7 +75,6 @@ export class MHTMLEditorRowController extends MObject {
     const row = new MHTMLGlyphRow(renderer, storage.count);
     this._currentRow = row;
     storage.addRow(row);
-
     renderer.textLayer.el.appendChild(row.el);
 
     return row;
@@ -82,6 +93,18 @@ export class MHTMLEditorRowController extends MObject {
     this._currentRow = row;
 
     return row;
+  }
+
+  public setWholeText(text: string): void {
+    const textParts = text.split('\n').filter(Boolean);
+
+    for (const [index, rowText] of textParts.entries()) {
+      const row = this.addRow(rowText);
+
+      if (index === textParts.length - 1) {
+        this.setCurrentRow(row);
+      }
+    }
   }
 
   private findClosestRightParenRow(startIndex: number): MHTMLGlyphRow | undefined {

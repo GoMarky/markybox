@@ -27,7 +27,12 @@ export default window.workbench.createComponent((accessor) => {
         editor = new markybox.MEditor({
           renderer,
           fullscreen: true,
-          logger: logService
+          logger: logService,
+          initialText: `
+function log() {
+  const isTest = process.env.IS_TEST;
+  console.log(123)
+}`
         });
       }
 

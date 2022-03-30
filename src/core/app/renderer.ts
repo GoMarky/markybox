@@ -7,5 +7,5 @@ export interface IAbstractRenderer {
 
   unlock(): void;
   lock(): void;
-  init(): void;
+  init(text?: string): void;
 }
