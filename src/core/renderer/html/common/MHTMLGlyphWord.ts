@@ -4,9 +4,7 @@ export class MHTMLGlyphWord extends MHTMLGlyphDOM<HTMLSpanElement> {
   constructor(public text: string) {
     super();
 
-    const element = document.createElement('span');
-
-    this._el = element;
+    this._el = document.createElement('span');
     this._el.textContent = this.text;
   }
 

@@ -3,6 +3,7 @@ import { MHTMLGlyphParen, ParenDirection } from '@/core/renderer/html/common/MHT
 
 export class MHTMLNodeFragment extends MHTMLGlyphDOM<DocumentFragment> {
   private readonly _hasLeftParen: boolean;
+  private readonly _hasRightParen: boolean;
 
   constructor(private _children: MHTMLGlyphDOM[]) {
     super();
@@ -12,14 +13,24 @@ export class MHTMLNodeFragment extends MHTMLGlyphDOM<DocumentFragment> {
     for (const glyph of this._children) {
       this._el.appendChild(glyph.el);
 
-      if (glyph instanceof MHTMLGlyphParen && glyph.type === ParenDirection.Left) {
-        this._hasLeftParen = true;
+      if (glyph instanceof MHTMLGlyphParen) {
+        if (glyph.type === ParenDirection.Left) {
+          this._hasLeftParen = true;
+        }
+
+        if (glyph.type === ParenDirection.Right) {
+          this._hasRightParen = true;
+        }
       }
     }
   }
 
   public get hasLeftParen(): boolean {
     return this._hasLeftParen;
+  }
+
+  public get hasRightParen(): boolean {
+    return this._hasRightParen;
   }
 
   public get children(): MHTMLGlyphDOM[] {

@@ -1,11 +1,12 @@
 import { MHTMLGlyphDOM } from '@/core/renderer/html/common/MHTMLGlyphDOM';
 import { toPixel } from '@/base/dom';
+import { MHTMLRenderer } from '@/core';
 
 export class MHTMLGlyphRowGutter extends MHTMLGlyphDOM<HTMLSpanElement> {
   private _expandable: boolean = false;
   private _widgetElement: HTMLSpanElement;
 
-  constructor(private _index: number) {
+  constructor(private readonly renderer: MHTMLRenderer, private _index: number) {
     super();
 
     const element = document.createElement('span');
@@ -13,12 +14,11 @@ export class MHTMLGlyphRowGutter extends MHTMLGlyphDOM<HTMLSpanElement> {
     element.style.height = toPixel(16);
 
     this._el = element;
-
     this.render();
   }
 
   public get index(): number {
-    return this._index + 1;
+    return this._index;
   }
 
   public set index(value) {
@@ -43,12 +43,21 @@ export class MHTMLGlyphRowGutter extends MHTMLGlyphDOM<HTMLSpanElement> {
     widgetElement.style.height = toPixel(16);
     this._el.appendChild(widgetElement);
     this._widgetElement = widgetElement;
+
+    this._el.addEventListener('click', this.onClick);
+  }
+
+  private onClick = (): void => {
+    const { index, renderer } = this;
+    const { controller } = renderer;
+
+    controller.expandOrShrinkRow(index);
   }
 
   private render(): void {
     const { index, expandable } = this;
 
-    this._el.textContent = index.toString();
+    this._el.textContent = (index + 1).toString();
 
     if (expandable) {
       this.createExpandableWidget();
@@ -56,6 +65,7 @@ export class MHTMLGlyphRowGutter extends MHTMLGlyphDOM<HTMLSpanElement> {
   }
 
   public dispose(): void {
+    this._el.removeEventListener('click', this.onClick);
     this._el.remove();
   }
 }

@@ -26,6 +26,17 @@ export class MHTMLEditorRowController extends MObject {
     nextRow.setText(last);
   }
 
+  public expandOrShrinkRow(index: number): void {
+    const { renderer } = this;
+    const { storage } = renderer;
+
+    const leftParenRow = storage.at(index);
+    const rightParenRow = this.findClosestRightParenRow(index);
+
+    console.log(leftParenRow);
+    console.log(rightParenRow);
+  }
+
   public isCurrentColumnInsideGlyph(): boolean {
     const { navigator } = this.renderer;
     const { currentRow } = this;
@@ -71,5 +82,19 @@ export class MHTMLEditorRowController extends MObject {
     this._currentRow = row;
 
     return row;
+  }
+
+  private findClosestRightParenRow(startIndex: number): MHTMLGlyphRow | undefined {
+    const { storage } = this.renderer;
+
+    for (let i = startIndex + 1; i < storage.count; i++) {
+      const row = storage.at(i);
+
+      if (row?.fragment.hasRightParen) {
+        return row;
+      }
+    }
+
+    return undefined;
   }
 }

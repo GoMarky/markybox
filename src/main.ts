@@ -28,10 +28,10 @@ class Application {
 
     const App = (await import('@/views/App.vue')).default;
     const router = (await import('@/views/router/router')).default;
+    createApp(App).use(router).mount('#app');
 
-
+    console.clear();
     logService.info(`App started at: ${now()}`);
-    createApp(App).use(router).mount('#app')
   }
 }
 
@@ -48,7 +48,7 @@ function main() {
 
   const app = new Application();
 
-  app.init(appServices);
+  app.init(appServices)
 }
 
 main();

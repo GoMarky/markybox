@@ -18,7 +18,7 @@ interface IInputParseResult {
 }
 
 export class MHTMLGlyphRow extends MHTMLGlyphDOM<HTMLDivElement> {
-  private fragment: MHTMLNodeFragment;
+  public fragment: MHTMLNodeFragment;
   private _text: string = '';
 
   private readonly gutterElement: MHTMLGlyphRowGutter;
@@ -32,8 +32,7 @@ export class MHTMLGlyphRow extends MHTMLGlyphDOM<HTMLDivElement> {
     const rowElement = document.createElement('div');
     rowElement.classList.add('m-editor__row');
 
-    this.gutterElement = new MHTMLGlyphRowGutter(index);
-
+    this.gutterElement = new MHTMLGlyphRowGutter(renderer, index);
     this.renderer.gutter.el.appendChild(this.gutterElement.el);
 
     this._el = rowElement;
