@@ -66,7 +66,6 @@ export default window.workbench.createComponent((accessor) => {
 .user-login
   padding: 20px
 
-
 .user-login__input
   padding-bottom: 10px
 </style>
