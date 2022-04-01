@@ -23,6 +23,8 @@ declare global {
 
 }
 
+export const API_VERSION = 'v1';
+
 export const isDev: boolean = process.env.NODE_ENV === 'development';
 export const isProd: boolean = process.env.NODE_ENV === 'production';
 export const isTest: boolean = process.env.NODE_ENV === 'test';

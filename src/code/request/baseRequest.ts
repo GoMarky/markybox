@@ -11,6 +11,7 @@ import { CriticalError } from '@/base/errors';
 import { AbortRequestError, AbortRequestReason, DisconnectError, TimeoutError } from '@/code/request/request';
 import { FunctionLike } from '@/types/common';
 import { ensureNoFirstSlash } from '@/base/string';
+import { ApiError } from '@/platform/request/common/request';
 
 const DEFAULT_TIMEOUT_TIME = 15000;
 
@@ -35,7 +36,7 @@ export class BaseTransformer extends Disposable {
 }
 
 export class ResponseInstance<TResponse, TReturn> extends Disposable {
-  public result: TReturn;
+  public data: TReturn;
 
   constructor(
     public readonly response: AxiosResponse<TResponse>,
@@ -45,8 +46,8 @@ export class ResponseInstance<TResponse, TReturn> extends Disposable {
     super();
   }
 
-  public setResult(result: TReturn): void {
-    this.result = result;
+  public setData(data: TReturn): void {
+    this.data = data;
   }
 
   public getOriginalResult(): AxiosResponse<TResponse> {
@@ -72,6 +73,7 @@ export abstract class HTTPRequest<TAttributes = unknown, TResponse = unknown, TR
   protected constructor() {
     this.axios = axios.create({
       timeout: DEFAULT_TIMEOUT_TIME,
+      baseURL: 'http://localhost:3000',
     });
 
     this.transformer = BaseTransformer.createNullInstance();
@@ -83,6 +85,12 @@ export abstract class HTTPRequest<TAttributes = unknown, TResponse = unknown, TR
     endpoint: string,
     token?: AbortRequestToken | null
   ): never {
+    if (error.response?.data?.code) {
+      const { message, code } = error.response.data;
+
+      throw new ApiError(message, code, requestName)
+    }
+
     if (error.message === 'Network Error') {
       throw new DisconnectError(requestName, endpoint);
     }
@@ -100,8 +108,6 @@ export abstract class HTTPRequest<TAttributes = unknown, TResponse = unknown, TR
 
   public setEndpoint(endpoint: string): this {
     if (types.isString(endpoint)) {
-      this.axios.defaults.baseURL = endpoint;
-
       return this;
     }
 
@@ -144,12 +150,10 @@ export abstract class HTTPRequest<TAttributes = unknown, TResponse = unknown, TR
   }
 
   public getRequestURL(): string {
-    const endpoint = this.endpoint as string | FunctionLikeReturnString;
+    const endpoint = this.endpoint as string;
 
     if (types.isString(endpoint)) {
-      return ensureNoFirstSlash(endpoint);
-    } else if (types.isFunction(endpoint)) {
-      return ensureNoFirstSlash(endpoint());
+      return endpoint;
     } else {
       throw new CriticalError(`Unrecognized this.endpoint property for request: ${this.id}`);
     }
@@ -162,7 +166,7 @@ export abstract class HTTPRequest<TAttributes = unknown, TResponse = unknown, TR
     const responseInstance = new ResponseInstance<TResponse, TReturn>(response, endpoint, this.id);
 
     const result = this.transformer.transform(response);
-    responseInstance.setResult(result as TReturn);
+    responseInstance.setData(result as TReturn);
 
     return responseInstance;
   }

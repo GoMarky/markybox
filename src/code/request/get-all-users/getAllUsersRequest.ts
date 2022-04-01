@@ -6,7 +6,7 @@ export interface IGetAllUsersRequestResponse {
 }
 
 export class GetAllUsersRequest extends HTTPRequest<null, IGetAllUsersRequestResponse, string> {
-  public static readonly staticId = 'getAllUsers';
+  public static readonly staticId = 'get-all-users';
 
   protected readonly endpoint: string = ENDPOINTS.GET_ALL_USERS;
   public readonly id: string = GetAllUsersRequest.staticId;

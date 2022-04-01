@@ -5,6 +5,9 @@ import { ILogService, now } from '@/platform/log/common/log';
 import { ICreateComponentFactory } from '@/base/platform';
 import { ServiceCollection } from '@/platform/instantiation/browser/collection';
 import { getSingletonServiceDescriptors } from '@/platform/instantiation/browser/singleton';
+import { IRequestService } from '@/platform/request/common/requestService';
+import requests from '@/code/request/requests';
+import { ISessionService } from '@/code/session/common/session';
 
 class Application {
   public init(services: ServiceCollection): void {
@@ -25,12 +28,21 @@ class Application {
 
   public async createView(services: ServiceCollection): Promise<void> {
     const logService = services.get(ILogService);
+    const requestService = services.get(IRequestService);
+    const sessionService = services.get(ISessionService);
+
+    requestService.registerRequests(requests);
+
+    try {
+      await sessionService.restoreSession();
+    } catch (error) {
+      //
+    }
 
     const App = (await import('@/views/App.vue')).default;
     const router = (await import('@/views/router/router')).default;
     createApp(App).use(router).mount('#app');
 
-    console.clear();
     logService.info(`App started at: ${now()}`);
   }
 }

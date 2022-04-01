@@ -31,7 +31,7 @@ const environmentOptions: IEnvironmentConfig = {
 };
 
 // Environment service
-const environmentService = new EnvironmentService(environmentOptions, logService, lifecycleService);
+const environmentService = new EnvironmentService(environmentOptions);
 services.set(IEnvironmentService, environmentService);
 
 const requestService = new RequestService(logService, lifecycleService, instantiationService);

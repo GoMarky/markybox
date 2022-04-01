@@ -115,7 +115,7 @@ export class MHTMLRenderer extends MObject implements IAbstractRenderer {
       })
     );
 
-    window.addEventListener('click', (event) => this.currentState.onClick(event));
+    window.addEventListener('mousedown', (event) => this.currentState.onClick(event));
     window.addEventListener('keydown', (event) => this.currentState.onKeyDown(event));
   }
 }

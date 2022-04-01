@@ -9,31 +9,16 @@ export enum HTTPStatusCode {
   InternalServerError = 500,
 }
 
-/**
- * @description
- * More API Errors here:
- *
- * @see https://confluence.fbsvc.bz/confluence/pages/viewpage.action?pageId=3866818
- */
 export enum APIError {
   BadRequest = 1, // В запросе не определены какие-то обязательные поля
+  NotFoundError = 2,
+  UnexpectedError = 25,
 }
 
 const API_ERROR_NAME = 'ApiError';
 
-/**
- * @author Teodor_Dre <swen295@gmail.com>
- *
- * @description
- *  API Error instance.
- *
- *  @see https://confluence.fbsvc.bz/confluence/pages/viewpage.action?pageId=3866759
- *
- */
 export class ApiError<T = APIError> extends NetworkError {
   private readonly _type: T;
-
-  public readonly errorValue: string;
   public readonly name = API_ERROR_NAME;
 
   public get type(): T {
@@ -48,22 +33,17 @@ export class ApiError<T = APIError> extends NetworkError {
    *
    * @param {string} message
    * @param {APIError} type
-   * @param errorValue
-   * @param serverName
    * @param {string} requestName
    * @extends ApplicationError
    */
   constructor(
     message: string,
     type: T,
-    errorValue: string,
-    public readonly serverName: string,
     requestName?: string
   ) {
     super(message, requestName);
 
     this.message = message;
-    this.errorValue = errorValue;
     this._type = type;
   }
 

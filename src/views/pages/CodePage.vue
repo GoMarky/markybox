@@ -35,7 +35,7 @@ export default window.workbench.createComponent((accessor) => {
         }
 
         const root = document.querySelector<HTMLElement>('#root') as HTMLElement;
-        const renderer = new markybox.MHTMLRenderer(root, userName);
+        const renderer = new markybox.MHTMLRenderer(root, userName.value);
 
         editor = new markybox.MEditor({
           renderer,

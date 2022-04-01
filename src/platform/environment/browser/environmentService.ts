@@ -3,10 +3,6 @@ import {
   IEnvironmentService,
 } from '@/platform/environment/common/environment';
 
-import { ILogService } from '@/platform/log/common/log';
-import { ILifecycleService, LifePhase } from '@/platform/lifecycle/browser/lifecycle';
-
-
 export interface IEnvironmentConfig {
   readonly version: string;
 }
@@ -14,8 +10,6 @@ export interface IEnvironmentConfig {
 export class EnvironmentService extends Disposable implements IEnvironmentService {
   constructor(
     private readonly config: IEnvironmentConfig,
-    @ILogService private readonly logService: ILogService,
-    @ILifecycleService private readonly lifecycleService: ILifecycleService
   ) {
     super();
   }

@@ -32,16 +32,12 @@ export default window.workbench.createComponent((accessor) => {
       }
 
       function onEscape(event: KeyboardEvent): void {
-        console.log(event);
+        if (event.key === 'Escape') {
+          closeModal();
+        }
       }
 
-      onMounted(() => {
-        window.addEventListener('keyup', onEscape)
-      })
-
-      onUnmounted(() => {
-        window.removeEventListener('keyup', onEscape);
-      })
+      window.addEventListener('keyup', onEscape);
 
       return { isOpenModal, closeModal }
     },
@@ -70,7 +66,8 @@ export default window.workbench.createComponent((accessor) => {
 
 .modal__header
   min-height: 40px
-  display: flex;
+
+  display: flex
   flex-direction: row
   align-items: center
   justify-content: space-between
@@ -131,4 +128,7 @@ export default window.workbench.createComponent((accessor) => {
 .modal__content
   height: 100%
   margin: 0 auto
+
+.modal__main
+  background: $white-color
 </style>

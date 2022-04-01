@@ -11,10 +11,10 @@
     <nav class="page-header__navigation">
       <ul class="page-header__nav-list">
         <li class="page-header__nav-item">
-          <a v-if="isAuth" href="#" @click.prevent="openUserProfileModal()" class="page-header__nav-link" type="button">
+          <a v-if="isAuth" href="#" @click.prevent="openUserProfileModal()" class="page-header__nav-link">
             {{ name }}
           </a>
-          <a v-else href="#" @click.prevent="openLoginModal()" class="page-header__nav-link" type="button">
+          <a v-else href="#" @click.prevent="openLoginModal()" class="page-header__nav-link">
             Login
           </a>
         </li>

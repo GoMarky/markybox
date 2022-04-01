@@ -8,8 +8,7 @@ type ModalName = 'UserLoginModal' | 'UserProfileModal'
 
 export class ModalController extends Disposable {
   public readonly isOpen: Ref<boolean> = ref(false);
-
-  public readonly currentModal: Ref<string> = ref('');
+  public readonly currentModal: Ref<string | null> = ref(null);
 
   public open(modalName: ModalName): void {
     this.currentModal.value = modalName;
@@ -17,7 +16,7 @@ export class ModalController extends Disposable {
   }
 
   public close(): void {
-    this.currentModal.value = '';
+    this.currentModal.value = null;
     this.isOpen.value = false;
   }
 }
