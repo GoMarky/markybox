@@ -4,5 +4,4 @@ export const IEnvironmentService = createDecorator<IEnvironmentService>('environ
 
 export interface IEnvironmentService {
   readonly version: string;
-  readonly isDev: boolean;
 }

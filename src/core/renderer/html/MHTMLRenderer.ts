@@ -36,7 +36,7 @@ export class MHTMLRenderer extends MObject implements IAbstractRenderer {
   private readonly clipboard: MHTMLClipboard;
   private readonly partitionLayer: MPartitionLayer;
 
-  constructor(public readonly root: HTMLElement) {
+  constructor(public readonly root: HTMLElement, author: string = 'user') {
     super();
 
     if (!window.isSecureContext) {
@@ -48,7 +48,7 @@ export class MHTMLRenderer extends MObject implements IAbstractRenderer {
     this.gutter = new MHTMLEditorGutter(this);
     this.body = new MHTMLEditorBody(this);
     this.selection = new MHTMLEditorSelection(this);
-    this.navigator = new MHTMLEditorBodyNavigator(this, 'user');
+    this.navigator = new MHTMLEditorBodyNavigator(this, author);
     this.clipboard = new MHTMLClipboard();
     this.textLayer = new MTextLayer(this);
     this.markerLayer = new MMarkerLayer(this);

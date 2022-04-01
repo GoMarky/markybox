@@ -1,0 +1,42 @@
+.visually_hidden
+    position: absolute
+    overflow: hidden
+    clip: rect(0 0 0 0)
+    height: 1px
+    width: 1px
+    margin: -1px
+    padding: 0
+    border: 0
+
+.overlay-two
+    position: fixed
+    left: 0
+    top: 0
+    right: 0
+    bottom: 0
+    background: #000000
+    z-index: 5
+    opacity: 0.8
+    display: none
+
+    &--is-visible
+        display: block
+
+.overlay::after
+    content: ""
+    display: block
+    position: fixed
+    top: 0
+    left: 0
+    height: 100%
+    width: 100%
+    background: #000000
+    z-index: 3
+    opacity: 0.8
+
+.no-scroll
+    overflow: hidden
+
+@media (min-width: 700px)
+    .overlay::after
+        display: none

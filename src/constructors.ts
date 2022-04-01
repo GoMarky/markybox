@@ -4,11 +4,12 @@ import { ConsoleLogService } from '@/platform/log/browser/log';
 import { LogLevel } from '@/platform/log/common/abstractLog';
 import { ILogService } from '@/platform/log/common/log';
 import { ILifecycleService, LifecycleService } from '@/platform/lifecycle/browser/lifecycle';
-import { isDev } from '@/base/platform';
 import { EnvironmentService, IEnvironmentConfig } from '@/platform/environment/browser/environmentService';
 import { IEnvironmentService } from '@/platform/environment/common/environment';
-import { HTTPRequestService } from '@/platform/request/browser/requestService';
-import { IHTTPRequestService } from '@/platform/request/common/requestService';
+import { RequestService } from '@/platform/request/browser/requestService';
+import { IRequestService } from '@/platform/request/common/requestService';
+import { SessionService } from '@/code/session/browser/sessionService';
+import { ISessionService } from '@/code/session/common/session';
 
 const services = new ServiceCollection();
 
@@ -25,14 +26,16 @@ services.set(ILifecycleService, lifecycleService);
 
 const environmentOptions: IEnvironmentConfig = {
   version: '0.0.1',
-  development: isDev,
 };
 
 // Environment service
 const environmentService = new EnvironmentService(environmentOptions, logService, lifecycleService);
 services.set(IEnvironmentService, environmentService);
 
-const requestService = new HTTPRequestService(logService, lifecycleService, instantiationService);
-services.set(IHTTPRequestService, requestService);
+const requestService = new RequestService(logService, lifecycleService, instantiationService);
+services.set(IRequestService, requestService);
+
+const sessionService = new SessionService(requestService)
+services.set(ISessionService, sessionService);
 
 export default services;

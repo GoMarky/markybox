@@ -4,7 +4,7 @@ import { IDisposable } from '@/platform/lifecycle/common/lifecycle';
 import { HTTPRequestBody, HTTPRequestString } from '@/code/request/request';
 import { ResponseInstance } from '@/code/request/baseRequest';
 
-export const IHTTPRequestService = createDecorator<IHTTPRequestService>('httpRequestService');
+export const IRequestService = createDecorator<IRequestService>('RequestService');
 
 export interface IRequestRegister {
   readonly id: HTTPRequestString;
@@ -16,7 +16,7 @@ export interface IHTTPRequestCallOptions {
   readonly forcedEndpoint?: string;
 }
 
-export interface IHTTPRequestService {
+export interface IRequestService {
   /**
    * @author Teodor_Dre <swen295@gmail.com>
    *

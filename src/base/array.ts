@@ -22,3 +22,11 @@ export function sortStrings(array: string[]): void {
 export function indexOutOfRange(index: number): boolean {
   return index < 0;
 }
+
+export function getLastElement<T>(array: readonly T[]): T | undefined {
+  if (array.length === 0) {
+    return undefined;
+  }
+
+  return array[array.length - 1];
+}

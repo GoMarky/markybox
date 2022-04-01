@@ -7,32 +7,41 @@
 <script lang="ts">
 import { defineComponent, nextTick, onMounted, ref } from 'vue';
 import * as markybox from '@/core';
+import { getLastElement } from '@/base/array';
 import { ILogService } from '@/platform/log/common/log';
+import { ISessionService } from '@/code/session/common/session';
+import { Component } from '@/code/vue/common/component-names';
 
 export default window.workbench.createComponent((accessor) => {
   const logService = accessor.get(ILogService);
+  const sessionService = accessor.get(ISessionService);
 
   return defineComponent({
-    name: 'AppLayout',
+    name: Component.CodePage,
     setup() {
       const errorMessage = ref('');
 
       let editor: markybox.MEditor;
 
       function initEditor(): void {
-        const root = document.querySelector<HTMLElement>('#root') as HTMLElement;
+        const { isAuth, notes, name: userName } = sessionService.profile;
 
-        const renderer = new markybox.MHTMLRenderer(root);
+        let initialText = '';
+
+        if (isAuth.value) {
+          const lastRecord = getLastElement(notes.value);
+
+          initialText = lastRecord?.data || '';
+        }
+
+        const root = document.querySelector<HTMLElement>('#root') as HTMLElement;
+        const renderer = new markybox.MHTMLRenderer(root, userName);
 
         editor = new markybox.MEditor({
           renderer,
           fullscreen: true,
           logger: logService,
-          initialText: `
-function log() {
-  const isTest = process.env.IS_TEST;
-  console.log(123)
-}`
+          initialText,
         });
       }
 

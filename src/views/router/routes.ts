@@ -1,5 +1,5 @@
 import AppLayout from '@/views/layout/AppLayout.vue';
-import { AppRoute } from '@/views/router/router';
+import { RouteName } from '@/code/vue/common/route-names';
 
 const routes = [
   {
@@ -8,12 +8,12 @@ const routes = [
     component: AppLayout,
     children: [
       {
-        name: 'HomePage',
+        name: RouteName.HomePage,
         path: '/',
         component: () => import(/* webpackChunkName: "[HomePage]" */ '@/views/pages/HomePage.vue'),
       },
       {
-        name: 'CodePage',
+        name: RouteName.CodePage,
         path: '/:id',
         component: () => import(/* webpackChunkName: "[CodePage]" */ '@/views/pages/CodePage.vue')
       }

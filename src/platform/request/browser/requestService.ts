@@ -2,7 +2,7 @@
 
 import {
   IHTTPRequestCallOptions,
-  IHTTPRequestService,
+  IRequestService,
   IRequestRegister,
 } from '@/platform/request/common/requestService';
 
@@ -25,7 +25,7 @@ import { HTTPRequestBody, HTTPRequestString } from '@/code/request/request';
  * @class
  * @extends Disposable
  */
-export class HTTPRequestService extends Disposable implements IHTTPRequestService {
+export class RequestService extends Disposable implements IRequestService {
   private readonly requests: Map<string, HTTPRequest<any, any, any>> = new Map();
 
   constructor(
@@ -101,7 +101,7 @@ export class HTTPRequestService extends Disposable implements IHTTPRequestServic
       this.requests.set(requestStringName, instance as HTTPRequest);
     } catch (error) {
       this.logService.error(
-        `HTTPRequestService#registerRequest`,
+        `RequestService#registerRequest`,
         `Error when register request: ${error}`
       );
 
@@ -146,7 +146,7 @@ export class HTTPRequestService extends Disposable implements IHTTPRequestServic
 
     if (!request) {
       throw new CriticalError(
-        `HTTPRequestService#processRequest - Request ${requestName} was not found`
+        `RequestService#processRequest - Request ${requestName} was not found`
       );
     }
 

@@ -9,7 +9,6 @@ import { ILifecycleService, LifePhase } from '@/platform/lifecycle/browser/lifec
 
 export interface IEnvironmentConfig {
   readonly version: string;
-  readonly development: boolean;
 }
 
 export class EnvironmentService extends Disposable implements IEnvironmentService {
@@ -23,9 +22,5 @@ export class EnvironmentService extends Disposable implements IEnvironmentServic
 
   public get version(): string {
     return this.config.version;
-  }
-
-  public get isDev(): boolean {
-    return this.config.development;
   }
 }

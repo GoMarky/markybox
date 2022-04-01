@@ -14,11 +14,6 @@ export default window.workbench.createComponent(() => {
 })
 </script>
 
-<style>
-body {
-  font: 12px/normal 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', 'source-code-pro', monospace;
-  overflow: hidden;
-  margin: 0;
-  padding: 0;
-}
+<style lang="sass">
+@import "./src/views/styles/global/_base.sass"
 </style>

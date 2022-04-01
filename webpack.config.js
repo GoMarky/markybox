@@ -204,6 +204,21 @@ module.exports = ({ mode } = { mode: 'production' }) => {
               use: Array.from(cssLoaders),
             },
             {
+              test: /\.sass$/,
+              use: [
+                'vue-style-loader',
+                'css-loader',
+                {
+                  loader: 'sass-loader',
+                  options: {
+                    sassOptions: {
+                      indentedSyntax: true,
+                    }
+                  }
+                }
+              ]
+            },
+            {
               test: /\.js$/,
               exclude: /node_modules/,
               loader: 'babel-loader',

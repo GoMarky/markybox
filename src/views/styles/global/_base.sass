@@ -1,0 +1,44 @@
+@import ../global/mixins
+@import ../global/theme
+
+*
+  -webkit-font-smoothing: antialiased
+  -moz-osx-font-smoothing: grayscale
+
+html
+  height: 100%
+  font-size: 100%
+
+body
+  font-style: normal
+  font: 12px/normal 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', 'source-code-pro', monospace
+  overflow: hidden
+  padding: 0
+  color: $black-color
+  background-color: $white-color
+  @include offset
+  margin: 0 auto
+  display: flex
+  flex-direction: column
+  min-height: 100%
+  height: 0
+  -webkit-text-size-adjust: none
+  -moz-text-size-adjust: none
+
+@media (max-width: 900px)
+  .no-ios-scroll
+    position: fixed
+    overflow: scroll
+    width: 100%
+    height: 100%
+
+main
+  flex-grow: 1
+  position: relative
+
+a
+  text-decoration: none
+
+img
+  max-width: 100%
+  height: auto
