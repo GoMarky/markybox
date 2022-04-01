@@ -50,12 +50,12 @@ export default window.workbench.createComponent((accessor) => {
 .page-header
   display: flex
   flex-direction: column
-  padding: 15.5px 0
+  padding: 9.5px 0
   background-color: $base-background
   align-items: center
   position: relative
-  z-index: 4
-  min-height: 50px
+  z-index: $z-index-page-header
+  min-height: 40px
   box-sizing: border-box
 
 .page-header__logo
@@ -114,7 +114,7 @@ export default window.workbench.createComponent((accessor) => {
   position: relative
   width: 16px
   height: 4px
-  background-color: $yellow-color
+  background-color: $black-color
   display: inline-block
   transition: background .1s .1s
 
@@ -123,7 +123,7 @@ export default window.workbench.createComponent((accessor) => {
     position: absolute
     width: 16px
     height: 4px
-    background-color: $yellow-color
+    background-color: $black-color
     top: 6px
     left: 0
     transition: top .3s .3s, transform .3s
@@ -133,7 +133,7 @@ export default window.workbench.createComponent((accessor) => {
     position: absolute
     width: 16px
     height: 4px
-    background-color: $yellow-color
+    background-color: $black-color
     bottom: 6px
     left: 0
     transition: top .3s .3s, transform .3s
@@ -180,7 +180,6 @@ export default window.workbench.createComponent((accessor) => {
   border-bottom: 2px solid $black-color
 
   &--is-active
-
     border-bottom-color: $yellow-color
 
   &--tel

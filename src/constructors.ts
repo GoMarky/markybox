@@ -10,6 +10,8 @@ import { RequestService } from '@/platform/request/browser/requestService';
 import { IRequestService } from '@/platform/request/common/requestService';
 import { SessionService } from '@/code/session/browser/sessionService';
 import { ISessionService } from '@/code/session/common/session';
+import { LayoutService } from '@/platform/layout/browser/layout-service';
+import { ILayoutService } from '@/platform/layout/common/layout';
 
 const services = new ServiceCollection();
 
@@ -37,5 +39,8 @@ services.set(IRequestService, requestService);
 
 const sessionService = new SessionService(requestService)
 services.set(ISessionService, sessionService);
+
+const layoutService = new LayoutService();
+services.set(ILayoutService, layoutService);
 
 export default services;
