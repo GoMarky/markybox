@@ -63,9 +63,6 @@ export default window.workbench.createComponent((accessor) => {
 </script>
 
 <style lang="sass">
-.user-login
-  padding: 20px
-
 .user-login__input
   padding-bottom: 10px
 </style>

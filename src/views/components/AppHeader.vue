@@ -39,11 +39,11 @@ export default window.workbench.createComponent((accessor) => {
       const { name, isAuth } = sessionService.profile;
 
       function openUserProfileModal(): void {
-        //
+        layoutService.modal.open('UserProfileModal');
       }
 
       function openLoginModal(): void {
-        layoutService.modal.open('UserLoginModal')
+        layoutService.modal.open('UserLoginModal');
       }
 
       return { isAuth, name, openUserProfileModal, openLoginModal }

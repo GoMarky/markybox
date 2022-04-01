@@ -16,6 +16,7 @@
 import { defineComponent, watch } from 'vue';
 import AppModal from '@/views/components/AppModal.vue';
 import UserLoginModal from '@/views/modals/UserLoginModal.vue';
+import UserProfileModal from '@/views/modals/UserProfileModal.vue';
 import { ILayoutService } from '@/platform/layout/common/layout';
 
 export default window.workbench.createComponent((accessor) => {
@@ -23,6 +24,7 @@ export default window.workbench.createComponent((accessor) => {
 
   return defineComponent({
     components: {
+      UserProfileModal,
       UserLoginModal,
       AppModal,
     },

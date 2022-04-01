@@ -131,4 +131,5 @@ export default window.workbench.createComponent((accessor) => {
 
 .modal__main
   background: $white-color
+  padding: 20px
 </style>
