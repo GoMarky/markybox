@@ -4,14 +4,20 @@ import { Ref, ref } from 'vue';
 
 export const ILayoutService = createDecorator<ILayoutService>('layoutService');
 
-export class ModalController extends Disposable {
-  public readonly isOpen: Ref<boolean> = ref(true);
+type ModalName = 'UserLoginModal' | 'UserProfileModal'
 
-  public open(): void {
+export class ModalController extends Disposable {
+  public readonly isOpen: Ref<boolean> = ref(false);
+
+  public readonly currentModal: Ref<string> = ref('');
+
+  public open(modalName: ModalName): void {
+    this.currentModal.value = modalName;
     this.isOpen.value = true;
   }
 
   public close(): void {
+    this.currentModal.value = '';
     this.isOpen.value = false;
   }
 }

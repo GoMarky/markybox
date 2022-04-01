@@ -1,11 +1,14 @@
 <template>
-  <div id="modal-app" class="modal" :class="{ 'modal--is-visible': isOpenModal }">
+  <div class="modal" :class="{ 'modal--is-visible': isOpenModal }">
     <div class="modal__content">
       <div class="modal__container">
         <header class="modal__header">
           <h3 class="modal__title"></h3>
           <button class="modal__close" type="button" @click="closeModal()"></button>
         </header>
+        <div class="modal__main" id="modal-app">
+
+        </div>
       </div>
     </div>
   </div>

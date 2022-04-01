@@ -11,8 +11,11 @@
     <nav class="page-header__navigation">
       <ul class="page-header__nav-list">
         <li class="page-header__nav-item">
-          <a href="#" @click="openUserProfileModal()" class="page-header__nav-link" type="button">
+          <a v-if="isAuth" href="#" @click.prevent="openUserProfileModal()" class="page-header__nav-link" type="button">
             {{ name }}
+          </a>
+          <a v-else href="#" @click.prevent="openLoginModal()" class="page-header__nav-link" type="button">
+            Login
           </a>
         </li>
       </ul>
@@ -24,20 +27,26 @@
 import { defineComponent } from 'vue';
 import { ISessionService } from '@/code/session/common/session';
 import { Component } from '@/code/vue/common/component-names';
+import { ILayoutService } from '@/platform/layout/common/layout';
 
 export default window.workbench.createComponent((accessor) => {
   const sessionService = accessor.get(ISessionService);
+  const layoutService = accessor.get(ILayoutService);
 
   return defineComponent({
     name: Component.AppHeader,
     setup() {
-      const { name } = sessionService.profile;
+      const { name, isAuth } = sessionService.profile;
 
       function openUserProfileModal(): void {
-
+        //
       }
 
-      return { name, openUserProfileModal }
+      function openLoginModal(): void {
+        layoutService.modal.open('UserLoginModal')
+      }
+
+      return { isAuth, name, openUserProfileModal, openLoginModal }
     },
   })
 });

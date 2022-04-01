@@ -8,12 +8,14 @@
         'overlay--is-visible': isOpenModal,
       }"
     ></div>
+    <component :is="currentModal"></component>
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent, watch } from 'vue';
 import AppModal from '@/views/components/AppModal.vue';
+import UserLoginModal from '@/views/modals/UserLoginModal.vue';
 import { ILayoutService } from '@/platform/layout/common/layout';
 
 export default window.workbench.createComponent((accessor) => {
@@ -21,13 +23,14 @@ export default window.workbench.createComponent((accessor) => {
 
   return defineComponent({
     components: {
+      UserLoginModal,
       AppModal,
     },
     name: 'App',
     setup() {
-      const { isOpen: isOpenModal } = layoutService.modal;
+      const { isOpen: isOpenModal, currentModal } = layoutService.modal;
 
-      return { isOpenModal }
+      return { isOpenModal, currentModal }
     },
   });
 })

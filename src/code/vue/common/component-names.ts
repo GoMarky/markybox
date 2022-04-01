@@ -4,4 +4,7 @@ export enum Component {
   AppHeader = 'AppHeader',
   AppLayout = 'AppLayout',
   AppModal = 'AppModal',
+
+  UserLoginModal = 'UserLoginModal',
+  UserProfileModal = 'UserProfileModal'
 }
