@@ -44,7 +44,6 @@ export class MHTMLStorage extends MObject {
     this._rows.splice(index, 1);
 
     row.dispose();
-
     this._update();
 
     this._onDidRemoveRow.fire(row);

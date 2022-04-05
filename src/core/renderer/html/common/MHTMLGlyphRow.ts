@@ -55,6 +55,8 @@ export class MHTMLGlyphRow extends MHTMLGlyphDOM<HTMLDivElement> {
   }
 
   public setIndex(index: number): void {
+    this._el.setAttribute('data-row-index', index.toString());
+
     this.index = index;
     this.gutterElement.index = index;
   }

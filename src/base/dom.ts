@@ -26,3 +26,11 @@ export function getLocalStorageItem<T>(key: KnownLocalStorageKey, defaultValue?:
 export function setLocalStorageItem(key: KnownLocalStorageKey, value: unknown): void {
   return window.localStorage.setItem(key, JSON.stringify(value));
 }
+
+export function insertChildAtIndex(parent: HTMLElement, child: Node, index: number) {
+  if (index >= parent.children.length) {
+    parent.appendChild(child)
+  } else {
+    parent.insertBefore(child, parent.children[index])
+  }
+}

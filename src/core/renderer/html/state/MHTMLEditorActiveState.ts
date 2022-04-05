@@ -67,9 +67,13 @@ export class MHTMLEditorActiveState extends MHTMLEditorState {
     const { navigator, controller } = this.renderer;
     const { currentRow } = controller;
     const isCurrentRowEmpty = currentRow.empty();
+    const { position } = navigator;
 
-    if (isCurrentRowEmpty) {
-      // controller.addEmptyRow();
+    const isChosenLastLetter = position.column >= currentRow.columnsCount;
+
+    if (isCurrentRowEmpty || isChosenLastLetter) {
+      const newIndex = currentRow.index + 1;
+      controller.addRowAt(newIndex);
       return navigator.nextRow();
     }
 
@@ -119,6 +123,14 @@ export class MHTMLEditorActiveState extends MHTMLEditorState {
     const { index } = currentRow;
 
     storage.removeRow(currentRow);
-    navigator.setPosition({ row: index - 1, column: 0 })
+    const prevRow = controller.prevRow;
+
+    let column = 0;
+
+    if (prevRow) {
+      column = prevRow.columnsCount;
+    }
+
+    navigator.setPosition({ row: index - 1, column })
   }
 }

@@ -2,6 +2,7 @@ import { MObject } from '@/core/objects/MObject';
 import { MHTMLRenderer } from '@/core';
 import { MHTMLGlyphRow } from '@/core/renderer/html/common/MHTMLGlyphRow';
 import { splitAtIndex } from '@/core/app/common';
+import * as dom from '@/base/dom';
 
 export class MHTMLEditorController extends MObject {
   private _currentRow: MHTMLGlyphRow;
@@ -60,10 +61,8 @@ export class MHTMLEditorController extends MObject {
     const { renderer } = this;
     const { storage, textLayer } = renderer;
     const row = new MHTMLGlyphRow(renderer, index);
-    this._currentRow = row;
     storage.addRowAt(row, index);
-
-    textLayer.el.appendChild(row.el);
+    dom.insertChildAtIndex(textLayer.el, row.el, index);
 
     return row;
   }

@@ -16,6 +16,15 @@ export class UserProfile extends Disposable {
       updatedAt: 1648736390,
       createdAt: 1648736390,
       data: `function log() {};`,
+    },
+    {
+      id: nanoid(10),
+      updatedAt: 1648736390,
+      createdAt: 1648736390,
+      title: 'Test nested function',
+      data: `function log () {
+  const test2 = log();
+}`
     }
   ]);
 
