@@ -17,7 +17,7 @@ export default window.workbench.createComponent(() => {
       const { push } = useRouter();
 
       // due dev reason
-      push({ name: AppRoute.CodePage, params: { id: nanoid(5) } })
+      push({ name: AppRoute.CodePage, params: { id: nanoid(10) } })
     },
   })
 })

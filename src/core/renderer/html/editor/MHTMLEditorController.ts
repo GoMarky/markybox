@@ -32,9 +32,6 @@ export class MHTMLEditorController extends MObject {
 
     const leftParenRow = storage.at(index);
     const rightParenRow = this.findClosestRightParenRow(index);
-
-    console.log(leftParenRow);
-    console.log(rightParenRow);
   }
 
   public isCurrentColumnInsideGlyph(): boolean {

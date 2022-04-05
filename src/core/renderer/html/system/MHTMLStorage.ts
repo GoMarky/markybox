@@ -19,7 +19,6 @@ export class MHTMLStorage extends MObject {
 
   public addRow(row: MHTMLGlyphRow): void {
     this._rows.push(row);
-
     this._onDidAddRow.fire(row);
   }
 
@@ -43,7 +42,6 @@ export class MHTMLStorage extends MObject {
     this._rows.splice(index, 1);
 
     row.dispose();
-
     this._onDidRemoveRow.fire(row);
   }
 

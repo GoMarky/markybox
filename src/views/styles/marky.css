@@ -22,6 +22,7 @@
 }
 
 .m-editor__body {
+    user-select: none;
     position: relative;
     height: 100%;
     display: flex;

@@ -11,15 +11,11 @@ export class UserProfile extends Disposable {
   public readonly email: Ref<string> = ref('swen295@gmail.com');
   public readonly notes: Ref<INoteInfo[]> = ref([
     {
-      id: nanoid(5),
+      id: nanoid(10),
       title: 'Javascript Code',
       updatedAt: 1648736390,
       createdAt: 1648736390,
-      data: `
-function log() {
-  const isTest = process.env.IS_TEST;
-  console.log(123)
-}`,
+      data: `function log() {};`,
     }
   ]);
 

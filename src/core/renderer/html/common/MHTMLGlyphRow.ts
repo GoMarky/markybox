@@ -65,7 +65,9 @@ export class MHTMLGlyphRow extends MHTMLGlyphDOM<HTMLDivElement> {
     return (this.columnsCount - 1) >= column;
   }
 
-  public clearLetterByPosition(index: number): void {
+  public clearLetterByPosition(column: number): void {
+    const index = column - 1;
+
     const { _text } = this;
     const [first, last] = splitAtIndex(index)(_text);
     this._text = first + string.removeFirstLetter(last);
@@ -112,6 +114,13 @@ export class MHTMLGlyphRow extends MHTMLGlyphDOM<HTMLDivElement> {
       } else {
         tempString += currentChar;
       }
+    }
+
+    if (tempString.length) {
+      result.push({
+        type: 'text',
+        data: tempString,
+      })
     }
 
     return result;

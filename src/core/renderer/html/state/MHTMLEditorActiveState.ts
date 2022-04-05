@@ -73,15 +73,33 @@ export class MHTMLEditorActiveState extends MHTMLEditorState {
     const { navigator, controller, storage } = this.renderer;
     const { currentRow } = controller;
 
-    if (currentRow.empty()) {
-      controller.removeLastRow();
-      const lastRow = storage.last();
-      navigator.setPosition({ row: lastRow.index, column: 0 })
+    const isCurrentRowEmpty = currentRow.empty();
+
+    if (isCurrentRowEmpty) {
+      return this.doRemoveLastEmptyRow();
+    }
+
+    const { position: { column } } = navigator;
+    return this.removeLetterByPosition(column);
+  }
+
+  private removeLetterByPosition(column: number): void {
+    const { navigator, controller } = this.renderer;
+    const { currentRow } = controller
+
+    if (column === 0) {
       return;
     }
 
     navigator.prevColumn();
-    const position = navigator.position;
-    controller.currentRow.clearLetterByPosition(position.column);
+    currentRow.clearLetterByPosition(column);
+  }
+
+  private doRemoveLastEmptyRow(): void {
+    const { controller, storage, navigator } = this.renderer;
+
+    controller.removeLastRow();
+    const lastRow = storage.last();
+    navigator.setPosition({ row: lastRow.index, column: 0 })
   }
 }

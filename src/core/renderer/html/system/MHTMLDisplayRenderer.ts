@@ -7,8 +7,8 @@ import { IRendererDisplay } from '@/core/app/renderer';
 
 // TODO: do not use clientX
 const EDITOR_OFFSET_POSITION: IDOMPosition = {
-  top: 35,
-  left: 40,
+  top: 45,
+  left: 42,
 }
 
 export class HTMLDisplayRenderer extends MObject implements IRendererDisplay {
