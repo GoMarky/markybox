@@ -104,6 +104,7 @@ export class MHTMLRenderer extends MObject implements IAbstractRenderer {
     this.disposables.add(
       windowShortcut.registerShortcut('Meta+C', () => {
         const text = this.selection.getSelectedText();
+
         void this.clipboard.write(text);
       })
     );
@@ -117,5 +118,11 @@ export class MHTMLRenderer extends MObject implements IAbstractRenderer {
 
     window.addEventListener('mousedown', (event) => this.currentState.onClick(event));
     window.addEventListener('keydown', (event) => this.currentState.onKeyDown(event));
+  }
+
+  public text(): string {
+    const { rows } = this.storage;
+
+    return rows.map((row) => row.toString()).join('\n');
   }
 }

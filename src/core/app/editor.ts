@@ -36,4 +36,8 @@ export class MEditor extends MObject {
   public unlock(): void {
     this.renderer.unlock();
   }
+
+  public text(): string {
+    return this.renderer.text();
+  }
 }

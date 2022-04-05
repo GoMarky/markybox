@@ -61,7 +61,6 @@ export class MHTMLEditorController extends MObject {
     const { storage, textLayer } = this.renderer;
     const row = new MHTMLGlyphRow(this.renderer, index);
     storage.addRowAt(row, index);
-    console.log(row.index);
     dom.insertChildAtIndex(textLayer.el, row.el, index);
 
     return row;

@@ -14,9 +14,9 @@ export class MHTMLEditorSelection extends MObject {
   private _currentPosition: ISelectionPosition;
   private readonly layer: MSelectionLayer;
 
-  private _started = false;
-  private startPosition: IPosition | null;
-  private lastPosition: IPosition | null;
+  public started = false;
+  public startPosition: IPosition | null;
+  public lastPosition: IPosition | null;
 
   constructor(private readonly renderer: MHTMLRenderer) {
     super();
@@ -31,10 +31,9 @@ export class MHTMLEditorSelection extends MObject {
   }
 
   public getSelectedText(): string {
-    // TODO: select rows
     const { rows } = this.renderer.storage;
 
-    return rows.map(() => MHTMLEditorSelection.rowToText()).join(endl);
+    return rows.map((row) => row.toString()).join(endl);
   }
 
   public selectAll(): void {
@@ -45,46 +44,12 @@ export class MHTMLEditorSelection extends MObject {
     this._currentPosition = position;
     const { start, end } = position;
 
-    // this.layer.addSelectionRow(end);
-  }
-
-  private static rowToText(): string {
-    return '';
-  }
-
-  private onSelectionStart(event: MouseEvent): void {
-    const { display } = this.renderer;
-    this._started = true;
-
-    const { clientX, clientY } = event;
-
-    if (this.startPosition) {
-      this.lastPosition = null;
-    }
-
-    this.startPosition = display.toEditorPosition({ left: clientX, top: clientY });
-  }
-
-  private onSelectionMove(event: MouseEvent): void {
-    if (!this._started) {
-      return;
-    }
-
-    const { display } = this.renderer;
-    const { clientX, clientY } = event;
-
-    this.lastPosition = display.toEditorPosition({ left: clientX, top: clientY });
-
-    this.setPosition({ start: this.startPosition as IPosition, end: this.lastPosition });
-  }
-
-  private onSelectionEnd(_: MouseEvent): void {
-    this._started = false;
+    this.layer.addSelectionRow(end);
   }
 
   private init(): void {
-    window.addEventListener('mousedown', this.onSelectionStart.bind(this));
-    window.addEventListener('mousemove', this.onSelectionMove.bind(this));
-    window.addEventListener('mouseup', this.onSelectionEnd.bind(this));
+    window.addEventListener('mousedown', (event) => this.renderer.currentState.onSelectionStart(event));
+    window.addEventListener('mousemove', (event) => this.renderer.currentState.onSelectionMove(event));
+    window.addEventListener('mouseup', (event) => this.renderer.currentState.onSelectionEnd(event));
   }
 }

@@ -1,10 +1,47 @@
 import { Char } from '@/base/char';
 import { MHTMLEditorState } from '@/core/renderer/html/state/MHTMLEditorState';
 import { MChar } from '@/core/renderer/html/editor/MHTMLEditorBodyTextarea';
+import { IPosition } from '@/core/app/common';
 
 export class MHTMLEditorActiveState extends MHTMLEditorState {
   constructor() {
     super();
+  }
+
+  public onSelectionStart(event: MouseEvent): void {
+    const { selection } = this.renderer;
+
+    const { display } = this.renderer;
+    selection.started = true;
+
+    const { clientX, clientY } = event;
+
+    if (selection.startPosition) {
+      selection.lastPosition = null;
+    }
+
+    selection.startPosition = display.toEditorPosition({ left: clientX, top: clientY });
+  }
+
+  public onSelectionMove(event: MouseEvent): void {
+    const { selection } = this.renderer;
+
+    if (!selection.started) {
+      return;
+    }
+
+    const { display } = this.renderer;
+    const { clientX, clientY } = event;
+
+    selection.lastPosition = display.toEditorPosition({ left: clientX, top: clientY });
+
+    selection.setPosition({ start: selection.startPosition as IPosition, end: selection.lastPosition });
+  }
+
+  public onSelectionEnd(_: MouseEvent): void {
+    const { selection } = this.renderer;
+
+    selection.started = false;
   }
 
   public onInput(char: MChar): void {

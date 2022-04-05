@@ -8,4 +8,6 @@ export interface IAbstractRenderer {
   unlock(): void;
   lock(): void;
   init(text?: string): void;
+
+  text(): string;
 }

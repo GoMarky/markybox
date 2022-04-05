@@ -24,7 +24,7 @@ export class MHTMLStorage extends MObject {
   }
 
   public addRowAt(row: MHTMLGlyphRow, index: number): void {
-    this._rows.splice(index +1, 0, row);
+    this._rows.splice(index, 0, row);
     this._update();
     this._onDidAddRow.fire(row);
   }

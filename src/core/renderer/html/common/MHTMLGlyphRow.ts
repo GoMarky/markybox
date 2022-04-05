@@ -222,4 +222,8 @@ export class MHTMLGlyphRow extends MHTMLGlyphDOM<HTMLDivElement> {
     this.fragment?.dispose();
     this.el.remove();
   }
+
+  public toString(): string {
+    return this._text;
+  }
 }

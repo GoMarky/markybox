@@ -16,6 +16,12 @@ export abstract class MHTMLEditorState extends MObject {
 
   public abstract onKeyDown(event: KeyboardEvent): void;
 
+  public abstract onSelectionStart(event: MouseEvent): void
+
+  public abstract onSelectionEnd(_: MouseEvent): void;
+
+  public abstract onSelectionMove(event: MouseEvent): void
+
   public setContext(renderer: MHTMLRenderer): void {
     if (isUndefinedOrNull(renderer)) {
       throw new CriticalError(`Context for state must exist. Got - ${renderer}`);
