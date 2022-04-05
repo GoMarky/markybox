@@ -82,10 +82,11 @@ export class MHTMLEditorActiveState extends MHTMLEditorState {
 
   private splitCurrentRow(): void {
     const { navigator, controller } = this.renderer;
+    const { currentRow } = controller;
     const { position: { column } } = navigator;
 
     controller.splitCurrentRow(column);
-    return navigator.setPosition({ row: controller.currentRow.index, column: 0 })
+    return navigator.setPosition({ row: currentRow.index, column: 0 })
   }
 
   private backspace(): void {
