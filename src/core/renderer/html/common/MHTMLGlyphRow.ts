@@ -38,6 +38,10 @@ export class MHTMLGlyphRow extends MHTMLGlyphDOM<HTMLDivElement> {
     this._el = rowElement;
   }
 
+  public containsOnlyWhitespaces(): boolean {
+    return this.fragment.children.every(child => child instanceof MHTMLGlyphTextNode);
+  }
+
   public get columnsCount(): number {
     return this._text.length;
   }
@@ -53,6 +57,10 @@ export class MHTMLGlyphRow extends MHTMLGlyphDOM<HTMLDivElement> {
   public setIndex(index: number): void {
     this.index = index;
     this.gutterElement.index = index;
+  }
+
+  public erase(): void {
+    return this.setText('');
   }
 
   public setText(text: string): void {
@@ -209,6 +217,7 @@ export class MHTMLGlyphRow extends MHTMLGlyphDOM<HTMLDivElement> {
     super.dispose();
 
     this.gutterElement.dispose();
-    this.fragment.dispose();
+    this.fragment?.dispose();
+    this.el.remove();
   }
 }

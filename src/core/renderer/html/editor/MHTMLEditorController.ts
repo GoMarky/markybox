@@ -14,6 +14,20 @@ export class MHTMLEditorController extends MObject {
     return this._currentRow;
   }
 
+  public get prevRow(): MHTMLGlyphRow | null {
+    const { index } = this.currentRow;
+    const { storage } = this.renderer;
+
+    return storage.at(index - 1);
+  }
+
+  public get nextRow(): MHTMLGlyphRow | null {
+    const { index } = this.currentRow;
+    const { storage } = this.renderer;
+
+    return storage.at(index + 1);
+  }
+
   public splitCurrentRow(column: number): void {
     const { currentRow } = this;
     const { text } = currentRow;

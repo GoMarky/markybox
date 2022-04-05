@@ -35,15 +35,13 @@ export class MHTMLEditorActiveState extends MHTMLEditorState {
     const code = event.code as Char;
 
     const rowsCount = storage.count;
-    const { position: { row, column } } = navigator;
+    const { position: { row } } = navigator;
 
     switch (code) {
-      case Char.ArrowLeft: {
+      case Char.ArrowLeft:
         return navigator.prevColumn();
-      }
-      case Char.ArrowRight: {
+      case Char.ArrowRight:
         return navigator.nextColumn();
-      }
       case Char.ArrowUp: {
         return navigator.setPosition({ row: row - 1, column: 0 })
       }
@@ -58,25 +56,45 @@ export class MHTMLEditorActiveState extends MHTMLEditorState {
 
         return navigator.nextRow();
       }
-      case Char.Backspace: {
-        this.backspace();
-        return;
-      }
-      case Char.Enter: {
-        controller.splitCurrentRow(column);
-        return navigator.setPosition({ row: controller.currentRow.index, column: 0 })
-      }
+      case Char.Backspace:
+        return this.backspace();
+      case Char.Enter:
+        return this.enter();
     }
   }
 
-  private backspace(): void {
-    const { navigator, controller, storage } = this.renderer;
+  private enter(): void {
+    const { navigator, controller } = this.renderer;
     const { currentRow } = controller;
-
     const isCurrentRowEmpty = currentRow.empty();
 
     if (isCurrentRowEmpty) {
-      return this.doRemoveLastEmptyRow();
+      // controller.addEmptyRow();
+      return navigator.nextRow();
+    }
+
+    return this.splitCurrentRow();
+  }
+
+  private splitCurrentRow(): void {
+    const { navigator, controller } = this.renderer;
+    const { position: { column } } = navigator;
+
+    controller.splitCurrentRow(column);
+    return navigator.setPosition({ row: controller.currentRow.index, column: 0 })
+  }
+
+  private backspace(): void {
+    const { navigator, controller } = this.renderer;
+    const { currentRow } = controller;
+
+    if (currentRow.empty()) {
+      return this.removeCurrentEmptyRow();
+    }
+
+    if (currentRow.containsOnlyWhitespaces()) {
+      navigator.setPosition({ row: currentRow.index, column: 0 })
+      return currentRow.erase();
     }
 
     const { position: { column } } = navigator;
@@ -95,11 +113,12 @@ export class MHTMLEditorActiveState extends MHTMLEditorState {
     currentRow.clearLetterByPosition(column);
   }
 
-  private doRemoveLastEmptyRow(): void {
+  private removeCurrentEmptyRow(): void {
     const { controller, storage, navigator } = this.renderer;
+    const { currentRow } = controller;
+    const { index } = currentRow;
 
-    controller.removeLastRow();
-    const lastRow = storage.last();
-    navigator.setPosition({ row: lastRow.index, column: 0 })
+    storage.removeRow(currentRow);
+    navigator.setPosition({ row: index - 1, column: 0 })
   }
 }

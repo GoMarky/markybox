@@ -19,18 +19,20 @@ export class MHTMLStorage extends MObject {
 
   public addRow(row: MHTMLGlyphRow): void {
     this._rows.push(row);
+    this._update();
     this._onDidAddRow.fire(row);
   }
 
   public addRowAt(row: MHTMLGlyphRow, index: number): void {
     this._rows.splice(index, 0, row);
+    this._update();
     this._onDidAddRow.fire(row);
   }
 
   public removeRow(row: MHTMLGlyphRow): void {
     const index = this._rows.findIndex((r) => r === row);
 
-    // Если удаляемая строчка последняя - то не удаляем ее.
+    // Если удаляемая строчка первая - то не удаляем ее.
     if (index === 0) {
       return;
     }
@@ -42,6 +44,9 @@ export class MHTMLStorage extends MObject {
     this._rows.splice(index, 1);
 
     row.dispose();
+
+    this._update();
+
     this._onDidRemoveRow.fire(row);
   }
 
@@ -49,8 +54,12 @@ export class MHTMLStorage extends MObject {
     return this._rows[this.count - 1];
   }
 
+  public has(index: number): boolean {
+    return Boolean(this._rows[index]);
+  }
+
   public at(index: number): MHTMLGlyphRow | null {
-    if (this._rows[index]) {
+    if (this.has(index)) {
       return this._rows[index];
     }
 
@@ -63,5 +72,11 @@ export class MHTMLStorage extends MObject {
 
   public get count(): number {
     return this._rows.length;
+  }
+
+  private _update(): void {
+    for (const [index, row] of this._rows.entries()) {
+      row.setIndex(index);
+    }
   }
 }
