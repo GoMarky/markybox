@@ -105,6 +105,8 @@ export class MHTMLRenderer extends MObject implements IAbstractRenderer {
       windowShortcut.registerShortcut('Meta+C', () => {
         const text = this.selection.getSelectedText();
 
+        console.log(text);
+
         void this.clipboard.write(text);
       })
     );

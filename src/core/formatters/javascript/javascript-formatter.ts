@@ -13,7 +13,7 @@ export enum JavascriptKeyword {
 export type StatementClassName = 'm-editor__plain' | 'm-editor__keyword-identifier' | 'm-editor__keyword-identifier-name';
 
 export const Regexp = {
-  VariableStatement: /^(const|let|var|class|function$)/,
+  VariableStatement: /^(const|let|var|class|function|export|import|interface|type|public|private|static|protected$)/,
 };
 
 

@@ -10,16 +10,16 @@ export class MHTMLEditorActiveState extends MHTMLEditorState {
 
   public onSelectionStart(event: MouseEvent): void {
     const { selection } = this.renderer;
-
     const { display } = this.renderer;
-    selection.started = true;
 
     const { clientX, clientY } = event;
 
     if (selection.startPosition) {
       selection.lastPosition = null;
+      selection.clearSelect();
     }
 
+    selection.started = true;
     selection.startPosition = display.toEditorPosition({ left: clientX, top: clientY });
   }
 
@@ -32,10 +32,12 @@ export class MHTMLEditorActiveState extends MHTMLEditorState {
 
     const { display } = this.renderer;
     const { clientX, clientY } = event;
-
     selection.lastPosition = display.toEditorPosition({ left: clientX, top: clientY });
 
-    selection.setPosition({ start: selection.startPosition as IPosition, end: selection.lastPosition });
+    const start = selection.startPosition as IPosition;
+    const end = selection.lastPosition;
+
+    selection.updateSelection({ start, end });
   }
 
   public onSelectionEnd(_: MouseEvent): void {

@@ -79,7 +79,7 @@ export class MHTMLEditorBodyNavigator extends MObject {
     if (matchedRow) {
       if (matchedRow.empty()) {
         column = 0;
-      } else {
+      } else if (column >= matchedRow.columnsCount) {
         column = matchedRow.columnsCount;
       }
     }

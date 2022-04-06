@@ -4,6 +4,7 @@ import { removeChildren, toPixel } from '@/base/dom';
 import { createSelectionRowElement } from '@/core/renderer/html/common/helpers';
 import { MHTMLRenderer } from '@/core';
 import { MHTMLGlyphDOM } from '@/core/renderer/html/common/MHTMLGlyphDOM';
+import { ISelectionPosition } from '@/core/renderer/html/editor/MHTMLEditorSelection';
 
 export class MSelectionRowLayer extends MHTMLGlyphDOM {
   constructor() {
@@ -18,19 +19,35 @@ export class MSelectionLayer extends MLayer {
     this.init();
   }
 
-  public addSelectionRow(position: IPosition): void {
-    const { el, renderer } = this;
+  public addSelectionRows(positions: readonly ISelectionPosition[]): void {
+    const { renderer } = this;
     const { display } = renderer;
+    this.clear();
+
+    for (const { row, startColumn, endColumn } of positions) {
+      const _position: IPosition = { row, column: startColumn }
+
+      const { left, top } = display.toDOMPosition(_position);
+
+      const element = createSelectionRowElement();
+      element.style.left = toPixel(left);
+      element.style.top = toPixel(top);
+
+      if (endColumn) {
+        const right = endColumn * 7.2;
+        element.style.width = toPixel(right);
+      } else {
+        element.style.right = toPixel(0);
+      }
+
+      this._el.appendChild(element);
+    }
+  }
+
+  public clear(): void {
+    const { el } = this;
+
     removeChildren(el);
-
-    const { left, top } = display.toDOMPosition(position);
-
-    const element = createSelectionRowElement();
-    element.style.left = toPixel(left);
-    element.style.top = toPixel(top);
-    element.style.right = toPixel(0);
-
-    this._el.appendChild(element);
   }
 
   private init(): void {

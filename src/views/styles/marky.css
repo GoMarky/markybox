@@ -109,7 +109,6 @@
 
 .m-editor__selection-row {
     position: absolute;
-    border-radius: 3px;
     opacity: 0.5;
     background-color: #b5d5ff;
     z-index: var(--z-index-selection);
