@@ -105,8 +105,6 @@ export class MHTMLRenderer extends MObject implements IAbstractRenderer {
       windowShortcut.registerShortcut('Meta+C', () => {
         const text = this.selection.getSelectedText();
 
-        console.log(text);
-
         void this.clipboard.write(text);
       })
     );
@@ -114,7 +112,9 @@ export class MHTMLRenderer extends MObject implements IAbstractRenderer {
     // Paste all code from clipboard
     this.disposables.add(
       windowShortcut.registerShortcut('Meta+V', async () => {
-        await this.clipboard.read();
+        const text = await this.clipboard.read();
+
+        this.controller.setWholeText(text);
       })
     );
 

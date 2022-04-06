@@ -41,6 +41,12 @@ export class MHTMLEditorSelection extends MObject {
 
   public selectAll(): void {
     const { rows } = this.renderer.storage;
+
+    for (const row of rows) {
+      this._positions.push({ row: row.index, startColumn: 0, endColumn: 0 })
+    }
+
+    this.layer.addSelectionRows(this._positions);
   }
 
   public updateSelection(position: { start: IPosition, end: IPosition }): void {

@@ -16,4 +16,13 @@ export class MHTMLEditorLockedState extends MHTMLEditorState {
   public onKeyDown(_: KeyboardEvent): void {
     //
   }
+
+  public onSelectionEnd(_: MouseEvent): void {
+  }
+
+  public onSelectionMove(_: MouseEvent): void {
+  }
+
+  public onSelectionStart(_: MouseEvent): void {
+  }
 }

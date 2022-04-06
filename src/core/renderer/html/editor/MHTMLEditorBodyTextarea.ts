@@ -35,11 +35,15 @@ export class MHTMLEditorBodyTextarea extends MHTMLGlyphDOM<HTMLTextAreaElement> 
     this.createTextareaElement();
 
     const { _el } = this;
-
     _el.style.left = toPixel(42);
 
     window.addEventListener('keydown', (evt) => {
       const event = evt as KeyboardEvent;
+
+      if (event.defaultPrevented) {
+        return;
+      }
+
       const { key } = event;
 
       const isSystemKey = isSystemChar(key as Char);
