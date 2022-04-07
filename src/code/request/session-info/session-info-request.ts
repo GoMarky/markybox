@@ -8,11 +8,9 @@ export interface ISessionInfoRequestAttributes {
 }
 
 export interface ISessionInfoRequestResponse {
-  readonly sessionId: Session.SessionId;
-  readonly profile: {
-    email: Session.UserEmail;
-    name: Session.UserName;
-  }
+  readonly session_id: Session.SessionId;
+  readonly email: Session.UserEmail;
+  readonly user: Session.UserName;
   readonly notes: INoteInfo[];
 }
 

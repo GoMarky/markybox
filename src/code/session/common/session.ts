@@ -2,31 +2,13 @@ import { createDecorator } from '@/platform/instantiation/common/instantiation';
 import { Disposable } from '@/platform/lifecycle/common/lifecycle';
 import { computed, ComputedRef, ref, Ref } from 'vue';
 import { INoteInfo } from '@/code/notes/common/notes';
-import { nanoid } from 'nanoid';
 
 export class UserProfile extends Disposable {
-  public readonly sessionId: Ref<string> = ref('asdad12dasd12dad2434566yhjgfkmn5i64mtfd');
+  public readonly sessionId: Ref<string> = ref('');
 
-  public readonly name: Ref<string> = ref('Teodor_Dre');
-  public readonly email: Ref<string> = ref('swen295@gmail.com');
-  public readonly notes: Ref<INoteInfo[]> = ref([
-    {
-      id: nanoid(10),
-      title: 'Javascript Code',
-      updatedAt: 1648736390,
-      createdAt: 1648736390,
-      data: `function log() {};`,
-    },
-    {
-      id: nanoid(10),
-      updatedAt: 1648736390,
-      createdAt: 1648736390,
-      title: 'Test nested function',
-      data: `function log () {
-  const test2 = log();
-}`
-    }
-  ]);
+  public readonly name: Ref<string> = ref('');
+  public readonly email: Ref<string> = ref('');
+  public readonly notes: Ref<INoteInfo[]> = ref([]);
 
   public readonly isAuth: ComputedRef<boolean> = computed(() => {
     const { sessionId } = this;

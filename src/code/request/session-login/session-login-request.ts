@@ -8,7 +8,6 @@ export interface ISessionLoginRequestAttributes {
   readonly password: Session.UserPassword;
 }
 
-
 export class SessionLoginRequest extends HTTPRequest<ISessionLoginRequestAttributes, ISessionInfoRequestResponse, ISessionInfoRequestResponse> {
   public static readonly staticId = 'session-login';
 

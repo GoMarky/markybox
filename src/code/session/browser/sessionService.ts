@@ -50,11 +50,11 @@ export class SessionService extends Disposable implements ISessionService {
   }
 
   private doLogin(session: ISessionInfoRequestResponse): void {
-    const { profile, notes, sessionId } = session;
+    const { user, email, notes, session_id } = session;
 
-    this.profile.sessionId.value = sessionId;
+    this.profile.sessionId.value = session_id;
     this.profile.notes.value = notes;
-    this.profile.name.value = profile.name;
-
+    this.profile.name.value = user;
+    this.profile.email.value = email;
   }
 }

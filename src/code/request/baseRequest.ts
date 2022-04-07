@@ -15,7 +15,10 @@ import { ApiError } from '@/platform/request/common/request';
 
 const DEFAULT_TIMEOUT_TIME = 15000;
 
-export type FunctionLikeReturnString = FunctionLike<string>;
+export interface ISuccessResultWrapper {
+  request: string;
+  result: unknown;
+}
 
 export class BaseTransformer extends Disposable {
   constructor() {
@@ -26,7 +29,7 @@ export class BaseTransformer extends Disposable {
     return new BaseTransformer();
   }
 
-  public transform(response: AxiosResponse): unknown {
+  public transform(response: AxiosResponse): ISuccessResultWrapper {
     return response.data;
   }
 
@@ -166,7 +169,7 @@ export abstract class HTTPRequest<TAttributes = unknown, TResponse = unknown, TR
     const responseInstance = new ResponseInstance<TResponse, TReturn>(response, endpoint, this.id);
 
     const result = this.transformer.transform(response);
-    responseInstance.setData(result as TReturn);
+    responseInstance.setData(result.result as TReturn);
 
     return responseInstance;
   }
