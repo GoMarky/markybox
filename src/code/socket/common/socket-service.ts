@@ -9,6 +9,7 @@ export interface IBaseSocketMessagePayload {
 
 export enum SocketCommandType {
   EnterRoom = 'enter_room',
+  LeaveRoom = 'leave_room',
 }
 
 export interface ISocketMessageResponse {
