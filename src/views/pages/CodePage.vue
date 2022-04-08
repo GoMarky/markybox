@@ -11,10 +11,12 @@ import { getLastElement } from '@/base/array';
 import { ILogService } from '@/platform/log/common/log';
 import { ISessionService } from '@/code/session/common/session';
 import { Component } from '@/code/vue/common/component-names';
+import { ISocketService, SocketCommandType } from '@/code/socket/common/socket-service';
 
 export default window.workbench.createComponent((accessor) => {
   const logService = accessor.get(ILogService);
   const sessionService = accessor.get(ISessionService);
+  const socketService = accessor.get(ISocketService);
 
   return defineComponent({
     name: Component.CodePage,
@@ -22,6 +24,7 @@ export default window.workbench.createComponent((accessor) => {
       const errorMessage = ref('');
 
       let editor: markybox.MEditor;
+      let renderer: markybox.MHTMLRenderer;
 
       function initEditor(): void {
         const { isAuth, notes, name: userName } = sessionService.profile;
@@ -35,7 +38,7 @@ export default window.workbench.createComponent((accessor) => {
         }
 
         const root = document.querySelector<HTMLElement>('#root') as HTMLElement;
-        const renderer = new markybox.MHTMLRenderer(root, userName.value);
+        renderer = new markybox.MHTMLRenderer(root, userName.value);
 
         editor = new markybox.MEditor({
           renderer,
@@ -47,6 +50,18 @@ export default window.workbench.createComponent((accessor) => {
 
       onMounted(async () => {
         await nextTick();
+
+        socketService.onMessage((event) => {
+          const { type, data } = event;
+
+          switch (type) {
+            case SocketCommandType.EnterRoom: {
+              const { user } = data;
+
+              console.log(`User ${user} entered room`);
+            }
+          }
+        })
 
         try {
           initEditor();

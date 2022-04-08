@@ -40,5 +40,6 @@ export namespace Session {
   export type UserEmail = string;
   export type UserPassword = string;
 
+  export type NoteId = string;
   export type SessionId = string;
 }

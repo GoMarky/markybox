@@ -4,7 +4,7 @@ import { ISessionService, Session, UserProfile } from '@/code/session/common/ses
 import { ISessionInfoRequestAttributes, ISessionInfoRequestResponse, SessionInfoRequest } from '@/code/request/session-info/session-info-request';
 import { getLocalStorageItem, setLocalStorageItem } from '@/base/dom';
 import { ISessionLoginRequestAttributes, SessionLoginRequest } from '@/code/request/session-login/session-login-request';
-import { ISocketService } from '@/code/socket/common/socket-service';
+import { IBaseSocketMessagePayload, ISocketService } from '@/code/socket/common/socket-service';
 
 export class SessionService extends Disposable implements ISessionService {
   public readonly profile: UserProfile;
@@ -59,7 +59,12 @@ export class SessionService extends Disposable implements ISessionService {
     this.profile.name.value = user;
     this.profile.email.value = email;
 
+    const basePayload: IBaseSocketMessagePayload = {
+      note_nanoid: '5f5f54rd-566uhmfgfd-3dasd3-dq2asd',
+      user_name: user,
+    }
+
     void this.socketService.connect()
-      .then(() => this.socketService.send())
+      .then(() => this.socketService.send(basePayload))
   }
 }
