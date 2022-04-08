@@ -4,12 +4,14 @@ import { ISessionService, Session, UserProfile } from '@/code/session/common/ses
 import { ISessionInfoRequestAttributes, ISessionInfoRequestResponse, SessionInfoRequest } from '@/code/request/session-info/session-info-request';
 import { getLocalStorageItem, setLocalStorageItem } from '@/base/dom';
 import { ISessionLoginRequestAttributes, SessionLoginRequest } from '@/code/request/session-login/session-login-request';
+import { ISocketService } from '@/code/socket/common/socket-service';
 
 export class SessionService extends Disposable implements ISessionService {
   public readonly profile: UserProfile;
 
   constructor(
     @IRequestService private readonly requestService: IRequestService,
+    @ISocketService private readonly socketService: ISocketService,
   ) {
     super();
 
@@ -56,5 +58,8 @@ export class SessionService extends Disposable implements ISessionService {
     this.profile.notes.value = notes;
     this.profile.name.value = user;
     this.profile.email.value = email;
+
+    void this.socketService.connect()
+      .then(() => this.socketService.send())
   }
 }

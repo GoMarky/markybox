@@ -12,6 +12,8 @@ import { SessionService } from '@/code/session/browser/sessionService';
 import { ISessionService } from '@/code/session/common/session';
 import { LayoutService } from '@/platform/layout/browser/layout-service';
 import { ILayoutService } from '@/platform/layout/common/layout';
+import { SocketService } from '@/code/socket/browser/socket-service';
+import { ISocketService } from '@/code/socket/common/socket-service';
 
 const services = new ServiceCollection();
 
@@ -34,10 +36,13 @@ const environmentOptions: IEnvironmentConfig = {
 const environmentService = new EnvironmentService(environmentOptions);
 services.set(IEnvironmentService, environmentService);
 
+const socketService = new SocketService();
+services.set(ISocketService, socketService);
+
 const requestService = new RequestService(logService, lifecycleService, instantiationService);
 services.set(IRequestService, requestService);
 
-const sessionService = new SessionService(requestService)
+const sessionService = new SessionService(requestService, socketService)
 services.set(ISessionService, sessionService);
 
 const layoutService = new LayoutService();
