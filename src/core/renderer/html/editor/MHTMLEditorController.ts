@@ -98,6 +98,13 @@ export class MHTMLEditorController extends MObject {
     this._currentRow = storage.last();
   }
 
+  public removeRow(row: MHTMLGlyphRow): void {
+    const { renderer } = this;
+    const { storage } = renderer;
+
+    storage.removeRow(row);
+  }
+
   public setCurrentRow(row: MHTMLGlyphRow): MHTMLGlyphRow {
     this._currentRow = row;
 
@@ -110,8 +117,10 @@ export class MHTMLEditorController extends MObject {
     for (const [index, rowText] of textParts.entries()) {
       const row = this.addRow(rowText);
 
-      if (index === textParts.length - 1) {
-        this.setCurrentRow(row);
+      const isLastIteration = index === textParts.length - 1;
+
+      if (isLastIteration) {
+        this._currentRow = row;
       }
     }
   }

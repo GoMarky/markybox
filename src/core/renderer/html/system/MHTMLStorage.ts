@@ -32,8 +32,8 @@ export class MHTMLStorage extends MObject {
   public removeRow(row: MHTMLGlyphRow): void {
     const index = this._rows.findIndex((r) => r === row);
 
-    // Если удаляемая строчка первая - то не удаляем ее.
-    if (index === 0) {
+    // Если удаляемая строчка первая и единственная - то не удаляем ее.
+    if (this.count === 1 && index === 0) {
       return;
     }
 

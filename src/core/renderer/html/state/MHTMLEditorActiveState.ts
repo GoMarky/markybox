@@ -132,16 +132,33 @@ export class MHTMLEditorActiveState extends MHTMLEditorState {
     const { navigator, controller } = this.renderer;
     const { currentRow } = controller;
 
+    /**
+     * Если текущая строка пустая - удаляем ее.
+     */
     if (currentRow.empty()) {
       return this.removeCurrentEmptyRow();
     }
 
+    /**
+     * Если текущая строка содержит только пробелы, то не удаляем ее - а просто очищаем от пробелов
+     */
     if (currentRow.containsOnlyWhitespaces()) {
       navigator.setPosition({ row: currentRow.index, column: 0 })
       return currentRow.erase();
     }
 
     const { position: { column } } = navigator;
+
+    /**
+     * Если мы находимся в начале строки, и нажимаем backspace и
+     * предыдущая строчка пустая -> то удаляем предыдущую строчку.
+     */
+    if (column === 0 && controller.prevRow?.empty()) {
+      controller.removeRow(controller.prevRow);
+      navigator.setPosition({ row: currentRow.index, column })
+      return;
+    }
+
     return this.removeLetterByPosition(column);
   }
 
