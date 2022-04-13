@@ -23,10 +23,10 @@ export function indexOutOfRange(index: number): boolean {
   return index < 0;
 }
 
-export function getLastElement<T>(array: readonly T[]): T | undefined {
+export function getLastElement<T>(array: T[]): T | undefined {
   if (array.length === 0) {
     return undefined;
   }
 
-  return array[array.length - 1];
+  return array.at(-1);
 }

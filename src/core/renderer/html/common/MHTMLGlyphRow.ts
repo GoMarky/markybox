@@ -14,6 +14,8 @@ import { MHTMLGlyphRowGutter } from '@/core/renderer/html/common/MHTMLGlyphRowGu
 import { getLastElement } from '@/base/array';
 
 interface IInputParseResult {
+  startColumn?: number;
+  endColumn?: number;
   type: 'whitespace' | 'text' | 'paren';
   data: string;
 }
@@ -81,8 +83,14 @@ export class MHTMLGlyphRow extends MHTMLGlyphDOM<HTMLDivElement> {
     const result: IInputParseResult[] = [];
     const words = text.split(/(\s+)/);
 
+    let currentPosition = 0;
+
     for (const word of words) {
       const isWhitespace = word.trim().length === 0;
+
+      const startColumn = currentPosition;
+      currentPosition += word.length;
+      const endColumn = currentPosition;
 
       let type: IInputParseResult['type'];
 
@@ -105,6 +113,8 @@ export class MHTMLGlyphRow extends MHTMLGlyphDOM<HTMLDivElement> {
       }
 
       result.push({
+        startColumn,
+        endColumn,
         type,
         data: word,
       });
@@ -127,7 +137,7 @@ export class MHTMLGlyphRow extends MHTMLGlyphDOM<HTMLDivElement> {
 
     const children: MHTMLGlyphDOM[] = [];
 
-    for (const { data, type } of words) {
+    for (const { data, type, startColumn, endColumn } of words) {
       switch (type) {
         case 'whitespace': {
           const textNode = new MHTMLGlyphTextNode(data);
@@ -135,7 +145,7 @@ export class MHTMLGlyphRow extends MHTMLGlyphDOM<HTMLDivElement> {
           break;
         }
         case 'text': {
-          const wordNode = new MHTMLGlyphWord(data);
+          const wordNode = new MHTMLGlyphWord(data, startColumn as number, endColumn as number);
           children.push(wordNode);
           break;
         }

@@ -91,14 +91,6 @@ export class MHTMLRenderer extends MObject implements IAbstractRenderer {
       this.controller.setCurrentRow(row);
     })
 
-    this.navigator.onDidUpdatePosition((position) => {
-      const row = this.storage.at(position.row);
-
-      if (!row) {
-        throw new CriticalError(`Expected row at position: ${position.row}. Got undefined`);
-      }
-    })
-
     // Select all code
     this.disposables.add(
       windowShortcut.registerShortcut('Meta+A', () => {

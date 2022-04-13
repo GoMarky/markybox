@@ -1,5 +1,7 @@
 import { MHTMLGlyphDOM } from '@/core/renderer/html/common/MHTMLGlyphDOM';
 import { MHTMLGlyphParen, ParenDirection } from '@/core/renderer/html/common/MHTMLGlyphParen';
+import { MHTMLGlyphTextNode } from '@/core/renderer/html/common/MHTMLGlyphTextNode';
+import { MHTMLGlyphWord } from '@/core/renderer/html/common/MHTMLGlyphWord';
 
 export class MHTMLNodeFragment extends MHTMLGlyphDOM<DocumentFragment> {
   private readonly _hasLeftParen: boolean;
@@ -25,8 +27,10 @@ export class MHTMLNodeFragment extends MHTMLGlyphDOM<DocumentFragment> {
     }
   }
 
-  public at(index: MHTMLGlyphDOM): void {
+  public at(column: number): MHTMLGlyphWord | undefined {
+    const glyphs = this._children.filter((glyph) => glyph instanceof MHTMLGlyphWord) as MHTMLGlyphWord[];
 
+    return glyphs.find((glyph) => glyph.startColumn <= column && glyph.endColumn > column);
   }
 
   public get hasLeftParen(): boolean {

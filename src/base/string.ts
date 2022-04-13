@@ -23,7 +23,7 @@ export function getLastLetter(text: string): string {
     return '';
   }
 
-  return text[text.length - 1];
+  return text.at(-1) as string;
 }
 
 export function isEmptyString(str?: string): boolean {
