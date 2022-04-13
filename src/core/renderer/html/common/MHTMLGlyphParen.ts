@@ -9,14 +9,12 @@ export enum ParenDirection {
 export class MHTMLGlyphParen extends MHTMLGlyphDOM<HTMLSpanElement> {
   public readonly type: ParenDirection;
 
-  constructor(public text: string) {
+  constructor(public readonly text: string) {
     super();
-
-    const element = document.createElement('span');
 
     this.type = isLeftParen(text) ? ParenDirection.Left : ParenDirection.Right;
 
-    this._el = element;
+    this._el = document.createElement('span');
     this._el.classList.add(`m-editor__paren-${this.type}`)
     this._el.textContent = this.text;
   }
@@ -25,8 +23,6 @@ export class MHTMLGlyphParen extends MHTMLGlyphDOM<HTMLSpanElement> {
     super.dispose();
 
     this.disposables.clear();
-
-    this.text = '';
     this._el.remove();
   }
 }

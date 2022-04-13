@@ -25,6 +25,10 @@ export class MHTMLNodeFragment extends MHTMLGlyphDOM<DocumentFragment> {
     }
   }
 
+  public at(index: MHTMLGlyphDOM): void {
+
+  }
+
   public get hasLeftParen(): boolean {
     return this._hasLeftParen;
   }

@@ -4,6 +4,7 @@
 export enum Char {
   Enter = 'Enter',
   Backspace = 'Backspace',
+  Escape = 'Escape',
   Shift = 'Shift',
   CapsLock = 'CapsLock',
   Meta = 'Meta',

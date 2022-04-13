@@ -17,7 +17,6 @@ import { CriticalError } from '@/base/errors';
 import { MHTMLEditorController } from '@/core/renderer/html/editor/MHTMLEditorController';
 import { IAbstractRenderer } from '@/core/app/renderer';
 import { MHTMLTextHintVisitor } from '@/core/renderer/html/visitors/MHTMLTextHintVisitor';
-import { MHTMLTextIndentVisitor } from '@/core/renderer/html/visitors/MHTMLTextIndentVisitor';
 import { MHTMLHighlightKeywordVisitor } from '@/core/renderer/html/visitors/MHTMLHighlightKeywordVisitor';
 import { MPartitionLayer } from '@/core/renderer/html/layers/MPartionLayer';
 
@@ -69,8 +68,7 @@ export class MHTMLRenderer extends MObject implements IAbstractRenderer {
   public init(text?: string): void {
     this.unlock();
 
-    this.body.addVisitor(new MHTMLTextHintVisitor());
-    this.body.addVisitor(new MHTMLTextIndentVisitor(this));
+    this.body.addVisitor(new MHTMLTextHintVisitor(this));
     this.body.addVisitor(new MHTMLHighlightKeywordVisitor());
 
     this.registerListeners();
@@ -91,6 +89,14 @@ export class MHTMLRenderer extends MObject implements IAbstractRenderer {
       }
 
       this.controller.setCurrentRow(row);
+    })
+
+    this.navigator.onDidUpdatePosition((position) => {
+      const row = this.storage.at(position.row);
+
+      if (!row) {
+        throw new CriticalError(`Expected row at position: ${position.row}. Got undefined`);
+      }
     })
 
     // Select all code
