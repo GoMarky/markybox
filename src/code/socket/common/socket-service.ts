@@ -1,13 +1,15 @@
 import { createDecorator } from '@/platform/instantiation/common/instantiation';
 import { Session } from '@/code/session/common/session';
-import {IEvent} from '@/base/event';
+import { IEvent } from '@/base/event';
 
 export interface IBaseSocketMessagePayload {
+  type: SocketCommandType;
   note_nanoid: Session.NoteId;
   user_name?: Session.UserName;
 }
 
 export enum SocketCommandType {
+  RoomCreated = 'create_room',
   EnterRoom = 'enter_room',
   LeaveRoom = 'leave_room',
 }
@@ -19,6 +21,8 @@ export interface ISocketMessageResponse {
 
 export interface ISocketService {
   readonly onMessage: IEvent<ISocketMessageResponse>;
+
+  createOrEnterRoom(noteId: Session.NoteId): void;
 
   connect(): Promise<void>;
 

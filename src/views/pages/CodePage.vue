@@ -6,6 +6,7 @@
 
 <script lang="ts">
 import { defineComponent, nextTick, onMounted, ref } from 'vue';
+import { useRouter } from 'vue-router';
 import * as markybox from '@/core';
 import { getLastElement } from '@/base/array';
 import { ILogService } from '@/platform/log/common/log';
@@ -21,6 +22,7 @@ export default window.workbench.createComponent((accessor) => {
   return defineComponent({
     name: Component.CodePage,
     setup() {
+      const { currentRoute } = useRouter();
       const errorMessage = ref('');
 
       let editor: markybox.MEditor;
@@ -48,20 +50,40 @@ export default window.workbench.createComponent((accessor) => {
         });
       }
 
-      onMounted(async () => {
-        await nextTick();
-
+      onMounted(() => {
         socketService.onMessage((event) => {
           const { type, data } = event;
 
           switch (type) {
             case SocketCommandType.EnterRoom: {
-              const { user } = data;
+              const { user_name } = data;
 
-              console.log(`User ${user} entered room`);
+              console.log(`User ${user_name} entered room`);
+              break;
+            }
+            case SocketCommandType.RoomCreated: {
+              const { note_id } = data;
+
+              console.log(`Room ${note_id} created`);
+              break;
             }
           }
         })
+      })
+
+      sessionService.onDidUserLogin(() => {
+        const noteId = currentRoute.value.params.id as string;
+
+        socketService.createOrEnterRoom(noteId);
+      });
+
+      onMounted(async () => {
+        await nextTick();
+
+        if (sessionService.profile.isAuth.value) {
+          const noteId = currentRoute.value.params.id as string;
+          socketService.createOrEnterRoom(noteId);
+        }
 
         try {
           initEditor();
@@ -70,8 +92,6 @@ export default window.workbench.createComponent((accessor) => {
             const { name, message } = error;
 
             errorMessage.value = `Name: ${name}. Message: ${message}`;
-          } else {
-            console.log(error);
           }
         }
       })

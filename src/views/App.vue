@@ -13,7 +13,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, watch } from 'vue';
+import { defineComponent, nextTick, onMounted, watch } from 'vue';
 import AppModal from '@/views/components/AppModal.vue';
 import UserLoginModal from '@/views/modals/UserLoginModal.vue';
 import UserProfileModal from '@/views/modals/UserProfileModal.vue';

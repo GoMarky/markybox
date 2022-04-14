@@ -39,7 +39,7 @@ export class MHTMLRenderer extends MObject implements IAbstractRenderer {
     super();
 
     if (!window.isSecureContext) {
-      throw new SecurityError(`markybox works only in security context. Please, enable HTTPS`);
+      console.warn(`markybox works only in security context. Please, enable HTTPS`);
     }
 
     this.storage = new MHTMLStorage();

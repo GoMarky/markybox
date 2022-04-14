@@ -36,14 +36,14 @@ const environmentOptions: IEnvironmentConfig = {
 const environmentService = new EnvironmentService(environmentOptions);
 services.set(IEnvironmentService, environmentService);
 
-const socketService = new SocketService();
-services.set(ISocketService, socketService);
-
 const requestService = new RequestService(logService, lifecycleService, instantiationService);
 services.set(IRequestService, requestService);
 
-const sessionService = new SessionService(requestService, socketService)
+const sessionService = new SessionService(requestService)
 services.set(ISessionService, sessionService);
+
+const socketService = new SocketService(sessionService);
+services.set(ISocketService, socketService);
 
 const layoutService = new LayoutService();
 services.set(ILayoutService, layoutService);

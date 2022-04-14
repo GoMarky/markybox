@@ -2,6 +2,7 @@ import { createDecorator } from '@/platform/instantiation/common/instantiation';
 import { Disposable } from '@/platform/lifecycle/common/lifecycle';
 import { computed, ComputedRef, ref, Ref } from 'vue';
 import { INoteInfo } from '@/code/notes/common/notes';
+import { IEvent } from '@/base/event';
 
 export class UserProfile extends Disposable {
   public readonly sessionId: Ref<string> = ref('');
@@ -24,12 +25,11 @@ export class UserProfile extends Disposable {
 }
 
 export interface ISessionService {
+  readonly onDidUserLogin: IEvent<void>;
   readonly profile: UserProfile;
 
   login(email: Session.UserEmail, password: Session.UserPassword): Promise<void>;
-
   logout(): Promise<void>;
-
   restoreSession(): Promise<void>;
 }
 

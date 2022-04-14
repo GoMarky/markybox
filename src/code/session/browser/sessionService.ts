@@ -4,14 +4,16 @@ import { ISessionService, Session, UserProfile } from '@/code/session/common/ses
 import { ISessionInfoRequestAttributes, ISessionInfoRequestResponse, SessionInfoRequest } from '@/code/request/session-info/session-info-request';
 import { getLocalStorageItem, setLocalStorageItem } from '@/base/dom';
 import { ISessionLoginRequestAttributes, SessionLoginRequest } from '@/code/request/session-login/session-login-request';
-import { IBaseSocketMessagePayload, ISocketService } from '@/code/socket/common/socket-service';
+import { Emitter, IEvent } from '@/base/event';
 
 export class SessionService extends Disposable implements ISessionService {
+  private readonly _onDidUserLogin: Emitter<void> = new Emitter<void>();
+  public readonly onDidUserLogin: IEvent<void> = this._onDidUserLogin.event;
+
   public readonly profile: UserProfile;
 
   constructor(
     @IRequestService private readonly requestService: IRequestService,
-    @ISocketService private readonly socketService: ISocketService,
   ) {
     super();
 
@@ -51,20 +53,15 @@ export class SessionService extends Disposable implements ISessionService {
     setLocalStorageItem('sessionId', '');
   }
 
-  private doLogin(session: ISessionInfoRequestResponse): void {
+  private async doLogin(session: ISessionInfoRequestResponse): Promise<void> {
     const { user, email, notes, session_id } = session;
 
     this.profile.sessionId.value = session_id;
     this.profile.notes.value = notes;
-    this.profile.name.value = user;
+    // TODO: change to user
+    this.profile.name.value = email;
     this.profile.email.value = email;
 
-    const basePayload: IBaseSocketMessagePayload = {
-      note_nanoid: '5f5f54rd-566uhmfgfd-3dasd3-dq2asd',
-      user_name: user,
-    }
-
-    void this.socketService.connect()
-      .then(() => this.socketService.send(basePayload))
+    this._onDidUserLogin.fire();
   }
 }

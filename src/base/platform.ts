@@ -1,4 +1,5 @@
 import { IServicesAccessor } from '@/platform/instantiation/common/instantiation';
+import { Session } from '@/code/session/common/session';
 
 declare global {
   namespace NodeJS {
@@ -20,7 +21,6 @@ declare global {
   interface Window {
     workbench: ICreateComponentFactory;
   }
-
 }
 
 export const API_VERSION = 'v1';
