@@ -4,11 +4,13 @@ import { IEvent } from '@/base/event';
 
 export interface IBaseSocketMessagePayload {
   type: SocketCommandType;
-  note_nanoid: Session.NoteId;
+  note_nanoid?: Session.NoteId;
   user_name?: Session.UserName;
 }
 
 export enum SocketCommandType {
+  Info = 'info',
+  Ping = 'ping',
   RoomCreated = 'create_room',
   EnterRoom = 'enter_room',
   LeaveRoom = 'leave_room',

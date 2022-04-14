@@ -36,7 +36,11 @@ export class SocketService extends Disposable implements ISocketService {
 
   public send(payload: unknown & IBaseSocketMessagePayload): void {
     if (!this.ws) {
-      return;
+      throw new CriticalError(`Cant send message, when no connection exist`);
+    }
+
+    if (this.ws.readyState === this.ws.CLOSING || this.ws.readyState === this.ws.CLOSED) {
+      throw new CriticalError(`Cant send message when connection - CLOSED`);
     }
 
     this._send(payload);
@@ -65,6 +69,6 @@ export class SocketService extends Disposable implements ISocketService {
   }
 
   public disconnect(): void {
-    this.ws?.close();
+    return this.ws?.close(1000, 'Client closed connection')
   }
 }

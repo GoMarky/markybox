@@ -55,10 +55,16 @@ export default window.workbench.createComponent((accessor) => {
           const { type, data } = event;
 
           switch (type) {
+            case SocketCommandType.Info:
+              const { text } = data;
+              console.log(text);
+              break;
+            case SocketCommandType.LeaveRoom:
             case SocketCommandType.EnterRoom: {
-              const { user_name } = data;
+              const { text, user_name } = data;
 
-              console.log(`User ${user_name} entered room`);
+              renderer.addNavigator(user_name);
+
               break;
             }
             case SocketCommandType.RoomCreated: {

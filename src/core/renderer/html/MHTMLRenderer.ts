@@ -6,7 +6,6 @@ import { HTMLDisplayRenderer } from '@/core/renderer/html/system/MHTMLDisplayRen
 import { MHTMLEditorGutter } from '@/core/renderer/html/editor/MHTMLEditorGutter';
 import { MHTMLEditorBody } from '@/core/renderer/html/editor/MHTMLEditorBody';
 import { MHTMLClipboard } from '@/core/renderer/html/system/MHTMLClipboard';
-import { SecurityError } from '@/core/app/errors';
 import { MHTMLEditorSelection } from '@/core/renderer/html/editor/MHTMLEditorSelection';
 import { MMarkerLayer } from '@/core/renderer/html/layers/MMarkerLayer';
 import { MHTMLStorage } from '@/core/renderer/html/system/MHTMLStorage';
@@ -34,6 +33,8 @@ export class MHTMLRenderer extends MObject implements IAbstractRenderer {
 
   private readonly clipboard: MHTMLClipboard;
   private readonly partitionLayer: MPartitionLayer;
+
+  private navigators: MHTMLEditorBodyNavigator[] = [];
 
   constructor(public readonly root: HTMLElement, author: string = 'user') {
     super();
@@ -124,5 +125,22 @@ export class MHTMLRenderer extends MObject implements IAbstractRenderer {
     const { rows } = this.storage;
 
     return rows.map((row) => row.toString()).join('\n');
+  }
+
+  public addNavigator(name: string): void {
+    const navigator = new MHTMLEditorBodyNavigator(this, name);
+
+    this.navigators.push(navigator);
+  }
+
+  public removeNavigator(name: string): void {
+    const navigator = this.navigators.find((nav => nav.name === name));
+
+    if (!navigator) {
+      throw new CriticalError(`Can find navigator with name - ${name}`);
+    }
+
+    navigator.dispose();
+    this.navigators = this.navigators.filter((nav) => nav !== navigator);
   }
 }

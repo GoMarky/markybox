@@ -7,15 +7,13 @@ import { IPosition } from '@/core/app/common';
 export class MHTMLEditorBodyNavigator extends MObject {
   private _currentPosition: IPosition = { row: 0, column: 0 };
   private layer: MCaretLayer;
-  private name: string;
 
   private readonly _onDidUpdatePosition: Emitter<IPosition> = new Emitter<IPosition>();
   public readonly onDidUpdatePosition: IEvent<IPosition> = this._onDidUpdatePosition.event;
 
-  constructor(private readonly renderer: MHTMLRenderer, name: string) {
+  constructor(private readonly renderer: MHTMLRenderer, public readonly name: string) {
     super();
 
-    this.name = name;
     this.layer = new MCaretLayer(renderer, name);
   }
 
