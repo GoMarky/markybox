@@ -14,6 +14,8 @@ import { LayoutService } from '@/platform/layout/browser/layout-service';
 import { ILayoutService } from '@/platform/layout/common/layout';
 import { SocketService } from '@/code/socket/browser/socket-service';
 import { ISocketService } from '@/code/socket/common/socket-service';
+import { NoteService } from '@/code/notes/browser/note-service';
+import { INoteService } from '@/code/notes/common/notes';
 
 const services = new ServiceCollection();
 
@@ -47,5 +49,8 @@ services.set(ISocketService, socketService);
 
 const layoutService = new LayoutService();
 services.set(ILayoutService, layoutService);
+
+const noteService = new NoteService(requestService);
+services.set(INoteService, noteService);
 
 export default services;

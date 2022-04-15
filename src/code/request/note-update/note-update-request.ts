@@ -1,10 +1,10 @@
 import { ENDPOINTS } from '@/platform/request/browser/requests';
 import { HTTPRequest, ResponseInstance } from '@/code/request/baseRequest';
-import { Session } from '@/code/session/common/session';
+import { ISessionService, Session } from '@/code/session/common/session';
 import { INoteInfo, Note } from '@/code/notes/common/notes';
 
 export interface INoteUpdateRequestAttributes {
-  readonly sessionId: Session.SessionId;
+  readonly sessionId?: Session.SessionId;
   readonly noteId: Note.NoteId;
   readonly data: Note.NoteContent;
 }
@@ -17,12 +17,17 @@ export class NoteUpdateRequest extends HTTPRequest<INoteUpdateRequestAttributes,
   protected readonly endpoint: string = ENDPOINTS.NOTE_UPDATE;
   public readonly id: string = NoteUpdateRequest.staticId;
 
-  constructor() {
+  constructor(@ISessionService private readonly sessionService: ISessionService) {
     super();
   }
 
   public async handle(): Promise<ResponseInstance<INoteUpdateRequestResponse, INoteUpdateRequestResponse>> {
-    const response = await this.patch(this.endpoint, this.getAttributes());
+    const { profile } = this.sessionService;
+
+    const response = await this.post(this.endpoint, {
+      sessionId: profile.sessionId.value,
+      ...this.getAttributes(),
+    });
     return this.doHandle(response);
   }
 }

@@ -15,4 +15,5 @@ export enum Char {
   ArrowLeft = 'ArrowLeft',
   ArrowRight = 'ArrowRight',
   Unidentified = 'Unidentified',
+  Tab = 'Tab',
 }

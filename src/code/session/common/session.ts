@@ -17,6 +17,25 @@ export class UserProfile extends Disposable {
     return Boolean(sessionId.value);
   })
 
+  constructor() {
+    super();
+
+    this.enableTestMode();
+  }
+
+  public enableTestMode(): void {
+    this.name.value = 'Andrew';
+    this.sessionId.value = 'asdasdas';
+    this.email.value = 'me@swen.tech';
+    this.notes.value = [{
+      data: 'class Test {  }',
+      createdAt: Date.now(),
+      updatedAt: Date.now(),
+      id: 'asdasdasd',
+      title: 'test code'
+    }]
+  }
+
   public dispose() {
     this.name.value = '';
     this.email.value = '';
@@ -29,7 +48,9 @@ export interface ISessionService {
   readonly profile: UserProfile;
 
   login(email: Session.UserEmail, password: Session.UserPassword): Promise<void>;
+
   logout(): Promise<void>;
+
   restoreSession(): Promise<void>;
 }
 

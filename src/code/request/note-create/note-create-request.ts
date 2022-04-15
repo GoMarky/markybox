@@ -1,15 +1,16 @@
 import { ENDPOINTS } from '@/platform/request/browser/requests';
 import { HTTPRequest, ResponseInstance } from '@/code/request/baseRequest';
-import { Session } from '@/code/session/common/session';
+import { ISessionService, Session } from '@/code/session/common/session';
 import { Note } from '@/code/notes/common/notes';
 
 export interface INoteCreateRequestAttributes {
-  readonly sessionId: Session.SessionId;
-  readonly noteId: Note.NoteId;
+  readonly sessionId?: Session.SessionId;
   readonly data: Note.NoteContent;
 }
 
-export type INoteCreateRequestResponse = 'created';
+export type INoteCreateRequestResponse = {
+  readonly id: Note.NoteId
+};
 
 export class NoteCreateRequest extends HTTPRequest<INoteCreateRequestAttributes, INoteCreateRequestResponse, INoteCreateRequestResponse> {
   public static readonly staticId = 'note-create';
@@ -17,12 +18,17 @@ export class NoteCreateRequest extends HTTPRequest<INoteCreateRequestAttributes,
   protected readonly endpoint: string = ENDPOINTS.NOTE_CREATE;
   public readonly id: string = NoteCreateRequest.staticId;
 
-  constructor() {
+  constructor(@ISessionService private readonly sessionService: ISessionService) {
     super();
   }
 
   public async handle(): Promise<ResponseInstance<INoteCreateRequestResponse, INoteCreateRequestResponse>> {
-    const response = await this.post(this.endpoint, this.getAttributes());
+    const { profile } = this.sessionService;
+
+    const response = await this.post(this.endpoint, {
+      sessionId: profile.sessionId.value,
+      ...this.getAttributes(),
+    });
     return this.doHandle(response);
   }
 }

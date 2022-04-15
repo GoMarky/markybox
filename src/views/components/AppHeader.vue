@@ -11,6 +11,11 @@
     <nav class="page-header__navigation">
       <ul class="page-header__nav-list">
         <li class="page-header__nav-item">
+          <a href="#" @click.prevent="createNote()" class="page-header__nav-link">
+            Create note
+          </a>
+        </li>
+        <li class="page-header__nav-item">
           <a v-if="isAuth" href="#" @click.prevent="openUserProfileModal()" class="page-header__nav-link">
             {{ name }}
           </a>
@@ -28,10 +33,12 @@ import { defineComponent } from 'vue';
 import { ISessionService } from '@/code/session/common/session';
 import { Component } from '@/code/vue/common/component-names';
 import { ILayoutService } from '@/platform/layout/common/layout';
+import { INoteService } from '@/code/notes/common/notes';
 
 export default window.workbench.createComponent((accessor) => {
   const sessionService = accessor.get(ISessionService);
   const layoutService = accessor.get(ILayoutService);
+  const noteService = accessor.get(INoteService);
 
   return defineComponent({
     name: Component.AppHeader,
@@ -46,7 +53,13 @@ export default window.workbench.createComponent((accessor) => {
         layoutService.modal.open('UserLoginModal');
       }
 
-      return { isAuth, name, openUserProfileModal, openLoginModal }
+      async function createNote(): Promise<void> {
+        const noteId = await noteService.createNote();
+
+        console.log(noteId);
+      }
+
+      return { isAuth, name, openUserProfileModal, openLoginModal, createNote }
     },
   })
 });

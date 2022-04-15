@@ -1,10 +1,10 @@
 import { ENDPOINTS } from '@/platform/request/browser/requests';
 import { HTTPRequest, ResponseInstance } from '@/code/request/baseRequest';
-import { Session } from '@/code/session/common/session';
+import { ISessionService, Session } from '@/code/session/common/session';
 import { Note } from '@/code/notes/common/notes';
 
 export interface INoteDeleteRequestAttributes {
-  readonly sessionId: Session.SessionId;
+  readonly sessionId?: Session.SessionId;
   readonly noteId: Note.NoteId;
 }
 
@@ -16,12 +16,17 @@ export class NoteDeleteRequest extends HTTPRequest<INoteDeleteRequestAttributes,
   protected readonly endpoint: string = ENDPOINTS.NOTE_DELETE;
   public readonly id: string = NoteDeleteRequest.staticId;
 
-  constructor() {
+  constructor(@ISessionService private readonly sessionService: ISessionService) {
     super();
   }
 
   public async handle(): Promise<ResponseInstance<INoteDeleteRequestResponse, INoteDeleteRequestResponse>> {
-    const response = await this.delete(this.endpoint, this.getAttributes());
+    const { profile } = this.sessionService;
+
+    const response = await this.post(this.endpoint, {
+      sessionId: profile.sessionId.value,
+      ...this.getAttributes(),
+    });
     return this.doHandle(response);
   }
 }
