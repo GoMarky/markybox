@@ -1,5 +1,5 @@
+import * as markybox from '@/core'
 import { IServicesAccessor } from '@/platform/instantiation/common/instantiation';
-import { Session } from '@/code/session/common/session';
 
 declare global {
   namespace NodeJS {
@@ -20,6 +20,9 @@ export interface ICreateComponentFactory {
 declare global {
   interface Window {
     workbench: ICreateComponentFactory;
+
+    $editor?: markybox.MEditor;
+    $renderer?: markybox.MHTMLRenderer
   }
 }
 

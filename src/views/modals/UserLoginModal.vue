@@ -34,9 +34,13 @@ import { Component } from '@/code/vue/common/component-names';
 import UIInput from '@/views/components/ui/UIInput.vue';
 import UIButton from '@/views/components/ui/UIButton.vue';
 import { ISessionService } from '@/code/session/common/session';
+import { ILayoutService } from '@/platform/layout/common/layout';
+import { getLastElement } from '@/base/array';
+import { INoteInfo } from '@/code/notes/common/notes';
 
 export default window.workbench.createComponent((accessor) => {
   const sessionService = accessor.get(ISessionService);
+  const layoutService = accessor.get(ILayoutService);
 
   return defineComponent({
     components: {
@@ -48,8 +52,19 @@ export default window.workbench.createComponent((accessor) => {
       const email = ref('');
       const password = ref('');
 
+      const { notes } = sessionService.profile;
+
       async function login() {
-        await sessionService.login(email.value, password.value);
+        try {
+          await sessionService.login(email.value, password.value);
+
+          layoutService.modal.close();
+
+          const lastRecord = getLastElement(notes.value) as INoteInfo;
+          window.$editor?.setText(lastRecord.data);
+        } catch (error) {
+          console.error(error);
+        }
       }
 
       return {

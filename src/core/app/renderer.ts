@@ -7,7 +7,8 @@ export interface IAbstractRenderer {
 
   unlock(): void;
   lock(): void;
-  init(text?: string): void;
+  init(): void;
 
-  text(): string;
+  setText(text: string): void;
+  getText(): string;
 }

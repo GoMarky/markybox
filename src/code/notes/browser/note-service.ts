@@ -23,13 +23,13 @@ export class NoteService extends Disposable implements INoteService {
   }
 
   public async deleteNote(noteId: Note.NoteId): Promise<void> {
-    const response = await this.requestService.call<INoteDeleteRequestAttributes,
+    await this.requestService.call<INoteDeleteRequestAttributes,
       INoteDeleteRequestResponse,
       INoteDeleteRequestResponse>(NoteDeleteRequest.staticId, { noteId })
   }
 
   public async updateNote(noteId: Note.NoteId, data: Note.NoteId): Promise<void> {
-    const response = await this.requestService.call<INoteUpdateRequestAttributes,
+    await this.requestService.call<INoteUpdateRequestAttributes,
       INoteUpdateRequestResponse,
       INoteUpdateRequestResponse>(NoteUpdateRequest.staticId, { noteId, data })
   }

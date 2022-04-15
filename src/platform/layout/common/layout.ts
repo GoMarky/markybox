@@ -11,11 +11,15 @@ export class ModalController extends Disposable {
   public readonly currentModal: Ref<string | null> = ref(null);
 
   public open(modalName: ModalName): void {
+    window.$editor?.lock();
+
     this.currentModal.value = modalName;
     this.isOpen.value = true;
   }
 
   public close(): void {
+    window.$editor?.unlock();
+
     this.currentModal.value = null;
     this.isOpen.value = false;
   }

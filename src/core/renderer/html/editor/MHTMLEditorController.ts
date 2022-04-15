@@ -112,6 +112,9 @@ export class MHTMLEditorController extends MObject {
   }
 
   public setWholeText(text: string): void {
+    const { renderer } = this;
+    const { storage } = renderer;
+
     const textParts = text.split('\n').filter(Boolean);
 
     for (const [index, rowText] of textParts.entries()) {

@@ -55,8 +55,6 @@ export default window.workbench.createComponent((accessor) => {
 
       async function createNote(): Promise<void> {
         const noteId = await noteService.createNote();
-
-        console.log(noteId);
       }
 
       return { isAuth, name, openUserProfileModal, openLoginModal, createNote }

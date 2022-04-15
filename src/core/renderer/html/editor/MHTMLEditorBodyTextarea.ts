@@ -45,10 +45,9 @@ export class MHTMLEditorBodyTextarea extends MHTMLGlyphDOM<HTMLTextAreaElement> 
       }
 
       const { key } = event;
-
       const isSystemKey = isSystemChar(key as Char);
 
-      if (isSystemKey) {
+      if (isSystemKey || key === 'Tab') {
         return;
       }
 

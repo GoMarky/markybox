@@ -6,7 +6,6 @@ export interface IEditorOptions {
   readonly renderer: IAbstractRenderer;
   readonly logger?: ILogger;
   readonly fullscreen: boolean;
-  readonly initialText?: string;
 }
 
 export class MEditor extends MObject {
@@ -16,7 +15,7 @@ export class MEditor extends MObject {
   constructor(options: IEditorOptions) {
     super();
 
-    const { renderer, fullscreen, logger, initialText } = options;
+    const { renderer, fullscreen, logger } = options;
     this.renderer = renderer;
     this.logger = logger;
 
@@ -24,7 +23,7 @@ export class MEditor extends MObject {
       this.renderer.display.setFullScreen();
     }
 
-    this.renderer.init(initialText);
+    this.renderer.init();
   }
 
   public lock(): void {
@@ -37,7 +36,11 @@ export class MEditor extends MObject {
     this.renderer.unlock();
   }
 
-  public text(): string {
-    return this.renderer.text();
+  public setText(text: string): void {
+    this.renderer.setText(text);
+  }
+
+  public getText(): string {
+    return this.renderer.getText();
   }
 }

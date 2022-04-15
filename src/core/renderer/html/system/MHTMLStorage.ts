@@ -17,6 +17,16 @@ export class MHTMLStorage extends MObject {
     super();
   }
 
+  public clear(): void {
+    for (const row of this._rows) {
+      this.removeRow(row);
+    }
+
+    this.last().dispose();
+    this._rows.splice(0, 1)
+    this._update();
+  }
+
   public addRow(row: MHTMLGlyphRow): void {
     this._rows.push(row);
     this._update();

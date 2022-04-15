@@ -23,7 +23,7 @@ export class NoteDeleteRequest extends HTTPRequest<INoteDeleteRequestAttributes,
   public async handle(): Promise<ResponseInstance<INoteDeleteRequestResponse, INoteDeleteRequestResponse>> {
     const { profile } = this.sessionService;
 
-    const response = await this.post(this.endpoint, {
+    const response = await this.delete(this.endpoint, {
       sessionId: profile.sessionId.value,
       ...this.getAttributes(),
     });

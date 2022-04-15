@@ -21,7 +21,7 @@ export class SessionLogoutRequest extends HTTPRequest<ISessionLogoutRequestAttri
   }
 
   public async handle(): Promise<ResponseInstance<ISessionLogoutRequestResponse, ISessionLogoutRequestResponse>> {
-    const response = await this.post(this.endpoint, this.getAttributes());
+    const response = await this.delete(this.endpoint, this.getAttributes());
     return this.doHandle(response);
   }
 }

@@ -24,7 +24,7 @@ export class NoteUpdateRequest extends HTTPRequest<INoteUpdateRequestAttributes,
   public async handle(): Promise<ResponseInstance<INoteUpdateRequestResponse, INoteUpdateRequestResponse>> {
     const { profile } = this.sessionService;
 
-    const response = await this.post(this.endpoint, {
+    const response = await this.patch(this.endpoint, {
       sessionId: profile.sessionId.value,
       ...this.getAttributes(),
     });

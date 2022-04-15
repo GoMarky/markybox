@@ -66,19 +66,13 @@ export class MHTMLRenderer extends MObject implements IAbstractRenderer {
     this.currentState.setContext(this);
   }
 
-  public init(text?: string): void {
+  public init(): void {
     this.unlock();
 
     this.body.addVisitor(new MHTMLTextHintVisitor(this));
     this.body.addVisitor(new MHTMLHighlightKeywordVisitor());
 
     this.registerListeners();
-
-    if (text) {
-      this.controller.setWholeText(text);
-    } else {
-      this.controller.addEmptyRow();
-    }
   }
 
   private registerListeners(): void {
@@ -121,10 +115,19 @@ export class MHTMLRenderer extends MObject implements IAbstractRenderer {
     window.addEventListener('keydown', (event) => this.currentState.onKeyDown(event));
   }
 
-  public text(): string {
+  public getText(): string {
     const { rows } = this.storage;
 
     return rows.map((row) => row.toString()).join('\n');
+  }
+
+  public setText(text: string): void {
+    if (!text) {
+      this.controller.addEmptyRow();
+      return;
+    }
+
+    this.controller.setWholeText(text);
   }
 
   public addNavigator(name: string): void {

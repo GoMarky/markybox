@@ -13,11 +13,13 @@ import { ILogService } from '@/platform/log/common/log';
 import { ISessionService } from '@/code/session/common/session';
 import { Component } from '@/code/vue/common/component-names';
 import { ISocketService, SocketCommandType } from '@/code/socket/common/socket-service';
+import { INoteInfo, INoteService } from '@/code/notes/common/notes';
 
 export default window.workbench.createComponent((accessor) => {
   const logService = accessor.get(ILogService);
   const sessionService = accessor.get(ISessionService);
   const socketService = accessor.get(ISocketService);
+  const noteService = accessor.get(INoteService);
 
   return defineComponent({
     name: Component.CodePage,
@@ -25,29 +27,27 @@ export default window.workbench.createComponent((accessor) => {
       const { currentRoute } = useRouter();
       const errorMessage = ref('');
 
-      let editor: markybox.MEditor;
-      let renderer: markybox.MHTMLRenderer;
-
       function initEditor(): void {
         const { isAuth, notes, name: userName } = sessionService.profile;
 
         let initialText = '';
 
         if (isAuth.value) {
-          const lastRecord = getLastElement(notes.value);
+          const lastRecord = getLastElement(notes.value) as INoteInfo;
 
-          initialText = lastRecord?.data || '';
+          initialText = lastRecord?.data;
         }
 
         const root = document.querySelector<HTMLElement>('#root') as HTMLElement;
-        renderer = new markybox.MHTMLRenderer(root, userName.value);
+        const renderer = window.$renderer = new markybox.MHTMLRenderer(root, userName.value);
 
-        editor = new markybox.MEditor({
+        window.$editor = new markybox.MEditor({
           renderer,
           fullscreen: true,
           logger: logService,
-          initialText,
         });
+
+        window.$editor.setText(initialText)
       }
 
       onMounted(() => {
@@ -57,13 +57,12 @@ export default window.workbench.createComponent((accessor) => {
           switch (type) {
             case SocketCommandType.Info:
               const { text } = data;
-              console.log(text);
               break;
             case SocketCommandType.LeaveRoom:
             case SocketCommandType.EnterRoom: {
               const { text, user_name } = data;
 
-              renderer.addNavigator(user_name);
+              window.$renderer?.addNavigator(user_name);
 
               break;
             }
