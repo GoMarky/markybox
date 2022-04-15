@@ -210,6 +210,47 @@ export abstract class HTTPRequest<TAttributes = unknown, TResponse = unknown, TR
     }
   }
 
+  protected async patch(
+    url: string,
+    data: TAttributes | null,
+    config?: Record<string, unknown>
+  ): Promise<AxiosResponse> {
+    try {
+      return await this.axios.patch(url, data, {
+        ...config,
+        cancelToken: this.getAbortToken(),
+      });
+    } catch (error) {
+      return HTTPRequest.handleNativeError(
+        this.id,
+        error,
+        this.axios.defaults.baseURL as string,
+        this.token
+      );
+    }
+  }
+
+  protected async delete(
+    url: string,
+    data: TAttributes | null,
+    config?: Record<string, unknown>
+  ): Promise<AxiosResponse> {
+    try {
+      return await this.axios.delete(url, {
+        ...config,
+        data,
+        cancelToken: this.getAbortToken(),
+      });
+    } catch (error) {
+      return HTTPRequest.handleNativeError(
+        this.id,
+        error,
+        this.axios.defaults.baseURL as string,
+        this.token
+      );
+    }
+  }
+
   private getAbortToken(): CancelToken | undefined {
     return this.token?.source.token;
   }

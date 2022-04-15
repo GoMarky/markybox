@@ -1,10 +1,12 @@
 import { API_VERSION } from '@/base/platform';
 
 const BASE_ENDPOINTS = {
-  GET_ALL_USERS: 'users/',
   SESSION_LOGIN: 'session/login/',
   SESSION_INFO: 'session/info/',
-  SESSION_LOGOUT: 'session/logout/'
+  SESSION_LOGOUT: 'session/logout/',
+  NOTE_CREATE: 'note/create/',
+  NOTE_UPDATE: 'note/update/',
+  NOTE_DELETE: 'note/delete/',
 };
 
 function addVersion(endpoints: Record<string, string>): Record<string, string> {

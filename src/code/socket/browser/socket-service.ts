@@ -4,6 +4,7 @@ import { Emitter, IEvent } from '@/base/event';
 import { ISessionService, Session } from '@/code/session/common/session';
 import { unref } from 'vue';
 import { CriticalError } from '@/base/errors';
+import { Note } from '@/code/notes/common/notes';
 
 const SOCKET_URL = 'ws://localhost:3000/v1/subscribe/';
 
@@ -21,7 +22,7 @@ export class SocketService extends Disposable implements ISocketService {
     this.ws?.send(JSON.stringify(payload));
   }
 
-  public createOrEnterRoom(noteId: Session.NoteId): void {
+  public createOrEnterRoom(noteId: Note.NoteId): void {
     const { email } = this.sessionService.profile;
 
     const basePayload: IBaseSocketMessagePayload = {

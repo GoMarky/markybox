@@ -58,8 +58,7 @@ export class SessionService extends Disposable implements ISessionService {
 
     this.profile.sessionId.value = session_id;
     this.profile.notes.value = notes;
-    // TODO: change to user
-    this.profile.name.value = email;
+    this.profile.name.value = user;
     this.profile.email.value = email;
 
     this._onDidUserLogin.fire();

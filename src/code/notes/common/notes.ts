@@ -1,7 +1,12 @@
+export namespace Note {
+  export type NoteId = string;
+  export type NoteContent = string;
+}
+
 export interface INoteInfo {
-  id: string;
+  id: Note.NoteId;
   title: string;
   createdAt: number;
   updatedAt: number;
-  data: string;
+  data: Note.NoteContent;
 }
