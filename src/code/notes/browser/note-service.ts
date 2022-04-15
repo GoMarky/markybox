@@ -15,7 +15,7 @@ export class NoteService extends Disposable implements INoteService {
   public async createNote(): Promise<Note.NoteId> {
     const { data } = await this.requestService.call<INoteCreateRequestAttributes,
       INoteCreateRequestResponse,
-      INoteCreateRequestResponse>(NoteCreateRequest.staticId, { data: '' });
+      INoteCreateRequestResponse>(NoteCreateRequest.staticId);
 
     const { id } = data;
 

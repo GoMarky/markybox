@@ -19,8 +19,6 @@ export class UserProfile extends Disposable {
 
   constructor() {
     super();
-
-    this.enableTestMode();
   }
 
   public enableTestMode(): void {

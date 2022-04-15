@@ -10,7 +10,7 @@ export type KnownLocalStorageKey = 'sessionId';
 
 export function getLocalStorageItem<T>(key: KnownLocalStorageKey, defaultValue: T): T
 export function getLocalStorageItem<T>(key: KnownLocalStorageKey, defaultValue?: T): T | null {
-  const result = JSON.stringify(window.localStorage.getItem(key));
+  const result = window.localStorage.getItem(key);
 
   if (result) {
     return JSON.parse(result);

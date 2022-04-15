@@ -61,6 +61,8 @@ export class SessionService extends Disposable implements ISessionService {
     this.profile.name.value = user;
     this.profile.email.value = email;
 
+    setLocalStorageItem('sessionId', session_id);
+
     this._onDidUserLogin.fire();
   }
 }

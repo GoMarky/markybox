@@ -25,11 +25,6 @@ export class SocketService extends Disposable implements ISocketService {
   public createOrEnterRoom(noteId: Note.NoteId): void {
     const { email } = this.sessionService.profile;
 
-    // TODO: test
-    if (true) {
-      return;
-    }
-
     const basePayload: IBaseSocketMessagePayload = {
       type: SocketCommandType.EnterRoom,
       note_nanoid: noteId,
