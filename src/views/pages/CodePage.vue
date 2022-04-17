@@ -33,21 +33,30 @@ export default window.workbench.createComponent((accessor) => {
         let initialText = '';
 
         if (isAuth.value) {
-          const lastRecord = getLastElement(notes.value) as INoteInfo;
+          const noteId = currentRoute.value.params.id as string;
+          const note = notes.value.find((note) => note.id === noteId);
 
-          initialText = lastRecord?.data;
+          if (note) {
+            initialText = note.data;
+          }
         }
 
         const root = document.querySelector<HTMLElement>('#root') as HTMLElement;
         const renderer = window.$renderer = new markybox.MHTMLRenderer(root, userName.value);
 
-        window.$editor = new markybox.MEditor({
+        const editor = window.$editor = new markybox.MEditor({
           renderer,
           fullscreen: true,
           logger: logService,
         });
 
-        window.$editor.setText(initialText)
+        renderer.editorAutoSave.onDidSave((text: string) => {
+          const noteId = currentRoute.value.params.id as string;
+
+          noteService.updateNote(noteId, text);
+        })
+
+        editor.setText(initialText)
       }
 
       onMounted(() => {

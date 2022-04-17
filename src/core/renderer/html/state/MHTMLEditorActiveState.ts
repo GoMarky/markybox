@@ -2,8 +2,7 @@ import { Char } from '@/base/char';
 import { MHTMLEditorState } from '@/core/renderer/html/state/MHTMLEditorState';
 import { MChar } from '@/core/renderer/html/editor/MHTMLEditorBodyTextarea';
 import { IPosition } from '@/core/app/common';
-
-const BASE_INDENT_VALUE = '    ';
+import { BASE_INDENT_VALUE } from '@/core/renderer/html/common/helpers';
 
 export class MHTMLEditorActiveState extends MHTMLEditorState {
   constructor() {
@@ -49,12 +48,14 @@ export class MHTMLEditorActiveState extends MHTMLEditorState {
   }
 
   public onInput(char: MChar): void {
-    const { controller, navigator } = this.renderer;
+    const { controller, navigator, editorAutoSave } = this.renderer;
     const { position: { column, row } } = navigator;
     const { currentRow } = controller;
 
     currentRow.inputAt(char, column);
     navigator.setPosition({ row, column: column + 1 });
+
+    editorAutoSave.save();
   }
 
   public onClick(event: MouseEvent): void {

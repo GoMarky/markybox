@@ -3,6 +3,7 @@ import { MHTMLRenderer } from '@/core';
 import { MHTMLGlyphRow } from '@/core/renderer/html/common/MHTMLGlyphRow';
 import { splitAtIndex } from '@/core/app/common';
 import * as dom from '@/base/dom';
+import { _endl, BASE_INDENT_VALUE } from '@/core/renderer/html/common/helpers';
 
 export class MHTMLEditorController extends MObject {
   private _currentRow: MHTMLGlyphRow;
@@ -112,10 +113,7 @@ export class MHTMLEditorController extends MObject {
   }
 
   public setWholeText(text: string): void {
-    const { renderer } = this;
-    const { storage } = renderer;
-
-    const textParts = text.split('\n').filter(Boolean);
+    const textParts = text.split(_endl).filter(Boolean);
 
     for (const [index, rowText] of textParts.entries()) {
       const row = this.addRow(rowText);
@@ -126,6 +124,15 @@ export class MHTMLEditorController extends MObject {
         this._currentRow = row;
       }
     }
+  }
+
+  public addIndentToCurrentRow(): void {
+    const { currentRow } = this;
+    const { navigator } = this.renderer;
+    const { column } = navigator.position;
+
+    currentRow.inputAt(BASE_INDENT_VALUE, column);
+    navigator.setPosition({ row: currentRow.index, column: column + 4 })
   }
 
   private findClosestRightParenRow(startIndex: number): MHTMLGlyphRow | undefined {

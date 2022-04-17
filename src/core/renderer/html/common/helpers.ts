@@ -8,6 +8,9 @@ export interface IDOMPosition {
 
 const lineHeight = 16;
 
+export const BASE_INDENT_VALUE = '    ';
+export const _endl = '\n';
+
 export function createSelectionRowElement(): HTMLElement {
   const element = document.createElement('div');
   element.classList.add('m-editor__selection-row');

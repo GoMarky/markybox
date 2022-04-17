@@ -18,6 +18,7 @@ import { IAbstractRenderer } from '@/core/app/renderer';
 import { MHTMLTextHintVisitor } from '@/core/renderer/html/visitors/MHTMLTextHintVisitor';
 import { MHTMLHighlightKeywordVisitor } from '@/core/renderer/html/visitors/MHTMLHighlightKeywordVisitor';
 import { MPartitionLayer } from '@/core/renderer/html/layers/MPartionLayer';
+import { MEditorAutoSave } from '@/core/objects/MEditorAutoSave';
 
 export class MHTMLRenderer extends MObject implements IAbstractRenderer {
   public readonly display: HTMLDisplayRenderer;
@@ -29,6 +30,7 @@ export class MHTMLRenderer extends MObject implements IAbstractRenderer {
   public readonly selection: MHTMLEditorSelection;
   public readonly storage: MHTMLStorage;
   public readonly controller: MHTMLEditorController;
+  public readonly editorAutoSave: MEditorAutoSave
   public currentState: MHTMLEditorState;
 
   private readonly clipboard: MHTMLClipboard;
@@ -54,25 +56,7 @@ export class MHTMLRenderer extends MObject implements IAbstractRenderer {
     this.markerLayer = new MMarkerLayer(this);
     this.partitionLayer = new MPartitionLayer(this);
     this.controller = new MHTMLEditorController(this);
-  }
-
-  public unlock(): void {
-    this.currentState = new MHTMLEditorActiveState();
-    this.currentState.setContext(this);
-  }
-
-  public lock(): void {
-    this.currentState = new MHTMLEditorLockedState();
-    this.currentState.setContext(this);
-  }
-
-  public init(): void {
-    this.unlock();
-
-    this.body.addVisitor(new MHTMLTextHintVisitor(this));
-    this.body.addVisitor(new MHTMLHighlightKeywordVisitor());
-
-    this.registerListeners();
+    this.editorAutoSave = new MEditorAutoSave(this);
   }
 
   private registerListeners(): void {
@@ -90,6 +74,12 @@ export class MHTMLRenderer extends MObject implements IAbstractRenderer {
     this.disposables.add(
       windowShortcut.registerShortcut('Meta+A', () => {
         this.selection.selectAll();
+      })
+    );
+
+    this.disposables.add(
+      windowShortcut.registerShortcut('Tab!', () => {
+        this.controller.addIndentToCurrentRow();
       })
     );
 
@@ -113,6 +103,25 @@ export class MHTMLRenderer extends MObject implements IAbstractRenderer {
 
     window.addEventListener('mousedown', (event) => this.currentState.onClick(event));
     window.addEventListener('keydown', (event) => this.currentState.onKeyDown(event));
+  }
+
+  public unlock(): void {
+    this.currentState = new MHTMLEditorActiveState();
+    this.currentState.setContext(this);
+  }
+
+  public lock(): void {
+    this.currentState = new MHTMLEditorLockedState();
+    this.currentState.setContext(this);
+  }
+
+  public init(): void {
+    this.unlock();
+
+    this.body.addVisitor(new MHTMLTextHintVisitor(this));
+    this.body.addVisitor(new MHTMLHighlightKeywordVisitor());
+
+    this.registerListeners();
   }
 
   public getText(): string {
