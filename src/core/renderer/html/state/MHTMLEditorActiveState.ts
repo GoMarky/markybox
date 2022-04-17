@@ -3,6 +3,7 @@ import { MHTMLEditorState } from '@/core/renderer/html/state/MHTMLEditorState';
 import { MChar } from '@/core/renderer/html/editor/MHTMLEditorBodyTextarea';
 import { IPosition } from '@/core/app/common';
 import { BASE_INDENT_VALUE } from '@/core/renderer/html/common/helpers';
+import { copyStringNumberOfTimes } from '@/base/string';
 
 export class MHTMLEditorActiveState extends MHTMLEditorState {
   constructor() {
@@ -65,11 +66,16 @@ export class MHTMLEditorActiveState extends MHTMLEditorState {
     const position = display.toEditorPosition({ top: clientY, left: clientX });
     const row = storage.at(position.row);
 
+    // Если попали в существующую строку, переводим курсор в нее
     if (row) {
       const column = position.column > row.columnsCount ? row.columnsCount : position.column;
 
-      navigator.setPosition({ row: position.row, column });
+      return navigator.setPosition({ row: position.row, column });
     }
+
+    // Если попали "вникуда", переводим курсор на последнюю строку, последней колонки.
+    const lastRow = storage.last();
+    navigator.setPosition({ row: lastRow.index, column: lastRow.columnsCount })
   }
 
   public onKeyDown(event: KeyboardEvent): void {
@@ -91,16 +97,21 @@ export class MHTMLEditorActiveState extends MHTMLEditorState {
         if (isCurrentPositionHasLastRow) {
           const { index } = controller.addEmptyRow();
           return navigator.setPosition({ row: index, column: 0 })
+        } else {
+          navigator.nextRow();
         }
 
-
-        return navigator.nextRow();
+        break;
       }
       case Char.Backspace:
-        return this.backspace();
+        this.backspace();
+        break;
       case Char.Enter:
-        return this.enter();
+        this.enter();
+        break;
     }
+
+    return this.renderer.editorAutoSave.save();
   }
 
   private enter(): void {
@@ -187,16 +198,28 @@ export class MHTMLEditorActiveState extends MHTMLEditorState {
   private addRowAtPositionWithIndent(index: number): void {
     const { navigator, controller } = this.renderer;
 
+    // Индекс строчки с пробелами
     const indentRowIndex = index + 1;
+    // Индекс строчки с правой скобкой
     const rightParenRowIndex = indentRowIndex + 1;
-
+    // Строчка с пробелами, добавляем ее в редактор
     const indentRow = controller.addRowAt(indentRowIndex);
-    indentRow.setText(BASE_INDENT_VALUE);
 
-    const rightParenRow = controller.addRowAt(rightParenRowIndex);
-    rightParenRow.setText('}');
+    // Считаем количество отступов (учитываем соседние скобки до этого)
+    const amountLeftParen = controller.getLeftParenAmountFromStartByIndex(indentRowIndex);
+    // Выставляем нужно количество пробелов в зависимости от количества левых скобок
+    const indentWhitespace = copyStringNumberOfTimes(BASE_INDENT_VALUE, amountLeftParen);
+    indentRow.setText(indentWhitespace);
 
-    navigator.setPosition({ row: indentRow.index, column: 4 });
+    const existRightParenWindow = controller.findClosestRightParenRowDown(indentRowIndex);
+
+    if (existRightParenWindow) {
+    } else {
+      const rightParenRow = controller.addRowAt(rightParenRowIndex);
+      rightParenRow.setText('}');
+    }
+
+    navigator.setPosition({ row: indentRow.index, column: indentWhitespace.length });
   }
 
   private addEmptyRowAtPosition(index: number): void {

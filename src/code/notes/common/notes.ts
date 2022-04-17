@@ -1,5 +1,4 @@
 import { createDecorator } from '@/platform/instantiation/common/instantiation';
-import { INoteCreateRequestResponse } from '@/code/request/note-create/note-create-request';
 
 export namespace Note {
   export type NoteId = string;
@@ -15,7 +14,7 @@ export interface INoteInfo {
 }
 
 export interface INoteService {
-  createNote(): Promise<Note.NoteId>;
+  createNote(title?: string): Promise<Note.NoteId>;
 
   deleteNote(noteId: Note.NoteId): Promise<void>;
 

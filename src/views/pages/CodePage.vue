@@ -24,8 +24,12 @@ export default window.workbench.createComponent((accessor) => {
   return defineComponent({
     name: Component.CodePage,
     setup() {
-      const { currentRoute } = useRouter();
+      const { currentRoute, beforeResolve, beforeEach } = useRouter();
       const errorMessage = ref('');
+
+      beforeEach((to) => {
+        console.log(to);
+      })
 
       function initEditor(): void {
         const { isAuth, notes, name: userName } = sessionService.profile;

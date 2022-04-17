@@ -19,8 +19,10 @@ import { MHTMLTextHintVisitor } from '@/core/renderer/html/visitors/MHTMLTextHin
 import { MHTMLHighlightKeywordVisitor } from '@/core/renderer/html/visitors/MHTMLHighlightKeywordVisitor';
 import { MPartitionLayer } from '@/core/renderer/html/layers/MPartionLayer';
 import { MEditorAutoSave } from '@/core/objects/MEditorAutoSave';
+import { ILogger } from '@/core/app/common';
 
 export class MHTMLRenderer extends MObject implements IAbstractRenderer {
+  public logger?: ILogger;
   public readonly display: HTMLDisplayRenderer;
   public readonly gutter: MHTMLEditorGutter;
   public readonly body: MHTMLEditorBody;
@@ -115,7 +117,9 @@ export class MHTMLRenderer extends MObject implements IAbstractRenderer {
     this.currentState.setContext(this);
   }
 
-  public init(): void {
+  public init(logger: ILogger): void {
+    this.logger = logger;
+
     this.unlock();
 
     this.body.addVisitor(new MHTMLTextHintVisitor(this));

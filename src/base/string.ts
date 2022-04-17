@@ -2,6 +2,17 @@ import { isUndefinedOrNull } from '@/base/types';
 
 export type Mime = 'text/plain';
 
+export function copyStringNumberOfTimes(text: string, amount: number): string {
+  let result: string = '';
+
+  while (amount) {
+    result += text;
+    amount --;
+  }
+
+  return result;
+}
+
 export function removeLastLetter(text: string): string {
   if (isUndefinedOrNull(text)) {
     return '';
@@ -63,7 +74,7 @@ export function isLeftParen(char: string): boolean {
     return false;
   }
 
-  return char === '[' || char === '{' || char === '(';
+  return char === '{';
 }
 
 function isRightParen(char: string): boolean {

@@ -34,6 +34,8 @@ export class MEditorAutoSave extends MObject {
   private doSave = debounce(() => {
     const text = this.renderer.getText();
 
+    this.renderer.logger?.info(`Document saved.`);
+
     if (this.type === AutoSave.Always) {
       this._onDidSave.fire(text);
     }

@@ -34,6 +34,8 @@ import { ISessionService } from '@/code/session/common/session';
 import { Component } from '@/code/vue/common/component-names';
 import { ILayoutService } from '@/platform/layout/common/layout';
 import { INoteService } from '@/code/notes/common/notes';
+import { useRouter } from 'vue-router';
+import { AppRoute } from '@/views/router/router';
 
 export default window.workbench.createComponent((accessor) => {
   const sessionService = accessor.get(ISessionService);
@@ -43,7 +45,9 @@ export default window.workbench.createComponent((accessor) => {
   return defineComponent({
     name: Component.AppHeader,
     setup() {
-      const { name, isAuth } = sessionService.profile;
+      const { name, isAuth, notes } = sessionService.profile;
+
+      const router = useRouter();
 
       function openUserProfileModal(): void {
         layoutService.modal.open('UserProfileModal');
@@ -54,7 +58,9 @@ export default window.workbench.createComponent((accessor) => {
       }
 
       async function createNote(): Promise<void> {
-        const noteId = await noteService.createNote();
+        const noteId = await noteService.createNote(`Title - #${notes.value.length}`);
+
+        await router.push({ name: AppRoute.CodePage, params: { id: noteId } })
       }
 
       return { isAuth, name, openUserProfileModal, openLoginModal, createNote }

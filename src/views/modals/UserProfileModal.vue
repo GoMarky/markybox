@@ -20,6 +20,7 @@
               </h3>
               <time class="user-profile__note-time"> Created {{ note.createdAt }}</time>
               <time class="user-profile__note-time"> Last update {{ note.updatedAt }}</time>
+              <button class="user-profile__note-delete" type="button" @click="deleteNote(note.id)"> Delete</button>
             </article>
           </li>
         </router-link>
@@ -33,10 +34,12 @@ import { defineComponent } from 'vue';
 import { ISessionService } from '@/code/session/common/session';
 import { ILayoutService } from '@/platform/layout/common/layout';
 import { Component } from '@/code/vue/common/component-names';
+import { INoteService } from '@/code/notes/common/notes';
 
 export default window.workbench.createComponent((accessor) => {
   const sessionService = accessor.get(ISessionService);
   const layoutService = accessor.get(ILayoutService);
+  const noteService = accessor.get(INoteService);
 
   return defineComponent({
     name: Component.UserProfileModal,
@@ -47,7 +50,11 @@ export default window.workbench.createComponent((accessor) => {
         layoutService.modal.close();
       }
 
-      return { notes, userName, closeModal };
+      async function deleteNote(noteId: string): Promise<void> {
+        await noteService.deleteNote(noteId);
+      }
+
+      return { notes, userName, closeModal, deleteNote };
     }
   })
 })

@@ -236,9 +236,8 @@ export abstract class HTTPRequest<TAttributes = unknown, TResponse = unknown, TR
     config?: Record<string, unknown>
   ): Promise<AxiosResponse> {
     try {
-      return await this.axios.delete(url, {
+      return await this.axios.post(url, data, {
         ...config,
-        data,
         cancelToken: this.getAbortToken(),
       });
     } catch (error) {

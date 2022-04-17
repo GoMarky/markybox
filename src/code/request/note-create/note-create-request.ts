@@ -5,6 +5,7 @@ import { Note } from '@/code/notes/common/notes';
 
 export interface INoteCreateRequestAttributes {
   readonly sessionId?: Session.SessionId;
+  readonly title?: string;
 }
 
 export type INoteCreateRequestResponse = {

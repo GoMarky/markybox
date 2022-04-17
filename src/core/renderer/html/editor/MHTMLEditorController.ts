@@ -47,7 +47,7 @@ export class MHTMLEditorController extends MObject {
     const { storage } = renderer;
 
     const leftParenRow = storage.at(index);
-    const rightParenRow = this.findClosestRightParenRow(index);
+    const rightParenRow = this.findClosestRightParenRowDown(index);
   }
 
   public isCurrentColumnInsideGlyph(): boolean {
@@ -135,11 +135,35 @@ export class MHTMLEditorController extends MObject {
     navigator.setPosition({ row: currentRow.index, column: column + 4 })
   }
 
-  private findClosestRightParenRow(startIndex: number): MHTMLGlyphRow | undefined {
+  public findClosestLeftParenRowDown(startIndex: number): MHTMLGlyphRow | undefined {
     const { storage } = this.renderer;
 
     for (let i = startIndex + 1; i < storage.count; i++) {
       const row = storage.at(i);
+
+      // Если во время поиска нашли правую скобку, значит следующая левая скобка уже не принадлежит искомой позиции
+      if (row?.fragment.hasRightParen) {
+        return undefined;
+      }
+
+      if (row?.fragment.hasLeftParen) {
+        return row;
+      }
+    }
+
+    return undefined;
+  }
+
+  public findClosestRightParenRowDown(startIndex: number): MHTMLGlyphRow | undefined {
+    const { storage } = this.renderer;
+
+    for (let i = startIndex + 1; i < storage.count; i++) {
+      const row = storage.at(i);
+
+      // Если во время поиска нашли левую скобку, значит следующая правая скобка уже не принадлежит искомой позиции
+      if (row?.fragment.hasLeftParen) {
+        return undefined;
+      }
 
       if (row?.fragment.hasRightParen) {
         return row;
@@ -147,5 +171,43 @@ export class MHTMLEditorController extends MObject {
     }
 
     return undefined;
+  }
+
+  public getRightParenAmountFromStartByIndex(startIndex: number): number {
+    const { storage } = this.renderer;
+    let amount = 0;
+
+    for (let i = startIndex; i >= 0; i--) {
+      const row = storage.at(i);
+
+      if (row?.fragment.hasLeftParen) {
+        amount -= 1;
+      }
+
+      if (row?.fragment.hasRightParen) {
+        amount += 1;
+      }
+    }
+
+    return amount;
+  }
+
+  public getLeftParenAmountFromStartByIndex(startIndex: number): number {
+    const { storage } = this.renderer;
+    let amount = 0;
+
+    for (let i = startIndex; i >= 0; i--) {
+      const row = storage.at(i);
+
+      if (row?.fragment.hasRightParen) {
+        amount -= 1;
+      }
+
+      if (row?.fragment.hasLeftParen) {
+        amount += 1;
+      }
+    }
+
+    return amount;
   }
 }
