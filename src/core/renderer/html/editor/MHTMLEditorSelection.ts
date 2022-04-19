@@ -66,17 +66,16 @@ export class MHTMLEditorSelection extends MObject {
       endRow = storage.count;
     }
 
-    const startColumn = start.column;
-    const endColumn = end.column;
+    const startColumn: number = start.column < end.column ? start.column : end.column;
+    const endColumn: number = end.column > start.column ? end.column : start.column;
 
     const positions: ISelectionPosition[] = [];
 
-    for (let i = startRow; i <= endRow; i++) {
-      const _startColumn = i === startRow ? startColumn : 0;
-      const _endColumn = i === startRow ? endColumn : 0
+    for (let i = startRow; i <= endRow - 1; i++) {
+      const _startColumn = startColumn;
+      const _endColumn = endColumn;
 
-      // TODO
-      positions.push({ row: i, startColumn: _startColumn, endColumn: 0 });
+      positions.push({ row: i, startColumn: _startColumn, endColumn: _endColumn });
     }
 
     this._positions = positions;

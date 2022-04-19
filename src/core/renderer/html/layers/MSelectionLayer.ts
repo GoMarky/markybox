@@ -24,20 +24,35 @@ export class MSelectionLayer extends MLayer {
     const { display } = renderer;
     this.clear();
 
-    for (const { row, startColumn, endColumn } of positions) {
-      const _position: IPosition = { row, column: startColumn }
+    const useRightPosition = positions.length > 1;
 
-      const { left, top } = display.toDOMPosition(_position);
+    if (useRightPosition) {
+      console.log('right');
+    }
+
+    for (const [index, { row, startColumn, endColumn }] of positions.entries()) {
+      const position: IPosition = { row, column: startColumn };
+      const isLastSelectionRow = (positions.length - 1) === index;
+      const { left, top } = display.toDOMPosition(position);
 
       const element = createSelectionRowElement();
-      element.style.left = toPixel(left);
-      element.style.top = toPixel(top);
+      const columnsDraw = endColumn - startColumn;
 
-      if (endColumn) {
-        const right = endColumn * 7.2;
-        element.style.width = toPixel(right);
+      const leftPixel = toPixel(left);
+      const topPixel = toPixel(top);
+      const widthPixel = toPixel(columnsDraw * 7.2);
+
+      element.style.top = topPixel;
+      element.style.left = leftPixel;
+
+      if (useRightPosition) {
+        if (isLastSelectionRow) {
+          element.style.width = widthPixel;
+        } else {
+          element.style.right = toPixel(0);
+        }
       } else {
-        element.style.right = toPixel(0);
+        element.style.width = widthPixel;
       }
 
       this._el.appendChild(element);
