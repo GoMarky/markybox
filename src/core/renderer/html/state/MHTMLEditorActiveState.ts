@@ -11,6 +11,12 @@ export class MHTMLEditorActiveState extends MHTMLEditorState {
   }
 
   public onSelectionStart(event: MouseEvent): void {
+    const isLeftClick = event.button === 0;
+
+    if (!isLeftClick) {
+      return;
+    }
+
     const { selection } = this.renderer;
     const { display } = this.renderer;
 
@@ -60,6 +66,12 @@ export class MHTMLEditorActiveState extends MHTMLEditorState {
   }
 
   public onClick(event: MouseEvent): void {
+    const isLeftMouseKey = event.button === 0;
+
+    if (!isLeftMouseKey) {
+      return;
+    }
+
     const { display, storage, navigator } = this.renderer;
 
     const { clientX, clientY } = event;
@@ -219,7 +231,7 @@ export class MHTMLEditorActiveState extends MHTMLEditorState {
       rightParenRow.setText('}');
     }
 
-    navigator.setPosition({ row: indentRow.index, column: indentWhitespace.length });
+    navigator.setPosition({ row: indentRowIndex, column: indentWhitespace.length });
   }
 
   private addEmptyRowAtPosition(index: number): void {

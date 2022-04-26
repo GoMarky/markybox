@@ -72,14 +72,10 @@ export class MHTMLEditorSelection extends MObject {
     const positions: ISelectionPosition[] = [];
 
     for (let i = startRow; i <= endRow - 1; i++) {
-      const _startColumn = startColumn;
-      const _endColumn = endColumn;
-
-      positions.push({ row: i, startColumn: _startColumn, endColumn: _endColumn });
+      positions.push({ row: i, startColumn, endColumn });
     }
 
     this._positions = positions;
-
     this.layer.addSelectionRows(positions);
   }
 
@@ -88,6 +84,7 @@ export class MHTMLEditorSelection extends MObject {
   }
 
   private init(): void {
+    this.renderer.body.el.addEventListener('contextmenu', (event) => event.preventDefault());
     window.addEventListener('mousedown', (event) => this.renderer.currentState.onSelectionStart(event));
     window.addEventListener('mousemove', (event) => this.renderer.currentState.onSelectionMove(event));
     window.addEventListener('mouseup', (event) => this.renderer.currentState.onSelectionEnd(event));

@@ -2,7 +2,7 @@ import { toPixel } from '@/base/dom';
 import { MHTMLRenderer } from '@/core';
 import { MHTMLGlyphDOM } from '@/core/renderer/html/common/MHTMLGlyphDOM';
 
-export class MHTMLEditorGutter extends MHTMLGlyphDOM {
+export class MHTMLEditorGutter extends MHTMLGlyphDOM<HTMLDivElement> {
   constructor(private readonly renderer: MHTMLRenderer) {
     super();
 

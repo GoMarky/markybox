@@ -7,12 +7,6 @@ import { MHTMLGlyphRow } from '@/core/renderer/html/common/MHTMLGlyphRow';
 export class MHTMLStorage extends MObject {
   private readonly _rows: MHTMLGlyphRow[] = [];
 
-  private readonly _onDidAddRow: Emitter<MHTMLGlyphRow> = new Emitter<MHTMLGlyphRow>();
-  public readonly onDidAddRow: IEvent<MHTMLGlyphRow> = this._onDidAddRow.event;
-
-  private readonly _onDidRemoveRow: Emitter<MHTMLGlyphRow> = new Emitter<MHTMLGlyphRow>();
-  public readonly onDidRemoveRow: IEvent<MHTMLGlyphRow> = this._onDidRemoveRow.event;
-
   constructor() {
     super();
   }
@@ -23,20 +17,18 @@ export class MHTMLStorage extends MObject {
     }
 
     this.last().dispose();
-    this._rows.splice(0, 1)
+    this._rows.splice(0, this._rows.length - 1)
     this._update();
   }
 
   public addRow(row: MHTMLGlyphRow): void {
     this._rows.push(row);
     this._update();
-    this._onDidAddRow.fire(row);
   }
 
   public addRowAt(row: MHTMLGlyphRow, index: number): void {
     this._rows.splice(index, 0, row);
     this._update();
-    this._onDidAddRow.fire(row);
   }
 
   public removeRow(row: MHTMLGlyphRow): void {
@@ -51,12 +43,10 @@ export class MHTMLStorage extends MObject {
       throw new CriticalError(`Cant find row: ${row}`);
     }
 
+    row.dispose();
     this._rows.splice(index, 1);
 
-    row.dispose();
     this._update();
-
-    this._onDidRemoveRow.fire(row);
   }
 
   public last(): MHTMLGlyphRow {

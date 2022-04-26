@@ -10,10 +10,13 @@ export enum JavascriptKeyword {
   Static = 'static',
 }
 
-export type StatementClassName = 'm-editor__plain' | 'm-editor__keyword-identifier' | 'm-editor__keyword-identifier-name';
+export type StatementClassName =
+  'm-editor__plain'
+  | 'm-editor__keyword-identifier'
+  | 'm-editor__keyword-identifier-name';
 
 export const Regexp = {
-  VariableStatement: /^(const|let|var|class|function|export|import|interface|type|public|private|static|protected|extends|implements$)/,
+  VariableStatement: /^(default|const|let|var|class|function|export|import|interface|type|public|private|static|protected|extends|implements|switch|case|break|continue$)/,
 };
 
 

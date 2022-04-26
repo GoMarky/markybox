@@ -1,6 +1,7 @@
 import { MHTMLGlyphWord } from '@/core/renderer/html/common/MHTMLGlyphWord';
 import { MChar } from '@/core/renderer/html/editor/MHTMLEditorBodyTextarea';
 import * as string from '@/base/string';
+import * as dom from '@/base/dom';
 import { containsParen, isParen } from '@/base/string';
 import { MHTMLGlyphTextNode } from '@/core/renderer/html/common/MHTMLGlyphTextNode';
 import { MHTMLGlyphDOM } from '@/core/renderer/html/common/MHTMLGlyphDOM';
@@ -31,12 +32,11 @@ export class MHTMLGlyphRow extends MHTMLGlyphDOM<HTMLDivElement> {
     public index: number
   ) {
     super();
-
     const rowElement = document.createElement('div');
     rowElement.classList.add('m-editor__row');
-
     this.gutterElement = new MHTMLGlyphRowGutter(renderer, index);
-    this.renderer.gutter.el.appendChild(this.gutterElement.el);
+
+    dom.insertChildAtIndex(this.renderer.gutter.el, this.gutterElement.el, index);
 
     this._el = rowElement;
   }
@@ -188,6 +188,7 @@ export class MHTMLGlyphRow extends MHTMLGlyphDOM<HTMLDivElement> {
 
   public setIndex(index: number): void {
     this._el.setAttribute('data-row-index', index.toString());
+    this.gutterElement.el.setAttribute('data-row-index', index.toString());
 
     this.index = index;
     this.gutterElement.index = index;
@@ -240,7 +241,7 @@ export class MHTMLGlyphRow extends MHTMLGlyphDOM<HTMLDivElement> {
 
     this.gutterElement.dispose();
     this.fragment?.dispose();
-    this.el.remove();
+    this._el.remove();
   }
 
   public toString(): string {

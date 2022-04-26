@@ -59,7 +59,6 @@ export class MHTMLGlyphRowGutter extends MHTMLGlyphDOM<HTMLSpanElement> {
 
     this._el.textContent = (index + 1).toString();
 
-
     if (expandable) {
       this.createExpandableWidget();
     }

@@ -85,6 +85,12 @@ export class MHTMLRenderer extends MObject implements IAbstractRenderer {
       })
     );
 
+    this.disposables.add(
+      windowShortcut.registerShortcut('Shift+Tab', () => {
+
+      })
+    )
+
     // Copy all code
     this.disposables.add(
       windowShortcut.registerShortcut('Meta+C', () => {

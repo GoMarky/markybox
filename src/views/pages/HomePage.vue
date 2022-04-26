@@ -5,19 +5,18 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
-import { nanoid } from 'nanoid';
 import { AppRoute } from '@/views/router/router';
 
 export default window.workbench.createComponent(() => {
+
   return defineComponent({
     name: 'HomePage',
     setup() {
       const { push } = useRouter();
 
-      // due dev reason
-      push({ name: AppRoute.CodePage, params: { id: nanoid(10) } })
+      push({ name: AppRoute.CodePage, params: { id: '1a9ac498-9141-43f9-a7db-73be48704d50' } })
     },
   })
 })

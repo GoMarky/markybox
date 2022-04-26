@@ -24,7 +24,7 @@ export default window.workbench.createComponent((accessor) => {
   return defineComponent({
     name: Component.CodePage,
     setup() {
-      const { currentRoute, beforeResolve, beforeEach } = useRouter();
+      const { currentRoute, beforeEach } = useRouter();
       const errorMessage = ref('');
 
       beforeEach((to) => {

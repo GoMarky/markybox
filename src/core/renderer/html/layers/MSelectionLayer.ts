@@ -26,10 +26,6 @@ export class MSelectionLayer extends MLayer {
 
     const useRightPosition = positions.length > 1;
 
-    if (useRightPosition) {
-      console.log('right');
-    }
-
     for (const [index, { row, startColumn, endColumn }] of positions.entries()) {
       const position: IPosition = { row, column: startColumn };
       const isLastSelectionRow = (positions.length - 1) === index;
