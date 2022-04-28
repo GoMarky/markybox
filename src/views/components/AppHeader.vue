@@ -58,7 +58,7 @@ export default window.workbench.createComponent((accessor) => {
       }
 
       async function createNote(): Promise<void> {
-        const noteId = await noteService.createNote(`Title - #${notes.value.length}`);
+        const noteId = await noteService.createNote(`Title - #${notes.value?.length || 1}`);
 
         await router.push({ name: AppRoute.CodePage, params: { id: noteId } })
       }

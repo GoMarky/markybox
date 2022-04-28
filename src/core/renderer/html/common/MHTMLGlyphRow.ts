@@ -1,15 +1,15 @@
 import { MHTMLGlyphWord } from '@/core/renderer/html/common/MHTMLGlyphWord';
 import { MChar } from '@/core/renderer/html/editor/MHTMLEditorBodyTextarea';
 import * as string from '@/base/string';
-import * as dom from '@/base/dom';
 import { containsParen, isParen } from '@/base/string';
+import * as dom from '@/base/dom';
 import { MHTMLGlyphTextNode } from '@/core/renderer/html/common/MHTMLGlyphTextNode';
 import { MHTMLGlyphDOM } from '@/core/renderer/html/common/MHTMLGlyphDOM';
 import { MHTMLRenderer } from '@/core';
 import { splitAtIndex } from '@/core/app/common';
 import { IVisitor } from '@/core/renderer/html/editor/MHTMLEditorBody';
 import { MHTMLNodeFragment } from '@/core/renderer/html/common/MHTMLNodeFragment';
-import { MHTMLGlyphParen, ParenDirection } from '@/core/renderer/html/common/MHTMLGlyphParen';
+import { MHTMLGlyphParen, ParenType } from '@/core/renderer/html/common/MHTMLGlyphParen';
 import { CriticalError } from '@/base/errors';
 import { MHTMLGlyphRowGutter } from '@/core/renderer/html/common/MHTMLGlyphRowGutter';
 import { getLastElement } from '@/base/array';
@@ -160,14 +160,14 @@ export class MHTMLGlyphRow extends MHTMLGlyphDOM<HTMLDivElement> {
     this.fragment = nodeFragment;
 
     this.accept(visitors);
-    this.gutterElement.expandable = nodeFragment.hasLeftParen;
+    this.gutterElement.expandable = nodeFragment.hasOpenBracket;
     this._el.appendChild(nodeFragment.el);
   }
 
-  public isLastCharLeftParen(): boolean {
+  public isLastCharOpenBracket(): boolean {
     const last = getLastElement(this.fragment.children);
 
-    return last instanceof MHTMLGlyphParen && last.type === ParenDirection.Left;
+    return last instanceof MHTMLGlyphParen && last.type === ParenType.OpenBracket;
   }
 
   public containsOnlyWhitespaces(): boolean {

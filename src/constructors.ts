@@ -50,7 +50,7 @@ services.set(ISocketService, socketService);
 const layoutService = new LayoutService();
 services.set(ILayoutService, layoutService);
 
-const noteService = new NoteService(requestService);
+const noteService = new NoteService(requestService, sessionService);
 services.set(INoteService, noteService);
 
 export default services;

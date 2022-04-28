@@ -8,7 +8,6 @@
 import { defineComponent, nextTick, onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import * as markybox from '@/core';
-import { getLastElement } from '@/base/array';
 import { ILogService } from '@/platform/log/common/log';
 import { ISessionService } from '@/code/session/common/session';
 import { Component } from '@/code/vue/common/component-names';
@@ -31,18 +30,13 @@ export default window.workbench.createComponent((accessor) => {
         console.log(to);
       })
 
-      function initEditor(): void {
-        const { isAuth, notes, name: userName } = sessionService.profile;
+      function initEditor(note?: INoteInfo): void {
+        const { name: userName } = sessionService.profile;
 
         let initialText = '';
 
-        if (isAuth.value) {
-          const noteId = currentRoute.value.params.id as string;
-          const note = notes.value.find((note) => note.id === noteId);
-
-          if (note) {
-            initialText = note.data;
-          }
+        if (note) {
+          initialText = note.data;
         }
 
         const root = document.querySelector<HTMLElement>('#root') as HTMLElement;
@@ -61,6 +55,11 @@ export default window.workbench.createComponent((accessor) => {
         })
 
         editor.setText(initialText)
+      }
+
+      const connectSocket = () => {
+        const noteId = currentRoute.value.params.id as string;
+        socketService.createOrEnterRoom(noteId);
       }
 
       onMounted(() => {
@@ -89,19 +88,18 @@ export default window.workbench.createComponent((accessor) => {
         })
       })
 
-      sessionService.onDidUserLogin(() => {
-        const noteId = currentRoute.value.params.id as string;
-
-        socketService.createOrEnterRoom(noteId);
-      });
+      sessionService.onDidUserLogin(() => connectSocket());
 
       onMounted(async () => {
         await nextTick();
 
         if (sessionService.profile.isAuth.value) {
-          const noteId = currentRoute.value.params.id as string;
-          socketService.createOrEnterRoom(noteId);
+          connectSocket();
         }
+
+        const noteId = currentRoute.value.params.id as string;
+
+
 
         try {
           initEditor();

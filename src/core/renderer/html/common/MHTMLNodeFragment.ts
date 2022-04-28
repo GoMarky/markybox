@@ -1,11 +1,10 @@
 import { MHTMLGlyphDOM } from '@/core/renderer/html/common/MHTMLGlyphDOM';
-import { MHTMLGlyphParen, ParenDirection } from '@/core/renderer/html/common/MHTMLGlyphParen';
-import { MHTMLGlyphTextNode } from '@/core/renderer/html/common/MHTMLGlyphTextNode';
+import { MHTMLGlyphParen, ParenType } from '@/core/renderer/html/common/MHTMLGlyphParen';
 import { MHTMLGlyphWord } from '@/core/renderer/html/common/MHTMLGlyphWord';
 
 export class MHTMLNodeFragment extends MHTMLGlyphDOM<DocumentFragment> {
-  private readonly _hasLeftParen: boolean;
-  private readonly _hasRightParen: boolean;
+  private readonly _hasOpenBracket: boolean;
+  private readonly _hasCloseBracket: boolean;
 
   constructor(private _children: MHTMLGlyphDOM[]) {
     super();
@@ -16,12 +15,12 @@ export class MHTMLNodeFragment extends MHTMLGlyphDOM<DocumentFragment> {
       this._el.appendChild(glyph.el);
 
       if (glyph instanceof MHTMLGlyphParen) {
-        if (glyph.type === ParenDirection.Left) {
-          this._hasLeftParen = true;
+        if (glyph.type === ParenType.OpenBracket) {
+          this._hasOpenBracket = true;
         }
 
-        if (glyph.type === ParenDirection.Right) {
-          this._hasRightParen = true;
+        if (glyph.type === ParenType.CloseBracket) {
+          this._hasCloseBracket = true;
         }
       }
     }
@@ -33,12 +32,12 @@ export class MHTMLNodeFragment extends MHTMLGlyphDOM<DocumentFragment> {
     return glyphs.find((glyph) => glyph.startColumn <= column && glyph.endColumn > column);
   }
 
-  public get hasLeftParen(): boolean {
-    return this._hasLeftParen;
+  public get hasOpenBracket(): boolean {
+    return this._hasOpenBracket;
   }
 
-  public get hasRightParen(): boolean {
-    return this._hasRightParen;
+  public get hasCloseBracket(): boolean {
+    return this._hasCloseBracket;
   }
 
   public get children(): MHTMLGlyphDOM[] {

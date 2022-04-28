@@ -7,6 +7,8 @@ const BASE_ENDPOINTS = {
   NOTE_CREATE: 'note/create/',
   NOTE_UPDATE: 'note/update/',
   NOTE_DELETE: 'note/delete/',
+  NOTE_GET_ALL: 'note/get-all/',
+  NOTE_GET_BY_ID: 'note/getById/',
 };
 
 function addVersion(endpoints: Record<string, string>): Record<string, string> {

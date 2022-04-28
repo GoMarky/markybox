@@ -146,7 +146,7 @@ export class MHTMLEditorActiveState extends MHTMLEditorState {
      */
     if (isChosenLastLetter) {
       // Если текущий символ - это lparen -> { / [ / (
-      if (currentRow.isLastCharLeftParen()) {
+      if (currentRow.isLastCharOpenBracket()) {
         return this.addRowAtPositionWithIndent(currentRow.index);
       } else {
         // Если текущий символ последний иной - то добавляем пустую строку.

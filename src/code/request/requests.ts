@@ -5,6 +5,8 @@ import { SessionLogoutRequest } from '@/code/request/session-logout/session-logo
 import { NoteCreateRequest } from '@/code/request/note-create/note-create-request';
 import { NoteUpdateRequest } from '@/code/request/note-update/note-update-request';
 import { NoteDeleteRequest } from '@/code/request/note-delete/note-delete-request';
+import { NoteGetAllRequest } from '@/code/request/note-get-all/note-get-all';
+import { NoteGetByIdRequest } from '@/code/request/note-get-by-id/note-get-by-id';
 
 const requests: IRequestRegister[] = [];
 
@@ -37,5 +39,15 @@ requests.push({
   id: NoteDeleteRequest.staticId,
   ctor: NoteDeleteRequest
 });
+
+requests.push({
+  id: NoteGetAllRequest.staticId,
+  ctor: NoteGetAllRequest
+});
+
+requests.push({
+  id: NoteGetByIdRequest.staticId,
+  ctor: NoteGetByIdRequest
+})
 
 export default requests;

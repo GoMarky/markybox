@@ -21,19 +21,6 @@ export class UserProfile extends Disposable {
     super();
   }
 
-  public enableTestMode(): void {
-    this.name.value = 'Andrew';
-    this.sessionId.value = 'asdasdas';
-    this.email.value = 'me@swen.tech';
-    this.notes.value = [{
-      data: 'class Test {  }',
-      createdAt: Date.now(),
-      updatedAt: Date.now(),
-      id: 'asdasdasd',
-      title: 'test code'
-    }]
-  }
-
   public dispose() {
     this.name.value = '';
     this.email.value = '';

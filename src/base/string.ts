@@ -7,7 +7,7 @@ export function copyStringNumberOfTimes(text: string, amount: number): string {
 
   while (amount) {
     result += text;
-    amount --;
+    amount--;
   }
 
   return result;
@@ -69,7 +69,23 @@ export function ensureNoFirstSlash(str: string): string {
   return str[0] === '/' ? str.slice(1) : str;
 }
 
-export function isLeftParen(char: string): boolean {
+export function isOpenBracket(char: string): boolean {
+  if (char.length > 1) {
+    return false;
+  }
+
+  return char === '[';
+}
+
+export function isCloseBracket(char: string): boolean {
+  if (char.length > 1) {
+    return false;
+  }
+
+  return char === ']';
+}
+
+export function isOpenBrace(char: string): boolean {
   if (char.length > 1) {
     return false;
   }
@@ -77,12 +93,28 @@ export function isLeftParen(char: string): boolean {
   return char === '{';
 }
 
-function isRightParen(char: string): boolean {
+export function isCloseBrace(char: string): boolean {
   if (char.length > 1) {
     return false;
   }
 
-  return char === ']' || char === '}' || char === ')';
+  return char === '}';
+}
+
+export function isOpenParenthesis(char: string): boolean {
+  if (char.length > 1) {
+    return false;
+  }
+
+  return char === '(';
+}
+
+export function isCloseParenthesis(char: string): boolean {
+  if (char.length > 1) {
+    return false;
+  }
+
+  return char === ')';
 }
 
 export function isParen(char?: string): boolean {
@@ -90,7 +122,7 @@ export function isParen(char?: string): boolean {
     return false;
   }
 
-  return isLeftParen(char) || isRightParen(char);
+  return isOpenBrace(char) || isCloseBrace(char) || isOpenBracket(char) || isCloseBracket(char) || isOpenParenthesis(char) || isCloseParenthesis(char);
 }
 
 export function containsParen(text: string): boolean {
