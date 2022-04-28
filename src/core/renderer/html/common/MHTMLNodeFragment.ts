@@ -3,8 +3,8 @@ import { MHTMLGlyphParen, ParenType } from '@/core/renderer/html/common/MHTMLGly
 import { MHTMLGlyphWord } from '@/core/renderer/html/common/MHTMLGlyphWord';
 
 export class MHTMLNodeFragment extends MHTMLGlyphDOM<DocumentFragment> {
-  private readonly _hasOpenBracket: boolean;
-  private readonly _hasCloseBracket: boolean;
+  private readonly _hasOpenBrace: boolean;
+  private readonly _hasCloseBrace: boolean;
 
   constructor(private _children: MHTMLGlyphDOM[]) {
     super();
@@ -15,12 +15,12 @@ export class MHTMLNodeFragment extends MHTMLGlyphDOM<DocumentFragment> {
       this._el.appendChild(glyph.el);
 
       if (glyph instanceof MHTMLGlyphParen) {
-        if (glyph.type === ParenType.OpenBracket) {
-          this._hasOpenBracket = true;
+        if (glyph.type === ParenType.OpenBrace) {
+          this._hasOpenBrace = true;
         }
 
-        if (glyph.type === ParenType.CloseBracket) {
-          this._hasCloseBracket = true;
+        if (glyph.type === ParenType.CloseBrace) {
+          this._hasCloseBrace = true;
         }
       }
     }
@@ -32,12 +32,12 @@ export class MHTMLNodeFragment extends MHTMLGlyphDOM<DocumentFragment> {
     return glyphs.find((glyph) => glyph.startColumn <= column && glyph.endColumn > column);
   }
 
-  public get hasOpenBracket(): boolean {
-    return this._hasOpenBracket;
+  public get hasOpenBrace(): boolean {
+    return this._hasOpenBrace;
   }
 
-  public get hasCloseBracket(): boolean {
-    return this._hasCloseBracket;
+  public get hasCloseBrace(): boolean {
+    return this._hasCloseBrace;
   }
 
   public get children(): MHTMLGlyphDOM[] {

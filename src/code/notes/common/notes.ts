@@ -14,6 +14,7 @@ export interface INoteInfo {
 }
 
 export interface INoteService {
+  getNoteById(noteId: Note.NoteId): Promise<INoteInfo>;
   createNote(title?: string): Promise<Note.NoteId>;
 
   deleteNote(noteId: Note.NoteId): Promise<void>;

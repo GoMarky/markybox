@@ -142,11 +142,11 @@ export class MHTMLEditorController extends MObject {
       const row = storage.at(i);
 
       // Если во время поиска нашли правую скобку, значит следующая левая скобка уже не принадлежит искомой позиции
-      if (row?.fragment.hasCloseBracket) {
+      if (row?.fragment.hasCloseBrace) {
         return undefined;
       }
 
-      if (row?.fragment.hasOpenBracket) {
+      if (row?.fragment.hasOpenBrace) {
         return row;
       }
     }
@@ -161,11 +161,11 @@ export class MHTMLEditorController extends MObject {
       const row = storage.at(i);
 
       // Если во время поиска нашли левую скобку, значит следующая правая скобка уже не принадлежит искомой позиции
-      if (row?.fragment.hasOpenBracket) {
+      if (row?.fragment.hasOpenBrace) {
         return undefined;
       }
 
-      if (row?.fragment.hasCloseBracket) {
+      if (row?.fragment.hasCloseBrace) {
         return row;
       }
     }
@@ -180,11 +180,11 @@ export class MHTMLEditorController extends MObject {
     for (let i = startIndex; i >= 0; i--) {
       const row = storage.at(i);
 
-      if (row?.fragment.hasOpenBracket) {
+      if (row?.fragment.hasOpenBrace) {
         amount -= 1;
       }
 
-      if (row?.fragment.hasCloseBracket) {
+      if (row?.fragment.hasCloseBrace) {
         amount += 1;
       }
     }
@@ -199,11 +199,11 @@ export class MHTMLEditorController extends MObject {
     for (let i = startIndex; i >= 0; i--) {
       const row = storage.at(i);
 
-      if (row?.fragment.hasCloseBracket) {
+      if (row?.fragment.hasCloseBrace) {
         amount -= 1;
       }
 
-      if (row?.fragment.hasOpenBracket) {
+      if (row?.fragment.hasOpenBrace) {
         amount += 1;
       }
     }

@@ -160,14 +160,14 @@ export class MHTMLGlyphRow extends MHTMLGlyphDOM<HTMLDivElement> {
     this.fragment = nodeFragment;
 
     this.accept(visitors);
-    this.gutterElement.expandable = nodeFragment.hasOpenBracket;
+    this.gutterElement.expandable = nodeFragment.hasOpenBrace;
     this._el.appendChild(nodeFragment.el);
   }
 
   public isLastCharOpenBracket(): boolean {
     const last = getLastElement(this.fragment.children);
 
-    return last instanceof MHTMLGlyphParen && last.type === ParenType.OpenBracket;
+    return last instanceof MHTMLGlyphParen && last.type === ParenType.OpenBrace;
   }
 
   public containsOnlyWhitespaces(): boolean {

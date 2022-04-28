@@ -97,12 +97,12 @@ export default window.workbench.createComponent((accessor) => {
           connectSocket();
         }
 
-        const noteId = currentRoute.value.params.id as string;
-
-
-
         try {
-          initEditor();
+          const noteId = currentRoute.value.params.id as string;
+
+          const note = await noteService.getNoteById(noteId);
+
+          initEditor(note);
         } catch (error) {
           if (error instanceof Error) {
             const { name, message } = error;
