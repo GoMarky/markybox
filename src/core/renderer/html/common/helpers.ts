@@ -8,7 +8,7 @@ export interface IDOMPosition {
 
 const lineHeight = 16;
 
-export const BASE_INDENT_VALUE = '    ';
+export const BASE_INDENT_VALUE = Array.from({ length: 4 }, () => ' ').join('');
 export const _endl = '\n';
 
 export function createSelectionRowElement(): HTMLElement {

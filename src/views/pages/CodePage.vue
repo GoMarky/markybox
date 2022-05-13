@@ -5,14 +5,15 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, nextTick, onMounted, ref } from 'vue';
-import { useRouter } from 'vue-router';
+import { defineComponent, nextTick, onMounted, Ref, ref } from 'vue';
+import { RouteLocationNormalizedLoaded, useRouter } from 'vue-router';
 import * as markybox from '@/core';
 import { ILogService } from '@/platform/log/common/log';
 import { ISessionService } from '@/code/session/common/session';
 import { Component } from '@/code/vue/common/component-names';
 import { ISocketService, SocketCommandType } from '@/code/socket/common/socket-service';
 import { INoteInfo, INoteService } from '@/code/notes/common/notes';
+import { CodePageEditor } from '@/code/notes/browser/code-page-editor';
 
 export default window.workbench.createComponent((accessor) => {
   const logService = accessor.get(ILogService);
@@ -23,38 +24,12 @@ export default window.workbench.createComponent((accessor) => {
   return defineComponent({
     name: Component.CodePage,
     setup() {
-      const { currentRoute, beforeEach } = useRouter();
+      const { currentRoute } = useRouter();
       const errorMessage = ref('');
-
-      beforeEach((to) => {
-        console.log(to);
-      })
+      const editor = new CodePageEditor(logService, sessionService, noteService);
 
       function initEditor(note?: INoteInfo): void {
-        const { name: userName } = sessionService.profile;
-
-        let initialText = '';
-
-        if (note) {
-          initialText = note.data;
-        }
-
-        const root = document.querySelector<HTMLElement>('#root') as HTMLElement;
-        const renderer = window.$renderer = new markybox.MHTMLRenderer(root, userName.value);
-
-        const editor = window.$editor = new markybox.MEditor({
-          renderer,
-          fullscreen: true,
-          logger: logService,
-        });
-
-        renderer.editorAutoSave.onDidSave((text: string) => {
-          const noteId = currentRoute.value.params.id as string;
-
-          noteService.updateNote(noteId, text);
-        })
-
-        editor.setText(initialText)
+        editor.init(currentRoute, note);
       }
 
       const connectSocket = () => {
@@ -71,10 +46,9 @@ export default window.workbench.createComponent((accessor) => {
               const { text } = data;
               break;
             case SocketCommandType.LeaveRoom:
+              break;
             case SocketCommandType.EnterRoom: {
               const { text, user_name } = data;
-
-              window.$renderer?.addNavigator(user_name);
 
               break;
             }

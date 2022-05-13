@@ -9,10 +9,6 @@ module.exports = {
     "<rootDir>/node_modules/(?!(quill-mention)/)"
   ],
   moduleNameMapper: {
-    '^@/(.*)$': '<rootDir>/app/src/$1',
-    '^@EXTENSIONS/(.*)$': '<rootDir>/extensions/$1',
-    '^@UI/(.*)$': '<rootDir>/ui/src/$1',
-    '^@TEST/(.*)$': '<rootDir>/test/$1',
-    '^@CONFIG/(.*)$': '<rootDir>/config/$1',
+    '^@/(.*)$': '<rootDir>/src/$1',
   }
 }

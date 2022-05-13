@@ -8,6 +8,8 @@ export interface ILogger {
   error(message: string, ...args: any[]): void;
 }
 
+export type ITuplePosition = [number, number]; // [row, column]
+
 export interface IPosition {
   row: number;
   column: number;

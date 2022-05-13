@@ -20,6 +20,7 @@ import { MHTMLHighlightKeywordVisitor } from '@/core/renderer/html/visitors/MHTM
 import { MPartitionLayer } from '@/core/renderer/html/layers/MPartionLayer';
 import { MEditorAutoSave } from '@/core/objects/MEditorAutoSave';
 import { ILogger } from '@/core/app/common';
+import { MHTMLEditorNavigators } from '@/core/renderer/html/editor/MHTMLEditorNavigators';
 
 export class MHTMLRenderer extends MObject implements IAbstractRenderer {
   public logger?: ILogger;
@@ -33,12 +34,12 @@ export class MHTMLRenderer extends MObject implements IAbstractRenderer {
   public readonly storage: MHTMLStorage;
   public readonly controller: MHTMLEditorController;
   public readonly editorAutoSave: MEditorAutoSave
+  public readonly navigatorManager: MHTMLEditorNavigators;
+
   public currentState: MHTMLEditorState;
 
   private readonly clipboard: MHTMLClipboard;
   private readonly partitionLayer: MPartitionLayer;
-
-  private navigators: MHTMLEditorBodyNavigator[] = [];
 
   constructor(public readonly root: HTMLElement, author: string = 'user') {
     super();
@@ -59,6 +60,7 @@ export class MHTMLRenderer extends MObject implements IAbstractRenderer {
     this.partitionLayer = new MPartitionLayer(this);
     this.controller = new MHTMLEditorController(this);
     this.editorAutoSave = new MEditorAutoSave(this);
+    this.navigatorManager = new MHTMLEditorNavigators(this);
   }
 
   private registerListeners(): void {
@@ -135,32 +137,15 @@ export class MHTMLRenderer extends MObject implements IAbstractRenderer {
   public getText(): string {
     const { rows } = this.storage;
 
-    return rows.map((row) => row.toString()).join('\n');
+    return rows.map((row) => row.toString()).join('\r\n');
   }
 
-  public setText(text: string): void {
+  public setText(text?: string): void {
     if (!text) {
       this.controller.addEmptyRow();
       return;
     }
 
     this.controller.setWholeText(text);
-  }
-
-  public addNavigator(name: string): void {
-    const navigator = new MHTMLEditorBodyNavigator(this, name);
-
-    this.navigators.push(navigator);
-  }
-
-  public removeNavigator(name: string): void {
-    const navigator = this.navigators.find((nav => nav.name === name));
-
-    if (!navigator) {
-      throw new CriticalError(`Can find navigator with name - ${name}`);
-    }
-
-    navigator.dispose();
-    this.navigators = this.navigators.filter((nav) => nav !== navigator);
   }
 }

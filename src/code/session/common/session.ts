@@ -16,11 +16,6 @@ export class UserProfile extends Disposable {
 
     return Boolean(sessionId.value);
   })
-
-  constructor() {
-    super();
-  }
-
   public dispose() {
     this.name.value = '';
     this.email.value = '';

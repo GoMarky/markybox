@@ -9,7 +9,19 @@ export interface IBaseSocketMessagePayload {
   user_name?: Session.UserName;
 }
 
+export enum EditorActionType {
+  Paste = 'p',
+  EnterSymbol = 'e',
+  ChangePosition = 'n',
+}
+
+export interface ISocketEditorActionPayload {
+  type: EditorActionType;
+  position: string; // '1,2' 'row, column'
+}
+
 export enum SocketCommandType {
+  EditorAction = 'editor-action',
   Info = 'info',
   Ping = 'ping',
   RoomCreated = 'create_room',
