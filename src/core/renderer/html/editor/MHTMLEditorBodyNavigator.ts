@@ -72,7 +72,7 @@ export class MHTMLEditorNavigator extends MObject {
     const matchedRow = storage.at(row);
 
     if (!matchedRow) {
-      return console.warn(`Can't set position on unexisted row index - ${row}`)
+      return console.warn(`Can't set position on unknown row index - ${row}`)
     }
 
     if (matchedRow.empty()) {

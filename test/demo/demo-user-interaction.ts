@@ -3,22 +3,43 @@ import { EditorActionType } from '@/code/socket/common/socket-service';
 import { IPosition, ITuplePosition } from '@/core/app/common';
 import { ArrayIterator } from '@/base/iterator';
 
-const fps = 1;
-
 export interface IFakeUserInteraction {
   type: EditorActionType;
   position: ITuplePosition;
   data?: any;
 }
 
+export function convertTextToUserInteraction(text: string): IFakeUserInteraction[] {
+  const actions: IFakeUserInteraction[] = [];
+  const chars = text.split('');
+
+  let row = 0;
+  let column = 0;
+
+  for (const char of chars) {
+    if (char === '\n') {
+      row += 1;
+      column = 0;
+    } else {
+      column += 1;
+    }
+
+    actions.push({ type: EditorActionType.EnterSymbol, position: [row, column], data: char })
+
+  }
+
+  return actions;
+}
+
 export class DemoUserInteraction {
   private readonly iterator: ArrayIterator<IFakeUserInteraction>;
+  private animationFrameId: number;
 
   constructor(
     private readonly renderer: markybox.MHTMLRenderer,
     private readonly actions: IFakeUserInteraction[],
     private readonly userName: string,
-    private readonly index: number) {
+    private readonly fps: number) {
     this.iterator = new ArrayIterator(this.actions);
 
     this.renderer.navigatorManager.add(this.userName);
@@ -30,7 +51,7 @@ export class DemoUserInteraction {
     const { navigatorManager } = this.renderer;
     const { position, type } = interaction;
     const [row, column] = position;
-    const normalizedPosition: IPosition = { row: this.index, column }
+    const normalizedPosition: IPosition = { row, column }
 
     switch (type) {
       case EditorActionType.ChangePosition: {
@@ -45,22 +66,20 @@ export class DemoUserInteraction {
   }
 
   public start(): void {
-    window.requestAnimationFrame(this.loop)
+    this.animationFrameId = window.requestAnimationFrame(this.loop)
   }
 
   public loop = (): void => {
     let current = this.iterator.next();
 
-    if (!current) {
-      current = this.iterator.first();
-    }
-
     if (current) {
       this.interact(current);
+    } else {
+      window.cancelAnimationFrame(this.animationFrameId);
     }
 
     window.setTimeout(() => {
       window.requestAnimationFrame(this.loop)
-    }, 1000 / fps)
+    }, 1000 / this.fps)
   }
 }

@@ -140,6 +140,10 @@ export class MHTMLRenderer extends MObject implements IAbstractRenderer {
     return rows.map((row) => row.toString()).join('\n');
   }
 
+  public clear(): void {
+    this.controller.clear();
+  }
+
   public setText(text?: string): void {
     if (!text) {
       this.controller.addEmptyRow();

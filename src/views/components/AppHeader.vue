@@ -11,8 +11,13 @@
     <nav class="page-header__navigation">
       <ul class="page-header__nav-list">
         <li class="page-header__nav-item">
+          <a href="#S" @click.prevent="clearNote()" class="page-header__nav-link">
+            Clear
+          </a>
+        </li>
+        <li class="page-header__nav-item">
           <a href="#" @click.prevent="createNote()" class="page-header__nav-link">
-            Create note
+            Create
           </a>
         </li>
         <li class="page-header__nav-item">
@@ -63,7 +68,16 @@ export default window.workbench.createComponent((accessor) => {
         await router.push({ name: AppRoute.CodePage, params: { id: noteId } })
       }
 
-      return { isAuth, name, openUserProfileModal, openLoginModal, createNote }
+      async function clearNote(): Promise<void> {
+        const noteId = router.currentRoute.value.params.id as string;
+
+        if (noteId) {
+          await noteService.updateNote(noteId, '');
+          window.$renderer?.clear();
+        }
+      }
+
+      return { isAuth, name, openUserProfileModal, openLoginModal, createNote, clearNote }
     },
   })
 });

@@ -11,12 +11,18 @@ class MHTMLEditorNavigatorCommandManager extends MObject {
   }
 
   public enterSymbol(name: string, position: IPosition, char: MChar): void {
-    const { row, column } = position;
+    let { row, column } = position;
 
-    const matchedRow = this.renderer.storage.at(position.row);
+    if (char === '\n') {
+      const newRow = this.renderer.controller.addEmptyRow();
 
-    if (matchedRow) {
-      matchedRow.inputAt(char, position.column);
+      row = newRow.index;
+    } else {
+      const matchedRow = this.renderer.storage.at(position.row);
+
+      if (matchedRow) {
+        matchedRow.inputAt(char, position.column);
+      }
     }
 
     return this.with(name, (navigator) => {

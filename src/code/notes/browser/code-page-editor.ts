@@ -6,7 +6,6 @@ import { RouteLocationNormalizedLoaded } from 'vue-router';
 import * as markybox from '@/core';
 import { isDev } from '@/base/platform';
 import { DemoUserInteraction } from '../../../../test/demo/demo-user-interaction';
-import { changePositionActions } from '../../../../test/demo/actions/change-position-actions';
 import { typeWordActions } from '../../../../test/demo/actions/type-word-actions';
 
 export class CodePageEditor {
@@ -20,8 +19,7 @@ export class CodePageEditor {
   }
 
   private createFakeUsers(): void {
-    new DemoUserInteraction(this.renderer, changePositionActions, 'user-1', 0);
-    new DemoUserInteraction(this.renderer, typeWordActions,'user-2', 3);
+    new DemoUserInteraction(this.renderer, typeWordActions,'user-2', 15);
   }
 
   public init(route: Ref<RouteLocationNormalizedLoaded>, note?: INoteInfo): void {

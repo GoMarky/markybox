@@ -113,7 +113,7 @@ export class MHTMLEditorController extends MObject {
   }
 
   public setWholeText(text: string): void {
-    const textParts = text.split(_endl).filter(Boolean);
+    const textParts = text.split(/\n/);
 
     for (const [index, rowText] of textParts.entries()) {
       const row = this.addRow(rowText);
@@ -209,5 +209,10 @@ export class MHTMLEditorController extends MObject {
     }
 
     return amount;
+  }
+
+  public clear(): void {
+    this.renderer.storage.clear();
+    this.addEmptyRow();
   }
 }
