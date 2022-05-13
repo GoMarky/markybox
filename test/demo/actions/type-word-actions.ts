@@ -1,4 +1,3 @@
-import { EditorActionType } from '@/code/socket/common/socket-service';
 import { convertTextToUserInteraction, IFakeUserInteraction } from '../demo-user-interaction';
 
 const text = `Welcome to markybox editor!

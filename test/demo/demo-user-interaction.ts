@@ -25,7 +25,6 @@ export function convertTextToUserInteraction(text: string): IFakeUserInteraction
     }
 
     actions.push({ type: EditorActionType.EnterSymbol, position: [row, column], data: char })
-
   }
 
   return actions;

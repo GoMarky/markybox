@@ -10,9 +10,10 @@ export interface IBaseSocketMessagePayload {
 }
 
 export enum EditorActionType {
-  Paste = 'p',
-  EnterSymbol = 'e',
-  ChangePosition = 'n',
+  PasteText = 'pt',
+  EnterSymbol = 'es',
+  DeleteSymbol = 'ds',
+  ChangePosition = 'cn',
 }
 
 export interface ISocketEditorActionPayload {

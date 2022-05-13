@@ -19,7 +19,7 @@ export class CodePageEditor {
   }
 
   private createFakeUsers(): void {
-    new DemoUserInteraction(this.renderer, typeWordActions,'user-2', 15);
+    // new DemoUserInteraction(this.renderer, typeWordActions,'user-2', 15);
   }
 
   public init(route: Ref<RouteLocationNormalizedLoaded>, note?: INoteInfo): void {
