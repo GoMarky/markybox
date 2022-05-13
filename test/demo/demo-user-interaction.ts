@@ -62,10 +62,12 @@ const actions: IFakeUserInteraction[] = [
 ]
 
 export class DemoUserInteraction {
-  private readonly userName = 'demo-user1';
   private readonly iterator: ArrayIterator<IFakeUserInteraction>;
 
-  constructor(private readonly renderer: markybox.MHTMLRenderer) {
+  constructor(
+    private readonly renderer: markybox.MHTMLRenderer,
+    private readonly userName: string,
+    private readonly index: number) {
     this.iterator = new ArrayIterator(actions);
 
     this.renderer.navigatorManager.add(this.userName);
@@ -77,7 +79,7 @@ export class DemoUserInteraction {
     const { navigatorManager } = this.renderer;
     const { position, type } = interaction;
     const [row, column] = position;
-    const normalizedPosition: IPosition = { row, column }
+    const normalizedPosition: IPosition = { row: this.index, column }
 
     switch (type) {
       case EditorActionType.ChangePosition: {

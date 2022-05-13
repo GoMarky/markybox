@@ -18,7 +18,10 @@ export class CodePageEditor {
   }
 
   private createFakeUsers(): void {
-    new DemoUserInteraction(this.renderer);
+    new DemoUserInteraction(this.renderer, 'user-1', 0);
+    new DemoUserInteraction(this.renderer, 'user-2', 1);
+    new DemoUserInteraction(this.renderer, 'user-3', 2);
+    new DemoUserInteraction(this.renderer, 'user-4', 3);
   }
 
   public init(route: Ref<RouteLocationNormalizedLoaded>, note?: INoteInfo): void {

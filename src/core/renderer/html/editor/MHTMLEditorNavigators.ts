@@ -23,6 +23,8 @@ class MHTMLEditorNavigatorCommandManager extends MObject {
 }
 
 export class MHTMLEditorNavigators extends MObject {
+  private static MAX_NAVIGATORS_LENGTH = 6;
+
   public readonly commandCenter: MHTMLEditorNavigatorCommandManager;
   private readonly navigators: Map<string, MHTMLEditorBodyNavigator> = new Map();
 
@@ -33,6 +35,10 @@ export class MHTMLEditorNavigators extends MObject {
   }
 
   public add(name: string): void {
+    if (this.navigators.size >= MHTMLEditorNavigators.MAX_NAVIGATORS_LENGTH) {
+      throw new CriticalError(`Maximum number of navigators reached. Current: ${this.navigators.size}`);
+    }
+
     const navigator = new MHTMLEditorBodyNavigator(this.renderer, name);
 
     this.navigators.set(name, navigator);
