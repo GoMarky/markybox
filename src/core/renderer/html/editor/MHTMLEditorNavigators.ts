@@ -1,12 +1,27 @@
 import { MObject } from '@/core/objects/MObject';
-import { MHTMLEditorBodyNavigator } from '@/core/renderer/html/editor/MHTMLEditorBodyNavigator';
+import { MHTMLEditorNavigator } from '@/core/renderer/html/editor/MHTMLEditorBodyNavigator';
 import { CriticalError } from '@/base/errors';
 import { MHTMLRenderer } from '@/core';
 import { IPosition } from '@/core/app/common';
+import { MChar } from '@/core/renderer/html/editor/MHTMLEditorBodyTextarea';
 
 class MHTMLEditorNavigatorCommandManager extends MObject {
-  constructor(private readonly navigators: Map<string, MHTMLEditorBodyNavigator>) {
+  constructor(private readonly renderer: MHTMLRenderer, private readonly navigators: Map<string, MHTMLEditorNavigator>) {
     super();
+  }
+
+  public enterSymbol(name: string, position: IPosition, char: MChar): void {
+    const { row, column } = position;
+
+    const matchedRow = this.renderer.storage.at(position.row);
+
+    if (matchedRow) {
+      matchedRow.inputAt(char, position.column);
+    }
+
+    return this.with(name, (navigator) => {
+      navigator.setPosition({ row, column: column + 1 });
+    })
   }
 
   public changePosition(name: string, position: IPosition): void {
@@ -15,7 +30,7 @@ class MHTMLEditorNavigatorCommandManager extends MObject {
     })
   }
 
-  private with(name: string, callback: (navigator: MHTMLEditorBodyNavigator) => void) {
+  private with(name: string, callback: (navigator: MHTMLEditorNavigator) => void) {
     const navigator = this.navigators.get(name);
 
     return Reflect.apply(callback, undefined, [navigator]);
@@ -26,12 +41,12 @@ export class MHTMLEditorNavigators extends MObject {
   private static MAX_NAVIGATORS_LENGTH = 6;
 
   public readonly commandCenter: MHTMLEditorNavigatorCommandManager;
-  private readonly navigators: Map<string, MHTMLEditorBodyNavigator> = new Map();
+  private readonly navigators: Map<string, MHTMLEditorNavigator> = new Map();
 
   constructor(private readonly renderer: MHTMLRenderer) {
     super();
 
-    this.commandCenter = new MHTMLEditorNavigatorCommandManager(this.navigators);
+    this.commandCenter = new MHTMLEditorNavigatorCommandManager(renderer, this.navigators);
   }
 
   public add(name: string): void {
@@ -39,7 +54,7 @@ export class MHTMLEditorNavigators extends MObject {
       throw new CriticalError(`Maximum number of navigators reached. Current: ${this.navigators.size}`);
     }
 
-    const navigator = new MHTMLEditorBodyNavigator(this.renderer, name);
+    const navigator = new MHTMLEditorNavigator(this.renderer, name);
 
     this.navigators.set(name, navigator);
   }

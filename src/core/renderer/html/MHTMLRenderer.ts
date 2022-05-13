@@ -137,7 +137,7 @@ export class MHTMLRenderer extends MObject implements IAbstractRenderer {
   public getText(): string {
     const { rows } = this.storage;
 
-    return rows.map((row) => row.toString()).join('\r\n');
+    return rows.map((row) => row.toString()).join('\n');
   }
 
   public setText(text?: string): void {

@@ -5,70 +5,21 @@ import { ArrayIterator } from '@/base/iterator';
 
 const fps = 1;
 
-interface IFakeUserInteraction {
+export interface IFakeUserInteraction {
   type: EditorActionType;
   position: ITuplePosition;
+  data?: any;
 }
-
-const actions: IFakeUserInteraction[] = [
-  {
-    type: EditorActionType.ChangePosition,
-    position: [0, 0],
-  },
-  {
-    type: EditorActionType.ChangePosition,
-    position: [0, 1],
-  },
-  {
-    type: EditorActionType.ChangePosition,
-    position: [0, 2],
-  },
-  {
-    type: EditorActionType.ChangePosition,
-    position: [0, 3],
-  },
-  {
-    type: EditorActionType.ChangePosition,
-    position: [0, 4],
-  },
-  {
-    type: EditorActionType.ChangePosition,
-    position: [0, 5],
-  },
-  {
-    type: EditorActionType.ChangePosition,
-    position: [0, 6],
-  },
-  {
-    type: EditorActionType.ChangePosition,
-    position: [0, 7],
-  },
-  {
-    type: EditorActionType.ChangePosition,
-    position: [0, 8],
-  },
-  {
-    type: EditorActionType.ChangePosition,
-    position: [0, 9],
-  },
-  {
-    type: EditorActionType.ChangePosition,
-    position: [0, 10],
-  },
-  {
-    type: EditorActionType.ChangePosition,
-    position: [0, 11],
-  }
-]
 
 export class DemoUserInteraction {
   private readonly iterator: ArrayIterator<IFakeUserInteraction>;
 
   constructor(
     private readonly renderer: markybox.MHTMLRenderer,
+    private readonly actions: IFakeUserInteraction[],
     private readonly userName: string,
     private readonly index: number) {
-    this.iterator = new ArrayIterator(actions);
+    this.iterator = new ArrayIterator(this.actions);
 
     this.renderer.navigatorManager.add(this.userName);
 
@@ -84,6 +35,10 @@ export class DemoUserInteraction {
     switch (type) {
       case EditorActionType.ChangePosition: {
         navigatorManager.commandCenter.changePosition(this.userName, normalizedPosition);
+        break;
+      }
+      case EditorActionType.EnterSymbol: {
+        navigatorManager.commandCenter.enterSymbol(this.userName, normalizedPosition, interaction.data);
         break;
       }
     }

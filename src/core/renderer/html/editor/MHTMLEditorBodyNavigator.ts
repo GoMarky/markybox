@@ -4,12 +4,9 @@ import { MCaretLayer } from '@/core/renderer/html/layers/MCaretLayer';
 import { Emitter, IEvent } from '@/base/event';
 import { IPosition } from '@/core/app/common';
 
-export class MHTMLEditorBodyNavigator extends MObject {
-  private _currentPosition: IPosition = { row: 0, column: 0 };
+export class MHTMLEditorNavigator extends MObject {
+  protected _currentPosition: IPosition = { row: 0, column: 0 };
   private layer: MCaretLayer;
-
-  private readonly _onDidUpdatePosition: Emitter<IPosition> = new Emitter<IPosition>();
-  public readonly onDidUpdatePosition: IEvent<IPosition> = this._onDidUpdatePosition.event;
 
   constructor(private readonly renderer: MHTMLRenderer, public readonly name: string) {
     super();
@@ -59,7 +56,7 @@ export class MHTMLEditorBodyNavigator extends MObject {
     this.doSetPosition(newPosition);
   }
 
-  private doSetPosition(position: IPosition): void {
+  protected doSetPosition(position: IPosition): void {
     const { layer, renderer } = this;
     const { storage } = renderer;
     let { row, column } = position;
@@ -74,19 +71,34 @@ export class MHTMLEditorBodyNavigator extends MObject {
 
     const matchedRow = storage.at(row);
 
-    if (matchedRow) {
-      if (matchedRow.empty()) {
-        column = 0;
-      } else if (column >= matchedRow.columnsCount) {
-        column = matchedRow.columnsCount;
-      }
+    if (!matchedRow) {
+      return console.warn(`Can't set position on unexisted row index - ${row}`)
+    }
+
+    if (matchedRow.empty()) {
+      column = 0;
+    } else if (column >= matchedRow.columnsCount) {
+      column = matchedRow.columnsCount;
     }
 
     const normalizedPosition: IPosition = { row, column };
 
     layer.setPosition(normalizedPosition);
     this._currentPosition = normalizedPosition;
+  }
+}
 
-    this._onDidUpdatePosition.fire(normalizedPosition);
+export class MHTMLEditorBodyNavigator extends MHTMLEditorNavigator {
+  private readonly _onDidUpdatePosition: Emitter<IPosition> = new Emitter<IPosition>();
+  public readonly onDidUpdatePosition: IEvent<IPosition> = this._onDidUpdatePosition.event;
+
+  constructor(renderer: MHTMLRenderer, name: string) {
+    super(renderer, name);
+  }
+
+  protected doSetPosition(position: IPosition): void {
+    super.doSetPosition(position);
+
+    this._onDidUpdatePosition.fire(this._currentPosition);
   }
 }
