@@ -25,10 +25,12 @@ export class SocketService extends Disposable implements ISocketService {
   public createOrEnterRoom(noteId: Note.NoteId): void {
     const { email } = this.sessionService.profile;
 
+    const user_name = email.value ? email.value : 'anonymous';
+
     const basePayload: IBaseSocketMessagePayload = {
       type: SocketCommandType.EnterRoom,
       note_nanoid: noteId,
-      user_name: unref(email),
+      user_name,
     }
 
     void this.connect()

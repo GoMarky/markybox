@@ -72,14 +72,12 @@ export default window.workbench.createComponent((accessor) => {
       onMounted(async () => {
         await nextTick();
 
-        if (sessionService.profile.isAuth.value) {
-          connectSocket();
-        }
-
         try {
           const noteId = currentRoute.value.params.id as string;
 
           const note = await noteService.getNoteById(noteId);
+
+          connectSocket();
 
           initEditor(note);
         } catch (error) {

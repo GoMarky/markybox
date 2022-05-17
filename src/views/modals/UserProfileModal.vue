@@ -13,7 +13,7 @@
         <router-link
           custom
           v-slot="{ navigate }"
-          :to="{ name: 'CodePage', params: { id: note.id } }"
+          :to="{ name: $RouteName.CodePage, params: { id: note.id } }"
           v-for="note in notes" :key="note.id"
         >
           <li class="user-profile__note-item" @click="navigate(); closeModal()">

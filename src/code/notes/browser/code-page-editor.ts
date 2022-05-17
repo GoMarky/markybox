@@ -26,12 +26,14 @@ export class CodePageEditor {
     const { name: userName } = this.sessionService.profile;
     let initialText = '';
 
+    const name = userName.value || 'anonymous';
+
     if (note) {
       initialText = note.data;
     }
 
     const root = document.querySelector<HTMLElement>('#root') as HTMLElement;
-    const renderer = this.renderer = window.$renderer = new markybox.MHTMLRenderer(root, userName.value);
+    const renderer = this.renderer = window.$renderer = new markybox.MHTMLRenderer(root, name);
 
     const editor = this.editor = window.$editor = new markybox.MEditor({
       renderer,
@@ -42,7 +44,7 @@ export class CodePageEditor {
     renderer.editorAutoSave.onDidSave((text: string) => {
       const noteId = route.value.params.id as string;
 
-      this.noteService.updateNote(noteId, text);
+      void this.noteService.updateNote(noteId, text);
     })
 
     editor.setText(initialText)
