@@ -1,23 +1,42 @@
 <template>
-  <div>
-    Home
+  <div class="page-home">
+    <section class="page-home__top-content">
+      <p>
+        {{ $t('home.top.text') }}
+      </p>
+    </section>
+    <section class="page-home__coding">
+      <div class="page-home__coding-content">
+        <button class="btn" type="button">
+          {{ $t('home.coding.button.create') }}
+        </button>
+        <button class="btn" type="button">
+          {{ $t('home.coding.button.login.create') }}
+        </button>
+      </div>
+    </section>
+    <section class="page-home__footer-content">
+      {{ $t('home.footer.text') }}
+    </section>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted } from 'vue';
+import { defineComponent } from 'vue';
 import { useRouter } from 'vue-router';
-import { AppRoute } from '@/views/router/router';
 
 export default window.workbench.createComponent(() => {
-
   return defineComponent({
     name: 'HomePage',
     setup() {
       const { push } = useRouter();
-
-      push({ name: AppRoute.CodePage, params: { id: '1a9ac498-9141-43f9-a7db-73be48704d50' } })
     },
   })
 })
 </script>
+
+<style>
+.page-home {
+
+}
+</style>

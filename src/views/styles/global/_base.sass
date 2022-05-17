@@ -1,6 +1,9 @@
 @import ../global/mixins
 @import ../global/theme
 
+\:root
+  --background-root: #0E1525
+  --root-color: #ffffff
 *
   -webkit-font-smoothing: antialiased
   -moz-osx-font-smoothing: grayscale
@@ -14,8 +17,8 @@ body
   font: 12px/normal 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', 'source-code-pro', monospace
   overflow: hidden
   padding: 0
-  color: $black-color
-  background-color: $white-color
+  color: var(--root-color)
+  background-color: var(--background-root)
   @include offset
   margin: 0 auto
   display: flex

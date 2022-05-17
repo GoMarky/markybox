@@ -1,4 +1,4 @@
-import { createApp } from 'vue';
+import { App, createApp } from 'vue';
 import appServices from '@/constructors';
 import { IInstantiationService } from '@/platform/instantiation/common/instantiation';
 import { ILogService, now } from '@/platform/log/common/log';
@@ -8,6 +8,7 @@ import { getSingletonServiceDescriptors } from '@/platform/instantiation/browser
 import { IRequestService } from '@/platform/request/common/requestService';
 import requests from '@/code/request/requests';
 import { ISessionService } from '@/code/session/common/session';
+import { translate } from '@/code/locales/translate';
 
 class Application {
   public init(services: ServiceCollection): void {
@@ -41,9 +42,17 @@ class Application {
 
     const App = (await import('@/views/App.vue')).default;
     const router = (await import('@/views/router/router')).default;
-    createApp(App).use(router).mount('#app');
+    const app = createApp(App).use(router);
+
+    this.defineGlobalAppVariable(app)
+
+    app.mount('#app');
 
     logService.info(`App started at: ${now()}`);
+  }
+
+  private defineGlobalAppVariable(app: App): void {
+    app.config.globalProperties.$t = translate;
   }
 }
 

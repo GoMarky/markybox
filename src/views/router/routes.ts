@@ -14,8 +14,18 @@ const routes = [
       },
       {
         name: RouteName.CodePage,
-        path: '/:id',
+        path: '/:id/',
         component: () => import(/* webpackChunkName: "[CodePage]" */ '@/views/pages/CodePage.vue')
+      },
+      {
+        name: RouteName.RegistrationPage,
+        path: '/registration/',
+        component: () => import(/* webpackChunkName: "[RegistrationPage]" */ '@/views/pages/RegistrationPage.vue')
+      },
+      {
+        name: RouteName.LoginPage,
+        path: '/login/',
+        component: () => import(/* webpackChunkName: "[LoginPage]" */ '@/views/pages/LoginPage.vue')
       }
     ]
   },

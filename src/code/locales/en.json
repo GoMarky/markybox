@@ -1,3 +1,7 @@
 {
-  "header.login.title": "Login"
+  "header.login.title": "Login",
+  "home.top.text": "Code, create, and learn together",
+  "home.coding.button.create": "Create",
+  "home.coding.button.login.create": "Login and create new",
+  "home.footer.text": "Use our free, collaborative, in-browser text editor."
 }

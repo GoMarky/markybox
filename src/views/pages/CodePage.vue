@@ -1,6 +1,8 @@
 <template>
-  <div id="root" class="marky">
-    <div v-if="errorMessage.length > 0"></div>
+  <div class="page-code">
+    <div id="root" class="marky">
+      <div v-if="errorMessage.length > 0"></div>
+    </div>
   </div>
 </template>
 
