@@ -10,6 +10,7 @@ import requests from '@/code/request/requests';
 import { ISessionService } from '@/code/session/common/session';
 import { translate } from '@/code/locales/translate';
 import { RouteName } from '@/code/vue/common/route-names';
+import { timestamp } from '@/base/string';
 
 class Application {
   public init(services: ServiceCollection): void {
@@ -54,6 +55,7 @@ class Application {
 
   private defineGlobalAppVariable(app: App): void {
     app.config.globalProperties.$t = translate;
+    app.config.globalProperties.$timestamp = timestamp;
     app.config.globalProperties.$RouteName = RouteName;
   }
 }

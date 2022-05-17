@@ -16,6 +16,7 @@
 .m-editor__gutter {
     user-select: none;
     display: flex;
+    color: #222;
     background-color: #e8e8e8;
     flex-direction: column;
     height: 100%;

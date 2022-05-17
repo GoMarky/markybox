@@ -1,21 +1,24 @@
 <template>
   <main class="page-code">
     <div id="root" class="marky">
-      <div v-if="errorMessage.length > 0"></div>
+      <div v-if="errorMessage.length > 0">
+        {{ errorMessage }}
+      </div>
     </div>
   </main>
 </template>
 
 <script lang="ts">
-import { defineComponent, nextTick, onMounted, Ref, ref } from 'vue';
-import { RouteLocationNormalizedLoaded, useRouter } from 'vue-router';
-import * as markybox from '@/core';
+import { defineComponent, nextTick, onMounted, ref } from 'vue';
+import { useRouter } from 'vue-router';
 import { ILogService } from '@/platform/log/common/log';
 import { ISessionService } from '@/code/session/common/session';
 import { Component } from '@/code/vue/common/component-names';
 import { ISocketService, SocketCommandType } from '@/code/socket/common/socket-service';
 import { INoteInfo, INoteService } from '@/code/notes/common/notes';
 import { CodePageEditor } from '@/code/notes/browser/code-page-editor';
+import { APIError, ApiError } from '@/platform/request/common/request';
+import { AppRoute } from '@/views/router/router';
 
 export default window.workbench.createComponent((accessor) => {
   const logService = accessor.get(ILogService);
@@ -26,7 +29,7 @@ export default window.workbench.createComponent((accessor) => {
   return defineComponent({
     name: Component.CodePage,
     setup() {
-      const { currentRoute } = useRouter();
+      const { currentRoute, push } = useRouter();
       const errorMessage = ref('');
       const editor = new CodePageEditor(logService, sessionService, noteService);
 
@@ -80,11 +83,11 @@ export default window.workbench.createComponent((accessor) => {
 
           initEditor(note);
         } catch (error) {
-          if (error instanceof Error) {
-            const { name, message } = error;
-
-            errorMessage.value = `Name: ${name}. Message: ${message}`;
+          if (error instanceof ApiError && error.is(APIError.NotFoundError)) {
+            return push({ name: AppRoute.HomePage })
           }
+
+          console.error(error.toString());
         }
       })
 

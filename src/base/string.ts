@@ -1,6 +1,11 @@
 import { isUndefinedOrNull } from '@/base/types';
+import * as fns from 'date-fns';
 
 export type Mime = 'text/plain';
+
+export function timestamp(timestamp: number): string {
+  return fns.format(fns.fromUnixTime(timestamp).getTime(), 'yyyy-MM-dd hh:mm', );
+}
 
 export function copyStringNumberOfTimes(text: string, amount: number): string {
   let result: string = '';

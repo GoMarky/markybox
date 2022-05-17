@@ -1,8 +1,10 @@
 import { createDecorator } from '@/platform/instantiation/common/instantiation';
 import { Disposable } from '@/platform/lifecycle/common/lifecycle';
 import { computed, ComputedRef, ref, Ref } from 'vue';
-import { INoteInfo } from '@/code/notes/common/notes';
+import { INoteInfo, Note } from '@/code/notes/common/notes';
 import { IEvent } from '@/base/event';
+import { indexOutOfRange } from '@/base/array';
+import { CriticalError } from '@/base/errors';
 
 export class UserProfile extends Disposable {
   public readonly sessionId: Ref<string> = ref('');
@@ -16,10 +18,22 @@ export class UserProfile extends Disposable {
 
     return Boolean(sessionId.value);
   })
-  public dispose() {
+
+  public dispose(): void {
     this.name.value = '';
     this.email.value = '';
+    this.sessionId.value = '';
     this.notes.value = [];
+  }
+
+  public removeNote(id: Note.NoteId): void {
+    const noteIndex = this.notes.value.findIndex((note) => note.id === id);
+
+    if (indexOutOfRange(noteIndex)) {
+      throw new CriticalError(`Incorrect note index - ${id}`);
+    }
+
+    this.notes.value.splice(noteIndex, 1);
   }
 }
 

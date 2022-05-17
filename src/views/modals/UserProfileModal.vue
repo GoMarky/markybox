@@ -3,8 +3,11 @@
     <div class="user-profile">
       <header class="user-profile__header">
         <h2 class="user-profile__header-title">
-          {{ userName }}
+          User name: {{ userName }}
         </h2>
+        <button class="btn btn_primary" @click="logout()">
+          Logout
+        </button>
       </header>
       <ul class="user-profile__notes-list">
         <router-link
@@ -15,12 +18,14 @@
         >
           <li class="user-profile__note-item" @click="navigate(); closeModal()">
             <article class="user-profile__note-article">
-              <h3 class="user-profile__note-title">
-                {{ note.title }} - {{ note.id }}
-              </h3>
-              <time class="user-profile__note-time"> Created {{ note.createdAt }}</time>
-              <time class="user-profile__note-time"> Last update {{ note.updatedAt }}</time>
-              <button class="user-profile__note-delete" type="button" @click="deleteNote(note.id)"> Delete</button>
+              <div>
+                <h3 class="user-profile__note-title">
+                  {{ note.title }}
+                </h3>
+                <time class="user-profile__note-time"> <b>Created:</b> {{ $timestamp(note.createdAt) }}</time>
+                <time class="user-profile__note-time"> <b>Last update:</b> {{ $timestamp(note.updatedAt) }}</time>
+              </div>
+              <button class="btn btn_secondary user-profile__note-delete" type="button" @click.stop="deleteNote(note.id)"> Delete</button>
             </article>
           </li>
         </router-link>
@@ -50,11 +55,18 @@ export default window.workbench.createComponent((accessor) => {
         layoutService.modal.close();
       }
 
-      async function deleteNote(noteId: string): Promise<void> {
-        await noteService.deleteNote(noteId);
+      async function logout(): Promise<void> {
+        await sessionService.logout();
+
+        closeModal();
       }
 
-      return { notes, userName, closeModal, deleteNote };
+      async function deleteNote(noteId: string): Promise<void> {
+        await noteService.deleteNote(noteId);
+        sessionService.profile.removeNote(noteId);
+      }
+
+      return { notes, userName, closeModal, deleteNote, logout };
     }
   })
 })
@@ -66,6 +78,20 @@ export default window.workbench.createComponent((accessor) => {
 
 .user-profile
   color: inherit
+
+  &__header
+    display: flex
+    flex-direction: row
+    align-items: center
+    justify-content: space-between
+
+  &__note-article
+    display: flex
+    flex-direction: row
+    align-items: center
+    justify-content: space-between
+    padding: 10px
+    border: 1px dashed #222
 
 .user-profile__notes-list
   @include offset
