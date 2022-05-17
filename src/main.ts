@@ -9,6 +9,7 @@ import { IRequestService } from '@/platform/request/common/requestService';
 import requests from '@/code/request/requests';
 import { ISessionService } from '@/code/session/common/session';
 import { translate } from '@/code/locales/translate';
+import { RouteName } from '@/code/vue/common/route-names';
 
 class Application {
   public init(services: ServiceCollection): void {
@@ -53,6 +54,7 @@ class Application {
 
   private defineGlobalAppVariable(app: App): void {
     app.config.globalProperties.$t = translate;
+    app.config.globalProperties.$RouteName = RouteName;
   }
 }
 

@@ -1,9 +1,9 @@
 <template>
-  <div class="page-code">
+  <main class="page-code">
     <div id="root" class="marky">
       <div v-if="errorMessage.length > 0"></div>
     </div>
-  </div>
+  </main>
 </template>
 
 <script lang="ts">

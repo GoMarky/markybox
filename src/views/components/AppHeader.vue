@@ -11,22 +11,33 @@
     <nav class="page-header__navigation">
       <ul class="page-header__nav-list">
         <li class="page-header__nav-item">
-          <a href="#S" @click.prevent="clearNote()" class="page-header__nav-link">
+          <button v-if="hasActiveNote" type="button" @click.prevent="clearNote()"
+                  class="btn btn_primary page-header__nav-link">
             Clear
-          </a>
+          </button>
         </li>
         <li class="page-header__nav-item">
-          <a href="#" @click.prevent="createNote()" class="page-header__nav-link">
-            Create
-          </a>
+          <button v-if="isAuth" type="button" @click.prevent="createNote()"
+                  class="btn btn_primary page-header__nav-link">
+            Create new
+          </button>
         </li>
         <li class="page-header__nav-item">
-          <a v-if="isAuth" href="#" @click.prevent="openUserProfileModal()" class="page-header__nav-link">
+          <button type="button" v-if="isAuth" @click.prevent="openUserProfileModal()"
+                  class="btn btn_primary page-header__nav-link">
             {{ name }}
-          </a>
-          <a v-else href="#" @click.prevent="openLoginModal()" class="page-header__nav-link">
+          </button>
+          <button v-else type="button" @click.prevent="openLoginModal()" class="btn btn_primary page-header__nav-link">
             Login
-          </a>
+          </button>
+        </li>
+        <li v-if="!isAuth" class="page-header__nav-item">
+          <router-link
+            :to="{ name: $RouteName.RegistrationPage }"
+            type="button"
+            class="btn btn_primary page-header__nav-link">
+            Sign up
+          </router-link>
         </li>
       </ul>
     </nav>
@@ -34,7 +45,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { computed, defineComponent } from 'vue';
 import { ISessionService } from '@/code/session/common/session';
 import { Component } from '@/code/vue/common/component-names';
 import { ILayoutService } from '@/platform/layout/common/layout';
@@ -51,8 +62,9 @@ export default window.workbench.createComponent((accessor) => {
     name: Component.AppHeader,
     setup() {
       const { name, isAuth, notes } = sessionService.profile;
-
       const router = useRouter();
+
+      const hasActiveNote = computed(() => Reflect.has(router.currentRoute.value.params, 'id'))
 
       function openUserProfileModal(): void {
         layoutService.modal.open('UserProfileModal');
@@ -77,7 +89,7 @@ export default window.workbench.createComponent((accessor) => {
         }
       }
 
-      return { isAuth, name, openUserProfileModal, openLoginModal, createNote, clearNote }
+      return { hasActiveNote, isAuth, name, openUserProfileModal, openLoginModal, createNote, clearNote }
     },
   })
 });
@@ -214,8 +226,6 @@ export default window.workbench.createComponent((accessor) => {
   color: $white-color
   line-height: 1
   text-align: center
-  padding-top: 26px
-  padding-bottom: 22.5px
   outline-color: $yellow-color
   border-bottom: 2px solid $black-color
 
@@ -250,6 +260,7 @@ export default window.workbench.createComponent((accessor) => {
   .page-header__nav-list
     display: flex
     flex-direction: row
+    justify-content: flex-end
     margin: 0
 
   .page-header__nav-item
@@ -257,18 +268,9 @@ export default window.workbench.createComponent((accessor) => {
     margin-right: 1.5rem
     position: relative
 
-    &:nth-last-child(2)
-      margin-right: 0
-
-    &:last-child
-      margin-left: auto
-      margin-right: 1rem
-
   .page-header__nav-link
-    @include offset
     font-size: 0.79rem
     line-height: 1
-    border-bottom: none
 
     &::before
       content: ''

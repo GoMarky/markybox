@@ -1,7 +1,7 @@
 <template>
-  <div class="page-registration">
+  <main class="page-registration">
     Signup
-  </div>
+  </main>
 </template>
 
 <script lang="ts">

@@ -25,10 +25,13 @@ export class NoteCreateRequest extends HTTPRequest<INoteCreateRequestAttributes,
   public async handle(): Promise<ResponseInstance<INoteCreateRequestResponse, INoteCreateRequestResponse>> {
     const { profile } = this.sessionService;
 
-    const response = await this.post(this.endpoint, {
-      sessionId: profile.sessionId.value,
-      ...this.getAttributes(),
-    });
+    const attrs = this.getAttributes();
+
+    if (profile.isAuth) {
+      Reflect.set(attrs, 'sessionId', profile.sessionId);
+    }
+
+    const response = await this.post(this.endpoint, attrs);
     return this.doHandle(response);
   }
 }

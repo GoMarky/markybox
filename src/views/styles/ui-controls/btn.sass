@@ -1,0 +1,25 @@
+@import ../global/mixins
+
+.btn
+  display: flex
+  align-items: center
+  justify-content: center
+  border-radius: 4px
+  cursor: pointer
+  outline: 0
+  padding: 8px
+  text-align: center
+  transition: .1s all ease-in-out
+  font: inherit
+  width: auto
+  white-space: nowrap
+
+  &_primary
+    background-color: var(--background-higher)
+    border: 1px solid var(--outline-dimmest)
+    color: var(--accent-primary-stronger)
+
+  &_secondary
+    background-color: var(--accent-primary-default)
+    border: 1px solid var(--accent-primary-default)
+    color: #ffffff
