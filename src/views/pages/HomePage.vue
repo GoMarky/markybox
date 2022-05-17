@@ -44,6 +44,7 @@ export default window.workbench.createComponent((accessor) => {
 
       function openLoginModal(): void {
         layoutService.modal.open('UserLoginModal');
+        noteService.createNoteAfterLogin = true;
       }
 
       async function createNote(): Promise<void> {

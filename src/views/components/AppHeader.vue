@@ -16,8 +16,8 @@
             Clear
           </button>
         </li>
-        <li class="page-header__nav-item">
-          <button v-if="isAuth" type="button" @click.prevent="createNote()"
+        <li v-if="isAuth" class="page-header__nav-item">
+          <button type="button" @click.prevent="createNote()"
                   class="btn btn_primary page-header__nav-link">
             Create new
           </button>

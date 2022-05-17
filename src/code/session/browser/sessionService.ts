@@ -5,6 +5,8 @@ import { ISessionInfoRequestAttributes, ISessionInfoRequestResponse, SessionInfo
 import { getLocalStorageItem, setLocalStorageItem } from '@/base/dom';
 import { ISessionLoginRequestAttributes, SessionLoginRequest } from '@/code/request/session-login/session-login-request';
 import { Emitter, IEvent } from '@/base/event';
+import { ISessionRegisterUserRequestAttributes, SessionRegisterUserRequest } from '@/code/request/session-register-user/session-register-user-request';
+import { reverse } from '@/base/string';
 
 export class SessionService extends Disposable implements ISessionService {
   private readonly _onDidUserLogin: Emitter<void> = new Emitter<void>();
@@ -18,6 +20,22 @@ export class SessionService extends Disposable implements ISessionService {
     super();
 
     this.profile = new UserProfile();
+  }
+
+  public async registerUser(options: ISessionRegisterUserRequestAttributes): Promise<void> {
+    const { email, userName } = options;
+
+    const password = reverse(options.password);
+
+    const { data } = await this.requestService.call<ISessionRegisterUserRequestAttributes,
+      ISessionInfoRequestResponse,
+      ISessionInfoRequestResponse>(SessionRegisterUserRequest.staticId, {
+      email,
+      userName,
+      password,
+    });
+
+    return this.doLogin(data);
   }
 
   public async restoreSession(): Promise<void> {

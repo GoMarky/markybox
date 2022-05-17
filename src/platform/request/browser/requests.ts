@@ -4,6 +4,7 @@ const BASE_ENDPOINTS = {
   SESSION_LOGIN: 'session/login/',
   SESSION_INFO: 'session/info/',
   SESSION_LOGOUT: 'session/logout/',
+  SESSION_REGISTER_USER: 'session/register/',
   NOTE_CREATE: 'note/create/',
   NOTE_UPDATE: 'note/update/',
   NOTE_DELETE: 'note/delete/',

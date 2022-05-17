@@ -7,7 +7,7 @@ import { IRendererDisplay } from '@/core/app/renderer';
 
 // TODO: do not use clientX
 const EDITOR_OFFSET_POSITION: IDOMPosition = {
-  top: 45,
+  top: 52,
   left: 42,
 }
 

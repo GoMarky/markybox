@@ -7,8 +7,11 @@ import { INoteDeleteRequestAttributes, INoteDeleteRequestResponse, NoteDeleteReq
 import { ISessionService } from '@/code/session/common/session';
 import { INoteGetAllRequestAttributes, INoteGetAllRequestResponse, NoteGetAllRequest } from '@/code/request/note-get-all/note-get-all';
 import { INoteGetByIdRequestAttributes, INoteGetByIdRequestResponse, NoteGetByIdRequest } from '@/code/request/note-get-by-id/note-get-by-id';
+import { RouteName } from '@/code/vue/common/route-names';
 
 export class NoteService extends Disposable implements INoteService {
+  public createNoteAfterLogin: boolean = false;
+
   constructor(
     @IRequestService private readonly requestService: IRequestService,
     @ISessionService private readonly sessionService: ISessionService,
@@ -61,11 +64,10 @@ export class NoteService extends Disposable implements INoteService {
 
     const onUserLogin = async () => {
       try {
-        const notes = await this.getNotes();
+        profile.notes.value = await this.getNotes();
 
-        profile.notes.value = notes;
-      } catch {
-        //
+      } catch (error) {
+        console.warn(error);
       }
     }
 

@@ -11,6 +11,7 @@
           :value="email"
           @update:value="email = $event"
           type="email"
+          autocomplete="on"
           name="email" />
       </div>
       <div class="user-login__input">
@@ -20,6 +21,7 @@
           :value="password"
           @update:value="password = $event"
           type="password"
+          autocomplete="on"
           name="password" />
       </div>
       <div class="user-login__submit">

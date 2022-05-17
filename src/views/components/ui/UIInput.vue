@@ -10,6 +10,7 @@
       :name="name"
       class="ui-input__block"
       :style="styles"
+      :autocomplete="autocomplete"
     />
     <span>
       {{ hintText }}
@@ -41,6 +42,10 @@ export default defineComponent({
     value: [String, Number],
     name: String,
     hintText: String,
+    autocomplete: {
+      type: String,
+      default: 'off',
+    }
   },
   emits: ['update:value'],
 });
@@ -61,15 +66,11 @@ export default defineComponent({
 .ui-input__block
   background: none
   border: 1px solid #7f828b
-  color: inherit
+  color: #ffffff
   background-color: inherit
-  min-height: 35px;
+  min-height: 35px
   padding-left: 10px
   font-family: inherit
   font-size: 14px
-
-  &:focus
-    color: #070707
-
 
 </style>

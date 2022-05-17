@@ -5,6 +5,7 @@ import { INoteInfo, Note } from '@/code/notes/common/notes';
 import { IEvent } from '@/base/event';
 import { indexOutOfRange } from '@/base/array';
 import { CriticalError } from '@/base/errors';
+import { ISessionRegisterUserRequestAttributes } from '@/code/request/session-register-user/session-register-user-request';
 
 export class UserProfile extends Disposable {
   public readonly sessionId: Ref<string> = ref('');
@@ -45,6 +46,7 @@ export interface ISessionService {
 
   logout(): Promise<void>;
 
+  registerUser(options: ISessionRegisterUserRequestAttributes): Promise<void>;
   restoreSession(): Promise<void>;
 }
 

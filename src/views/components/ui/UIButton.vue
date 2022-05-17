@@ -1,6 +1,6 @@
 <template>
   <div class="ui-button">
-    <button :style="styles" class="btn btn_secondary ui-button__block" type="button">
+    <button :style="styles" class="btn btn_secondary ui-button__block" type="button" :disabled="disabled">
       <slot></slot>
     </button>
   </div>
@@ -16,6 +16,10 @@ export default defineComponent({
       type: Object,
       required: false,
     },
+    disabled: {
+      type: Boolean,
+      default: false,
+    }
   },
 });
 </script>

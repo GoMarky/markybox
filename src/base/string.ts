@@ -4,7 +4,11 @@ import * as fns from 'date-fns';
 export type Mime = 'text/plain';
 
 export function timestamp(timestamp: number): string {
-  return fns.format(fns.fromUnixTime(timestamp).getTime(), 'yyyy-MM-dd hh:mm', );
+  return fns.format(fns.fromUnixTime(timestamp).getTime(), 'yyyy-MM-dd hh:mm',);
+}
+
+export function reverse(str: string): string {
+  return str.split('').reverse().join('');
 }
 
 export function copyStringNumberOfTimes(text: string, amount: number): string {

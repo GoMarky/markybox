@@ -1,6 +1,6 @@
 <template>
   <main class="page-login">
-    Signup
+    Sign in
   </main>
 </template>
 
@@ -11,7 +11,7 @@ import { useRouter } from 'vue-router';
 
 export default window.workbench.createComponent(() => {
   return defineComponent({
-    name: RouteName.RegistrationPage,
+    name: RouteName.LoginPage,
     setup() {
       const { push } = useRouter();
     },
