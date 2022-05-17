@@ -22,6 +22,8 @@
 }
 
 .m-editor__body {
+    background-color: #fff;
+    color: #222;
     user-select: none;
     position: relative;
     height: 100%;

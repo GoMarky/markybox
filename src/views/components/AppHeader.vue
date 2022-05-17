@@ -25,7 +25,7 @@
         <li class="page-header__nav-item">
           <button type="button" v-if="isAuth" @click.prevent="openUserProfileModal()"
                   class="btn btn_primary page-header__nav-link">
-            {{ name }}
+            Profile
           </button>
           <button v-else type="button" @click.prevent="openLoginModal()" class="btn btn_primary page-header__nav-link">
             Login
@@ -271,31 +271,6 @@ export default window.workbench.createComponent((accessor) => {
   .page-header__nav-link
     font-size: 0.79rem
     line-height: 1
-
-    &::before
-      content: ''
-      position: absolute
-      bottom: -18px
-      left: 0
-      width: 0
-      border-bottom: 2px solid $black-color
-      transition: 0.4s
-
-    &--is-active::before
-      width: 100%
-
-    &:hover::before
-      width: 100%
-
-    &:hover::before
-      display: block
-
-    &--tel::before
-      display: none
-      color: $white-color
-
-    &--tel:hover::before
-      display: none
 
   .page-header__toggle-menu
     display: none

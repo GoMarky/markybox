@@ -7,10 +7,10 @@
     </section>
     <section class="page-home__coding">
       <div class="page-home__coding-content">
-        <button class="btn btn_primary" type="button">
-          {{ $t('home.coding.button.create') }}
+        <button class="btn btn_primary" type="button" @click="createNote()">
+          {{ isAuth ? $t('home.coding.button.create.auth', { userName: name }) : $t('home.coding.button.create') }}
         </button>
-        <button class="btn btn_secondary" type="button">
+        <button v-if="!isAuth" type="button" class="btn btn_secondary" @click="openLoginModal()">
           {{ $t('home.coding.button.login.create') }}
         </button>
       </div>
@@ -23,17 +23,38 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { useRouter } from 'vue-router';
 import { RouteName } from '@/code/vue/common/route-names';
 import { INoteService } from '@/code/notes/common/notes';
+import { ILayoutService } from '@/platform/layout/common/layout';
+import { ISessionService } from '@/code/session/common/session';
 
 export default window.workbench.createComponent((accessor) => {
   const noteService = accessor.get(INoteService);
+  const sessionService = accessor.get(ISessionService);
+  const layoutService = accessor.get(ILayoutService);
 
   return defineComponent({
     name: RouteName.HomePage,
     setup() {
-      const { push } = useRouter();
+      const { profile } = sessionService;
+      const { isAuth, name } = profile;
+
+      function openLoginModal(): void {
+        layoutService.modal.open('UserLoginModal');
+      }
+
+      async function createNote(): Promise<void> {
+        const noteId = await noteService.createNote();
+
+        console.log(noteId);
+      }
+
+      return {
+        name,
+        isAuth,
+        createNote,
+        openLoginModal,
+      }
     },
   })
 })
@@ -50,9 +71,10 @@ export default window.workbench.createComponent((accessor) => {
   margin-top: 20%
 
   &__coding-content
-    display: grid
-    grid-template-columns: 1fr 1fr
-    grid-gap: 10px
+    display: flex
+    flex-direction: row
+    gap: 10px
+    justify-content: center
 
 .page-home-text
   font-size: 20px

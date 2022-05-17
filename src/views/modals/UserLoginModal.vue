@@ -1,6 +1,9 @@
 <template>
   <teleport to="#modal-app">
     <div class="user-login">
+      <h3 class="user-login__title">
+        Sign in
+      </h3>
       <div class="user-login__input">
         <UIInput
           id="user-email"

@@ -27,8 +27,8 @@ export class NoteCreateRequest extends HTTPRequest<INoteCreateRequestAttributes,
 
     const attrs = this.getAttributes();
 
-    if (profile.isAuth) {
-      Reflect.set(attrs, 'sessionId', profile.sessionId);
+    if (profile.isAuth.value) {
+      Reflect.set(attrs, 'sessionId', profile.sessionId.value);
     }
 
     const response = await this.post(this.endpoint, attrs);
