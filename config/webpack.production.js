@@ -3,11 +3,6 @@ const path = require('path');
 const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 
 const minimizer = [
-  new TerserPlugin({
-    terserOptions: {
-      ecma: 6,
-    },
-  }),
 ];
 
 minimizer.push(new CssMinimizerPlugin());
