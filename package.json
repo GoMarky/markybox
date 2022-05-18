@@ -14,13 +14,14 @@
     }
   },
   "scripts": {
-    "build": "cross-env NODE_OPTIONS=\"--max-old-space-size=4096\" NODE_ENV=production node ci/build.command.js",
+    "build": "cross-env NODE_OPTIONS=\"--max-old-space-size=4096\" NODE_ENV=production webpack --mode production --config webpack.config.js",
     "dev": "cross-env NODE_ENV=development webpack-dev-server --env mode=development",
     "dev:test": "npm run dev -- --fbTestApi=true",
     "lint": "eslint './app/**/*.{js,ts,vue}'",
     "lint:fix": "eslint --fix './app/**/*.{js,ts,vue}'",
     "test": "cross-env NODE_ENV=test jest",
-    "test:dev": "cross-env NODE_ENV=test jest --watch"
+    "test:dev": "cross-env NODE_ENV=test jest --watch",
+    "start": "node server/main.js"
   },
   "dependencies": {
     "@babel/plugin-proposal-object-rest-spread": "^7.15.6",
@@ -29,12 +30,15 @@
     "@gomarky/window-shortcut": "^1.0.17",
     "@sentry/browser": "^5.26.0",
     "@sentry/integrations": "^5.26.0",
+    "@types/express": "^4.17.13",
     "@types/js-cookie": "^2.2.6",
     "@types/mocha": "^7.0.2",
     "axios": "^0.20.0",
+    "body-parser": "^1.20.0",
     "clean-css": "^5.1.5",
     "core-js": "^3.6.5",
     "date-fns": "^2.28.0",
+    "express": "^4.18.1",
     "js-cookie": "^2.2.1",
     "nanoid": "^3.2.0",
     "regenerator-runtime": "^0.13.9",

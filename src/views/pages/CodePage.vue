@@ -97,25 +97,21 @@ export default window.workbench.createComponent((accessor) => {
 })
 </script>
 
-<style>
-@import '../styles/marky.css';
+<style lang="sass">
+\:root
+  --z-index-selection: 10
 
-:root {
-  --z-index-selection: 10;
-}
+.marky
+  display: flex
+  position: relative
+  overflow: hidden
+  direction: ltr
+  text-align: left
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0)
 
-.marky {
-  display: flex;
-  position: relative;
-  overflow: hidden;
-  direction: ltr;
-  text-align: left;
-  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
-}
 
-@keyframes blinker {
-  50% {
-    opacity: 0.0;
-  }
-}
+@keyframes blinker
+  50%
+    opacity: 0.0
+
 </style>

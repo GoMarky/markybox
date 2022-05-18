@@ -17,6 +17,10 @@ const showBuildParams = require('./config/helpers/show-build-params');
 showBuildParams();
 
 module.exports = ({ mode } = { mode: 'production' }) => {
+  if (!mode) {
+    mode = 'production';
+  }
+
   const _path = path.resolve(__dirname, 'dist');
 
   const filename = EnvironmentVariable.isDev ? '[name].js' : `[name].[chunkhash].js`;
