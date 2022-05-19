@@ -5,8 +5,9 @@ import { ISessionService, Session } from '@/code/session/common/session';
 import { unref } from 'vue';
 import { CriticalError } from '@/base/errors';
 import { Note } from '@/code/notes/common/notes';
+import { BASE_URL } from '@/code/request/api';
 
-const SOCKET_URL = 'ws://localhost:3000/v1/subscribe/';
+const SOCKET_URL = `ws://${BASE_URL}/v1/subscribe/`;
 
 export class SocketService extends Disposable implements ISocketService {
   private ws?: WebSocket;

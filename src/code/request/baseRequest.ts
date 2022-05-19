@@ -12,6 +12,7 @@ import { AbortRequestError, AbortRequestReason, DisconnectError, TimeoutError } 
 import { FunctionLike } from '@/types/common';
 import { ensureNoFirstSlash } from '@/base/string';
 import { ApiError } from '@/platform/request/common/request';
+import { BASE_URL } from '@/code/request/api';
 
 const DEFAULT_TIMEOUT_TIME = 15000;
 
@@ -76,7 +77,7 @@ export abstract class HTTPRequest<TAttributes = unknown, TResponse = unknown, TR
   protected constructor() {
     this.axios = axios.create({
       timeout: DEFAULT_TIMEOUT_TIME,
-      baseURL: 'http://localhost:3000',
+      baseURL: BASE_URL,
     });
 
     this.transformer = BaseTransformer.createNullInstance();
