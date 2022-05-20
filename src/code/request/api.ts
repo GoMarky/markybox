@@ -1,3 +1,3 @@
-import { isProd } from '@/base/platform';
+import { isDev } from '@/base/platform';
 
-export const BASE_URL = isProd ? '//s1.swen.tech' : '//localhost:3021';
+export const BASE_URL = !isDev ? '//localhost:3021' : '//s1.swen.tech';

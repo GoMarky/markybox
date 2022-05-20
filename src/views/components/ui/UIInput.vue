@@ -66,7 +66,7 @@ export default defineComponent({
 .ui-input__block
   background: none
   border: 1px solid #7f828b
-  color: #ffffff
+  color: #222222
   background-color: inherit
   min-height: 35px
   padding-left: 10px

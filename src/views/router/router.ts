@@ -1,5 +1,6 @@
-import { createWebHashHistory, createRouter } from 'vue-router';
+import { createWebHashHistory, createRouter, createWebHistory } from 'vue-router';
 import routes from '@/views/router/routes';
+import { isDev } from '@/base/platform';
 
 export enum AppRoute {
   CodePage = 'CodePage',
@@ -7,7 +8,7 @@ export enum AppRoute {
 }
 
 const router = createRouter({
-  history: createWebHashHistory(),
+  history: isDev ? createWebHashHistory('/') : createWebHistory('/'),
   routes,
 })
 
