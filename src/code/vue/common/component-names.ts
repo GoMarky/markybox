@@ -13,5 +13,4 @@ export enum Component {
 
   UserLoginModal = 'UserLoginModal',
   UserProfileModal = 'UserProfileModal',
-  UserSettingsModal = 'UserSettingsModal',
 }

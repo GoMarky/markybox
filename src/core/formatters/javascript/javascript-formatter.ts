@@ -16,7 +16,7 @@ export type StatementClassName =
   | 'm-editor__keyword-identifier-name';
 
 export const Regexp = {
-  VariableStatement: /^(new|default|const|let|var|class|function|export|import|interface|type|public|private|static|protected|extends|implements|switch|case|break|continue$)/,
+  VariableStatement: /^(return|new|default|const|let|var|class|function|export|import|interface|type|public|private|static|protected|extends|implements|switch|case|break|continue$)/,
 };
 
 

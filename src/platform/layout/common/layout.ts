@@ -4,7 +4,7 @@ import { Ref, ref } from 'vue';
 
 export const ILayoutService = createDecorator<ILayoutService>('layoutService');
 
-type ModalName = 'UserLoginModal' | 'UserProfileModal' | 'UserSettingsModal';
+type ModalName = 'UserLoginModal' | 'UserProfileModal';
 
 interface INotificationItem {
   title: string;

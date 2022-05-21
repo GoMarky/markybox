@@ -9,6 +9,30 @@
           Logout
         </button>
       </header>
+      <section class="user-profile__settings">
+        <div class="user-login__input">
+          <UISelect
+            label="Editor theme"
+            :value="currentEditorTheme"
+            @update:value="currentEditorTheme = $event"
+            v-model="currentEditorTheme"
+            :options="editorThemes"
+          ></UISelect>
+        </div>
+        <div class="user-login__input">
+          <UISelect
+            label="Preferred editor language"
+            :value="currentEditorLang"
+            @update:value="currentEditorLang = $event"
+            :options="editorLanguages"
+          ></UISelect>
+        </div>
+        <div class="user-login__submit">
+          <UIButton @click.native="save()">
+            Save
+          </UIButton>
+        </div>
+      </section>
       <ul class="user-profile__notes-list">
         <router-link
           custom
@@ -22,10 +46,12 @@
                 <h3 class="user-profile__note-title">
                   {{ note.title }}
                 </h3>
-                <time class="user-profile__note-time"> <b>Created:</b> {{ $timestamp(note.createdAt) }}</time>
-                <time class="user-profile__note-time"> <b>Last update:</b> {{ $timestamp(note.updatedAt) }}</time>
+                <time class="user-profile__note-time"><b>Created:</b> {{ $timestamp(note.createdAt) }}</time>
+                <time class="user-profile__note-time"><b>Last update:</b> {{ $timestamp(note.updatedAt) }}</time>
               </div>
-              <button class="btn btn_secondary user-profile__note-delete" type="button" @click.stop="deleteNote(note.id)"> Delete</button>
+              <button class="btn btn_secondary user-profile__note-delete" type="button"
+                      @click.stop="deleteNote(note.id)"> Delete
+              </button>
             </article>
           </li>
         </router-link>
@@ -35,11 +61,14 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, ref } from 'vue';
 import { ISessionService } from '@/code/session/common/session';
 import { ILayoutService } from '@/platform/layout/common/layout';
 import { Component } from '@/code/vue/common/component-names';
 import { INoteService } from '@/code/notes/common/notes';
+import UISelect from '@/views/components/ui/UISelect.vue';
+import UIButton from '@/views/components/ui/UIButton.vue';
+import { EditorLang, EditorTheme } from '@/code/notes/browser/editor-settings';
 
 export default window.workbench.createComponent((accessor) => {
   const sessionService = accessor.get(ISessionService);
@@ -47,9 +76,35 @@ export default window.workbench.createComponent((accessor) => {
   const noteService = accessor.get(INoteService);
 
   return defineComponent({
+    components: {
+      UIButton,
+      UISelect,
+    },
     name: Component.UserProfileModal,
     setup() {
       const { notes, name: userName } = sessionService.profile;
+
+      const currentEditorTheme = ref('light');
+      const currentEditorLang = ref('js');
+
+      const editorThemes: EditorTheme[] = [
+        'light',
+        'dark'
+      ];
+
+      const editorLanguages: EditorLang[] = [
+        'cpp',
+        'python',
+        'js',
+        'json'
+      ];
+
+      async function save(): Promise<void> {
+        try {
+        } catch (error) {
+          console.error(error.toString());
+        }
+      }
 
       function closeModal(): void {
         layoutService.modal.close();
@@ -66,7 +121,18 @@ export default window.workbench.createComponent((accessor) => {
         sessionService.profile.removeNote(noteId);
       }
 
-      return { notes, userName, closeModal, deleteNote, logout };
+      return {
+        notes,
+        userName,
+        closeModal,
+        deleteNote,
+        logout,
+        editorThemes,
+        editorLanguages,
+        currentEditorTheme,
+        currentEditorLang,
+        save,
+      };
     }
   })
 })
@@ -78,6 +144,9 @@ export default window.workbench.createComponent((accessor) => {
 
 .user-profile
   color: inherit
+
+  &__settings
+    margin-bottom: 10px
 
   &__header
     display: flex

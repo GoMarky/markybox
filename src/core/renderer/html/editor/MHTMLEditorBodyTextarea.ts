@@ -37,6 +37,10 @@ export class MHTMLEditorBodyTextarea extends MHTMLGlyphDOM<HTMLTextAreaElement> 
     const { _el } = this;
     _el.style.left = toPixel(42);
 
+    this._el.addEventListener('keydown', (evt) => {
+      console.log(evt);
+    })
+
     window.addEventListener('keydown', (evt) => {
       const event = evt as KeyboardEvent;
 
@@ -48,6 +52,7 @@ export class MHTMLEditorBodyTextarea extends MHTMLGlyphDOM<HTMLTextAreaElement> 
       const isSystemKey = isSystemChar(key as Char);
 
       if (isSystemKey || key === 'Tab') {
+        evt.preventDefault();
         return;
       }
 

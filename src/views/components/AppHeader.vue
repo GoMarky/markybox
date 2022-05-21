@@ -117,7 +117,7 @@ export default window.workbench.createComponent((accessor) => {
       }
 
       function openSettingsModal(): void {
-        layoutService.modal.open('UserSettingsModal');
+        layoutService.modal.open('UserProfileModal');
       }
 
       return { hasActiveNote, isAuth, name, openUserProfileModal, openLoginModal, createNote, clearNote, copyNoteLink, openSettingsModal }
