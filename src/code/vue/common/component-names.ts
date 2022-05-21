@@ -1,4 +1,10 @@
 export enum Component {
+  // UI
+
+  UISelect = 'UISelect',
+  UIButton = 'UIButton',
+  UIInput = 'UIInput',
+
   CodePage = 'CodePage',
   HomePage = 'HomePage',
   AppHeader = 'AppHeader',
@@ -6,5 +12,6 @@ export enum Component {
   AppModal = 'AppModal',
 
   UserLoginModal = 'UserLoginModal',
-  UserProfileModal = 'UserProfileModal'
+  UserProfileModal = 'UserProfileModal',
+  UserSettingsModal = 'UserSettingsModal',
 }

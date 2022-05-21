@@ -4,7 +4,21 @@ import { Ref, ref } from 'vue';
 
 export const ILayoutService = createDecorator<ILayoutService>('layoutService');
 
-type ModalName = 'UserLoginModal' | 'UserProfileModal'
+type ModalName = 'UserLoginModal' | 'UserProfileModal' | 'UserSettingsModal';
+
+interface INotificationItem {
+  title: string;
+  text?: string;
+  hideAfter?: number;
+}
+
+export class NotificationController extends Disposable {
+  public readonly notifications: Ref<INotificationItem[]> = ref([]);
+
+  public info(notification: INotificationItem): void {
+    this.notifications.value.push(notification);
+  }
+}
 
 export class ModalController extends Disposable {
   public readonly isOpen: Ref<boolean> = ref(false);
@@ -27,4 +41,5 @@ export class ModalController extends Disposable {
 
 export interface ILayoutService {
   readonly modal: ModalController;
+  readonly notification: NotificationController;
 }

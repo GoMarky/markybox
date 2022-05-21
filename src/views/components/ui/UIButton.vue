@@ -8,9 +8,10 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
+import { Component } from '@/code/vue/common/component-names';
 
 export default defineComponent({
-  name: 'UIButton',
+  name: Component.UIButton,
   props: {
     styles: {
       type: Object,

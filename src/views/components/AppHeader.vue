@@ -11,6 +11,12 @@
     <nav class="page-header__navigation">
       <ul class="page-header__nav-list">
         <li class="page-header__nav-item">
+          <button v-if="hasActiveNote" type="button" @click.prevent="copyNoteLink()"
+                  class="btn btn_primary page-header__nav-link">
+            Share link
+          </button>
+        </li>
+        <li class="page-header__nav-item">
           <button v-if="hasActiveNote" type="button" @click.prevent="clearNote()"
                   class="btn btn_primary page-header__nav-link">
             Clear
@@ -29,6 +35,11 @@
           </button>
           <button v-else type="button" @click.prevent="openLoginModal()" class="btn btn_primary page-header__nav-link">
             Login
+          </button>
+        </li>
+        <li class="page-header__nav-item">
+          <button type="button" @click.prevent="openSettingsModal()" class="btn btn_primary page-header__nav-link">
+            Settings
           </button>
         </li>
         <li v-if="!isAuth" class="page-header__nav-item">
@@ -52,6 +63,7 @@ import { ILayoutService } from '@/platform/layout/common/layout';
 import { INoteService } from '@/code/notes/common/notes';
 import { useRouter } from 'vue-router';
 import { AppRoute } from '@/views/router/router';
+import { Mime } from '@/base/string';
 
 export default window.workbench.createComponent((accessor) => {
   const sessionService = accessor.get(ISessionService);
@@ -89,7 +101,26 @@ export default window.workbench.createComponent((accessor) => {
         }
       }
 
-      return { hasActiveNote, isAuth, name, openUserProfileModal, openLoginModal, createNote, clearNote }
+      async function copyNoteLink(): Promise<void> {
+        const link = window.location.href;
+
+        const type: Mime = 'text/plain';
+        const blob: Blob = new window.Blob([link], { type });
+        const data: ClipboardItem[] = [new ClipboardItem({ [type]: blob })];
+
+        await window.navigator.clipboard.write(data);
+
+        layoutService.notification.info({
+          title: 'Link copied',
+          hideAfter: 1500,
+        })
+      }
+
+      function openSettingsModal(): void {
+        layoutService.modal.open('UserSettingsModal');
+      }
+
+      return { hasActiveNote, isAuth, name, openUserProfileModal, openLoginModal, createNote, clearNote, copyNoteLink, openSettingsModal }
     },
   })
 });
