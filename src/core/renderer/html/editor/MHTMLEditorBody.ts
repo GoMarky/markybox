@@ -7,7 +7,7 @@ export interface IVisitor {
   visit(fragment: MHTMLNodeFragment): void;
 }
 
-export class MHTMLEditorBody extends MHTMLGlyphDOM {
+export class MHTMLEditorBody extends MHTMLGlyphDOM<HTMLDivElement> {
   private textarea: MHTMLEditorBodyTextarea;
 
   public visitors: IVisitor[] = [];

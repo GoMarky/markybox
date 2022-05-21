@@ -136,7 +136,8 @@ export default window.workbench.createComponent((accessor) => {
   padding: 9.5px 0
   background-color: $base-background
   align-items: center
-  position: relative
+  position: sticky
+  top: 0
   z-index: $z-index-page-header
   min-height: 40px
   box-sizing: border-box

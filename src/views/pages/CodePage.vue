@@ -104,7 +104,7 @@ export default window.workbench.createComponent((accessor) => {
 .marky
   display: flex
   position: relative
-  overflow: hidden
+  overflow: scroll
   direction: ltr
   text-align: left
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0)

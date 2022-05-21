@@ -7,13 +7,12 @@ import { MHTMLGlyphRow } from '@/core/renderer/html/common/MHTMLGlyphRow';
 export class MHTMLStorage extends MObject {
   private readonly _rows: MHTMLGlyphRow[] = [];
 
-  constructor() {
-    super();
-  }
+  private readonly _onDidUpdate: Emitter<void> = new Emitter<void>();
+  public readonly onDidUpdate: IEvent<void> = this._onDidUpdate.event;
 
   public clear(): void {
     for (const row of this._rows) {
-      this.removeRow(row);
+      this.removeRow(row, false);
     }
 
     this.last().dispose();
@@ -21,17 +20,23 @@ export class MHTMLStorage extends MObject {
     this._update();
   }
 
-  public addRow(row: MHTMLGlyphRow): void {
+  public addRow(row: MHTMLGlyphRow, tick = true): void {
     this._rows.push(row);
-    this._update();
+
+    if (tick) {
+      this._update();
+    }
   }
 
-  public addRowAt(row: MHTMLGlyphRow, index: number): void {
+  public addRowAt(row: MHTMLGlyphRow, index: number, tick = true): void {
     this._rows.splice(index, 0, row);
-    this._update();
+
+    if (tick) {
+      this._update();
+    }
   }
 
-  public removeRow(row: MHTMLGlyphRow): void {
+  public removeRow(row: MHTMLGlyphRow, tick = true): void {
     const index = this._rows.findIndex((r) => r === row);
 
     // Если удаляемая строчка первая и единственная - то не удаляем ее.
@@ -46,7 +51,9 @@ export class MHTMLStorage extends MObject {
     row.dispose();
     this._rows.splice(index, 1);
 
-    this._update();
+    if (tick) {
+      this._update();
+    }
   }
 
   public last(): MHTMLGlyphRow {
@@ -77,5 +84,7 @@ export class MHTMLStorage extends MObject {
     for (const [index, row] of this._rows.entries()) {
       row.setIndex(index);
     }
+
+    this._onDidUpdate.fire();
   }
 }

@@ -4,6 +4,7 @@ import { MHTMLRenderer } from '@/core';
 import { IPosition } from '@/core/app/common';
 import { IDOMPosition } from '@/core/renderer/html/common/helpers';
 import { IRendererDisplay } from '@/core/app/renderer';
+import { debounce } from '@/base/async';
 
 // TODO: do not use clientX
 const EDITOR_OFFSET_POSITION: IDOMPosition = {
@@ -14,6 +15,8 @@ const EDITOR_OFFSET_POSITION: IDOMPosition = {
 export class HTMLDisplayRenderer extends MObject implements IRendererDisplay {
   constructor(private readonly renderer: MHTMLRenderer) {
     super();
+
+    this.registerListeners();
   }
 
   public toDOMPosition(position: IPosition): IDOMPosition {
@@ -28,7 +31,7 @@ export class HTMLDisplayRenderer extends MObject implements IRendererDisplay {
   public toEditorPosition(position: IDOMPosition): IPosition {
     let { top, left } = position;
 
-    top -= EDITOR_OFFSET_POSITION.top;
+    top += document.documentElement.scrollTop - EDITOR_OFFSET_POSITION.top;
     left -= EDITOR_OFFSET_POSITION.left;
 
     return {
@@ -43,5 +46,21 @@ export class HTMLDisplayRenderer extends MObject implements IRendererDisplay {
 
     root.style.width = toPixel(innerWidth);
     root.style.height = toPixel(innerHeight);
+  }
+
+  private registerListeners(): void {
+    const { storage, root } = this.renderer;
+
+    const debounced = debounce(() => {
+      const { count } = storage;
+      const { innerHeight } = window;
+
+      const totalRowsHeight = count * 16;
+      const rootHeight = totalRowsHeight > innerHeight ? totalRowsHeight : innerHeight;
+
+      root.style.height = toPixel(rootHeight);
+    }, 250);
+
+    storage.onDidUpdate(debounced)
   }
 }

@@ -12,7 +12,7 @@ import { translate } from '@/code/locales/translate';
 import { RouteName } from '@/code/vue/common/route-names';
 import { timestamp } from '@/base/string';
 
-import '@/views/styles/marky.css'
+import '@/views/styles/marky.css';
 
 class Application {
   public init(services: ServiceCollection): void {
