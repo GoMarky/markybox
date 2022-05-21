@@ -44,11 +44,15 @@ export class MHTMLEditorBodyTextarea extends MHTMLGlyphDOM<HTMLTextAreaElement> 
         return;
       }
 
-      const { key } = event;
+      const { key, code } = event;
       const isSystemKey = isSystemChar(key as Char);
 
       if (isSystemKey || key === 'Tab') {
         return;
+      }
+
+      if (code === 'Space') {
+        event.preventDefault();
       }
 
       this._onDidUpdate.fire(key);
