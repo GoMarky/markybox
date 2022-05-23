@@ -115,12 +115,12 @@ export class MHTMLEditorActiveState extends MHTMLEditorState {
 
         break;
       }
-      case Char.Backspace:
-        this.backspace();
-        break;
-      case Char.Enter:
-        this.enter();
-        break;
+      case Char.Backspace: {
+        return this.backspace();
+      }
+      case Char.Enter: {
+        return this.enter();
+      }
     }
 
     return this.renderer.editorAutoSave.save();
@@ -129,8 +129,8 @@ export class MHTMLEditorActiveState extends MHTMLEditorState {
   private enter(): void {
     const { navigator, controller } = this.renderer;
     const { currentRow } = controller;
-    const isCurrentRowEmpty = currentRow.empty();
     const { position } = navigator;
+    const isCurrentRowEmpty = currentRow.empty();
 
     const isChosenLastLetter = position.column >= currentRow.columnsCount;
 

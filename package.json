@@ -27,7 +27,7 @@
     "@babel/plugin-proposal-object-rest-spread": "^7.15.6",
     "@babel/plugin-syntax-dynamic-import": "^7.8.3",
     "@gomarky/vue-shimmer": "^1.0.6",
-    "@gomarky/window-shortcut": "^1.0.18",
+    "@gomarky/window-shortcut": "^1.0.19",
     "@sentry/browser": "^5.26.0",
     "@sentry/integrations": "^5.26.0",
     "@types/express": "^4.17.13",

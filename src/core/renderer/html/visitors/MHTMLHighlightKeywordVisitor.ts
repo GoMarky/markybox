@@ -32,11 +32,20 @@ export class MHTMLHighlightKeywordVisitor extends MObject implements IVisitor {
 
       const previousGlyph = glyphs[index - 1];
       this.checkStatementName(glyph, previousGlyph);
+      this.checkIsString(glyph);
       this.checkParentheses();
     }
   }
 
   private checkParentheses(): void {
+  }
+
+  private checkIsString(word: MHTMLGlyphWord): void {
+    const {text} = word;
+
+    if (text.startsWith("'") && text.endsWith("'")) {
+      this.doAddClassName(word, 'm-editor__keyword-identifier-string');
+    }
   }
 
   private checkStatementName(current: MHTMLGlyphWord, previous?: MHTMLGlyphWord): void {

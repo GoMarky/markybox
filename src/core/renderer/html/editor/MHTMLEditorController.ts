@@ -132,6 +132,7 @@ export class MHTMLEditorController extends MObject {
     const { column } = navigator.position;
 
     currentRow.slice(column - 4, column);
+    navigator.setPosition({ row: currentRow.index, column: column - 4 })
   }
 
   public addIndentToCurrentRow(): void {

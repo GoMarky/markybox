@@ -89,6 +89,22 @@ export class MHTMLRenderer extends MObject implements IAbstractRenderer {
     );
 
     this.disposables.add(
+      windowShortcut.registerShortcut('Meta+Shift+Z', (event) => {
+        event.preventDefault();
+
+        console.log('Redo')
+      })
+    );
+
+    this.disposables.add(
+      windowShortcut.registerShortcut('Meta+Z', (event) => {
+        event.preventDefault();
+
+        console.log('Undo')
+      })
+    )
+
+    this.disposables.add(
       windowShortcut.registerShortcut('Shift+Tab', (event) => {
         event.preventDefault();
         this.controller.removeIndentFromCurrentRow();

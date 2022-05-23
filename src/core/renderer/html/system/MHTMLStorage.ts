@@ -12,7 +12,7 @@ export class MHTMLStorage extends MObject {
 
   public clear(): void {
     for (const row of this._rows) {
-      this.removeRow(row, false);
+      this.removeRow(row, true);
     }
 
     this.last().dispose();

@@ -212,13 +212,16 @@ export class MHTMLGlyphRow extends MHTMLGlyphDOM<HTMLDivElement> {
     return this.setText('');
   }
 
-  public slice(start: number, end: number): void {
-    console.log(this._text);
-    console.log(start, end);
+  public slice(start: number, _: number): void {
+    if (this.containsOnlyWhitespaces()) {
+      const slicedText = this._text.slice(0, start);
 
-    const sliced = this._text.slice(start, end);
+      this._text = slicedText;
+      this.render();
+    }
 
-    console.log(sliced);
+    // TODO:
+    // Write logic for non-empty rows.
   }
 
   public append(text: string): void {
