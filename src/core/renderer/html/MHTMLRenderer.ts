@@ -82,13 +82,17 @@ export class MHTMLRenderer extends MObject implements IAbstractRenderer {
     );
 
     this.disposables.add(
-      windowShortcut.registerShortcut('Tab!', () => {
+      windowShortcut.registerShortcut('Tab', (event) => {
+        event.preventDefault();
         this.controller.addIndentToCurrentRow();
       })
     );
 
     this.disposables.add(
-      windowShortcut.registerShortcut('Shift+Tab', () => {})
+      windowShortcut.registerShortcut('Shift+Tab', (event) => {
+        event.preventDefault();
+        this.controller.removeIndentFromCurrentRow();
+      })
     )
 
     // Copy all code

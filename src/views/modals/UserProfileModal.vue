@@ -5,6 +5,10 @@
         <h2 class="user-profile__header-title">
           User name: {{ userName }}
         </h2>
+        <button type="button" @click.prevent="createNote()"
+                class="btn btn_primary page-header__nav-link">
+          Create new
+        </button>
         <button class="btn btn_primary" @click="logout()">
           Logout
         </button>
@@ -69,6 +73,8 @@ import { INoteService } from '@/code/notes/common/notes';
 import UISelect from '@/views/components/ui/UISelect.vue';
 import UIButton from '@/views/components/ui/UIButton.vue';
 import { EditorLang, EditorTheme } from '@/code/notes/browser/editor-settings';
+import { AppRoute } from '@/views/router/router';
+import { useRouter } from 'vue-router';
 
 export default window.workbench.createComponent((accessor) => {
   const sessionService = accessor.get(ISessionService);
@@ -83,6 +89,7 @@ export default window.workbench.createComponent((accessor) => {
     name: Component.UserProfileModal,
     setup() {
       const { notes, name: userName } = sessionService.profile;
+      const router = useRouter();
 
       const currentEditorTheme = ref('light');
       const currentEditorLang = ref('js');
@@ -110,6 +117,14 @@ export default window.workbench.createComponent((accessor) => {
         layoutService.modal.close();
       }
 
+      async function createNote(): Promise<void> {
+        const noteId = await noteService.createNote(`Title - #${notes.value?.length || 1}`);
+
+        await router.push({ name: AppRoute.CodePage, params: { id: noteId } })
+
+        closeModal();
+      }
+
       async function logout(): Promise<void> {
         await sessionService.logout();
 
@@ -124,13 +139,14 @@ export default window.workbench.createComponent((accessor) => {
       return {
         notes,
         userName,
-        closeModal,
-        deleteNote,
-        logout,
         editorThemes,
         editorLanguages,
         currentEditorTheme,
         currentEditorLang,
+        closeModal,
+        deleteNote,
+        logout,
+        createNote,
         save,
       };
     }

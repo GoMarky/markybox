@@ -9,8 +9,10 @@
           id="user-name"
           placeholder="User name"
           :value="username"
+          input-class="ui-input__block-color-white"
           @update:value="username = $event"
           type="text"
+          autocomplete="chrome-off"
           name="username" />
       </div>
       <div class="page-registration__input">
@@ -18,6 +20,7 @@
           id="user-email"
           placeholder="email"
           :value="email"
+          input-class="ui-input__block-color-white"
           @update:value="email = $event"
           type="email"
           name="email" />
@@ -27,6 +30,7 @@
           id="user-password"
           placeholder="password"
           :value="password"
+          input-class="ui-input__block-color-white"
           @update:value="password = $event"
           type="password"
           name="password" />

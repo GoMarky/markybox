@@ -126,6 +126,14 @@ export class MHTMLEditorController extends MObject {
     }
   }
 
+  public removeIndentFromCurrentRow(): void {
+    const { currentRow } = this;
+    const { navigator } = this.renderer;
+    const { column } = navigator.position;
+
+    currentRow.slice(column - 4, column);
+  }
+
   public addIndentToCurrentRow(): void {
     const { currentRow } = this;
     const { navigator } = this.renderer;

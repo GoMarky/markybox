@@ -194,21 +194,6 @@ export class MHTMLGlyphRow extends MHTMLGlyphDOM<HTMLDivElement> {
     this.gutterElement.index = index;
   }
 
-  public erase(): void {
-    return this.setText('');
-  }
-
-  public append(text: string): void {
-    this._text = this._text + text;
-    this.render();
-  }
-
-  public setText(text: string): void {
-    this._text = text;
-
-    this.render();
-  }
-
   public contains(column: number): boolean {
     return (this.columnsCount - 1) >= column;
   }
@@ -219,6 +204,30 @@ export class MHTMLGlyphRow extends MHTMLGlyphDOM<HTMLDivElement> {
     const { _text } = this;
     const [first, last] = splitAtIndex(index)(_text);
     this._text = first + string.removeFirstLetter(last);
+
+    this.render();
+  }
+
+  public erase(): void {
+    return this.setText('');
+  }
+
+  public slice(start: number, end: number): void {
+    console.log(this._text);
+    console.log(start, end);
+
+    const sliced = this._text.slice(start, end);
+
+    console.log(sliced);
+  }
+
+  public append(text: string): void {
+    this._text = this._text + text;
+    this.render();
+  }
+
+  public setText(text: string): void {
+    this._text = text;
 
     this.render();
   }

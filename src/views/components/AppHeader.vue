@@ -22,12 +22,6 @@
             Clear
           </button>
         </li>
-        <li v-if="isAuth" class="page-header__nav-item">
-          <button type="button" @click.prevent="createNote()"
-                  class="btn btn_primary page-header__nav-link">
-            Create new
-          </button>
-        </li>
         <li class="page-header__nav-item">
           <button type="button" v-if="isAuth" @click.prevent="openUserProfileModal()"
                   class="btn btn_primary page-header__nav-link">
@@ -35,11 +29,6 @@
           </button>
           <button v-else type="button" @click.prevent="openLoginModal()" class="btn btn_primary page-header__nav-link">
             Login
-          </button>
-        </li>
-        <li class="page-header__nav-item">
-          <button type="button" @click.prevent="openSettingsModal()" class="btn btn_primary page-header__nav-link">
-            Settings
           </button>
         </li>
         <li v-if="!isAuth" class="page-header__nav-item">
@@ -73,7 +62,7 @@ export default window.workbench.createComponent((accessor) => {
   return defineComponent({
     name: Component.AppHeader,
     setup() {
-      const { name, isAuth, notes } = sessionService.profile;
+      const { name, isAuth } = sessionService.profile;
       const router = useRouter();
 
       const hasActiveNote = computed(() => Reflect.has(router.currentRoute.value.params, 'id'))
@@ -84,12 +73,6 @@ export default window.workbench.createComponent((accessor) => {
 
       function openLoginModal(): void {
         layoutService.modal.open('UserLoginModal');
-      }
-
-      async function createNote(): Promise<void> {
-        const noteId = await noteService.createNote(`Title - #${notes.value?.length || 1}`);
-
-        await router.push({ name: AppRoute.CodePage, params: { id: noteId } })
       }
 
       async function clearNote(): Promise<void> {
@@ -116,11 +99,7 @@ export default window.workbench.createComponent((accessor) => {
         })
       }
 
-      function openSettingsModal(): void {
-        layoutService.modal.open('UserProfileModal');
-      }
-
-      return { hasActiveNote, isAuth, name, openUserProfileModal, openLoginModal, createNote, clearNote, copyNoteLink, openSettingsModal }
+      return { hasActiveNote, isAuth, name, openUserProfileModal, openLoginModal, clearNote, copyNoteLink }
     },
   })
 });

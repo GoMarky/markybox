@@ -8,9 +8,10 @@
       @input="$emit('update:value', $event.target.value)"
       :type="type"
       :name="name"
+      :class="inputClass"
       class="ui-input__block"
       :style="styles"
-      :autocomplete="autocomplete"
+      autocomplete="chrome-off"
     />
     <span>
       {{ hintText }}
@@ -33,6 +34,9 @@ export default defineComponent({
       type: String,
       default: 'text',
       required: false,
+    },
+    inputClass: {
+      type: String,
     },
     id: String,
     styles: {
@@ -73,5 +77,8 @@ export default defineComponent({
   padding-left: 10px
   font-family: inherit
   font-size: 14px
+
+.ui-input__block-color-white
+  color: #ffffff
 
 </style>
