@@ -219,6 +219,7 @@ export class MHTMLEditorActiveState extends MHTMLEditorState {
 
     // Считаем количество отступов (учитываем соседние скобки до этого)
     const amountLeftParen = controller.getLeftParenAmountFromStartByIndex(indentRowIndex);
+    const amountRightParen = controller.getRightParenAmountFromStartByIndex(indentRowIndex);
     // Выставляем нужно количество пробелов в зависимости от количества левых скобок
     const indentWhitespace = copyStringNumberOfTimes(BASE_INDENT_VALUE, amountLeftParen);
     indentRow.setText(indentWhitespace);
@@ -226,6 +227,8 @@ export class MHTMLEditorActiveState extends MHTMLEditorState {
     const existRightParenWindow = controller.findClosestRightParenRowDown(indentRowIndex);
 
     if (existRightParenWindow) {
+      const rightParenRow = controller.addRowAt(rightParenRowIndex);
+      rightParenRow.setText(copyStringNumberOfTimes(BASE_INDENT_VALUE, amountLeftParen - 1) + '}');
     } else {
       const rightParenRow = controller.addRowAt(rightParenRowIndex);
       rightParenRow.setText('}');
