@@ -2,8 +2,9 @@ import { MObject } from '@/core/objects/MObject';
 import { IVisitor } from '@/core/renderer/html/editor/MHTMLEditorBody';
 import { MHTMLGlyphWord } from '@/core/renderer/html/common/MHTMLGlyphWord';
 import { JavascriptCodeFormatter, StatementClassName } from '@/core/formatters/javascript/javascript-formatter';
-import { CodeStatement } from '@/core/formatters/formatter/base-formatter';
 import { MHTMLNodeFragment } from '@/core/renderer/html/common/MHTMLNodeFragment';
+import { CodeStatement } from '@/core/formatters/formatter/base-formatter';
+import { MHTMLRenderer } from '@/core';
 
 function getClassNameByStatement(statement?: CodeStatement): StatementClassName | undefined {
   if (!statement) {
@@ -18,7 +19,9 @@ function getClassNameByStatement(statement?: CodeStatement): StatementClassName 
 }
 
 export class MHTMLHighlightKeywordVisitor extends MObject implements IVisitor {
-  constructor() {
+  constructor(
+    private readonly renderer: MHTMLRenderer,
+  ) {
     super();
   }
 
@@ -41,9 +44,9 @@ export class MHTMLHighlightKeywordVisitor extends MObject implements IVisitor {
   }
 
   private checkIsString(word: MHTMLGlyphWord): void {
-    const {text} = word;
+    const { text } = word;
 
-    if (text.startsWith("'") && text.endsWith("'")) {
+    if (text.startsWith('\'') && text.endsWith('\'')) {
       this.doAddClassName(word, 'm-editor__keyword-identifier-string');
     }
   }
@@ -53,13 +56,17 @@ export class MHTMLHighlightKeywordVisitor extends MObject implements IVisitor {
       return;
     }
 
-    if (JavascriptCodeFormatter.parseKeyword(previous.text)) {
+    const { formatter } = this.renderer.body;
+
+    if (formatter.parseKeyword(previous.text)) {
       this.doAddClassName(current, 'm-editor__keyword-identifier-name');
     }
   }
 
   private checkStatement(glyph: MHTMLGlyphWord): void {
-    const statement = JavascriptCodeFormatter.parseKeyword(glyph.text);
+    const { formatter } = this.renderer.body;
+
+    const statement = formatter.parseKeyword(glyph.text);
     const className = getClassNameByStatement(statement);
 
     if (className) {

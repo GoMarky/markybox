@@ -24,6 +24,7 @@ import { MHTMLEditorNavigators } from '@/core/renderer/html/editor/MHTMLEditorNa
 
 export class MHTMLRenderer extends MObject implements IAbstractRenderer {
   public logger?: ILogger;
+
   public readonly display: HTMLDisplayRenderer;
   public readonly gutter: MHTMLEditorGutter;
   public readonly body: MHTMLEditorBody;
@@ -149,7 +150,7 @@ export class MHTMLRenderer extends MObject implements IAbstractRenderer {
     this.unlock();
 
     this.body.addVisitor(new MHTMLTextHintVisitor(this));
-    this.body.addVisitor(new MHTMLHighlightKeywordVisitor());
+    this.body.addVisitor(new MHTMLHighlightKeywordVisitor(this));
 
     this.registerListeners();
   }

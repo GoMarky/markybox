@@ -1,8 +1,8 @@
 import { BaseFormatter, CodeStatement } from '@/core/formatters/formatter/base-formatter';
 
-export class JSONCodeFormatter extends BaseFormatter {
+export class PythonCodeFormatter extends BaseFormatter {
   constructor() {
-    super('json');
+    super('python');
   }
 
   public parseKeyword(_: string): CodeStatement | undefined {

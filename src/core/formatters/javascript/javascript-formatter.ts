@@ -1,14 +1,4 @@
-import { BaseFormatter, CodeStatement } from '@/core/formatters/formatter/base-formatter';
-
-export enum JavascriptKeyword {
-  Class = 'class',
-  Function = 'function',
-  Const = 'const',
-  Var = 'var',
-  Let = 'let',
-  Public = 'public',
-  Static = 'static',
-}
+import { CodeStatement, BaseFormatter } from '@/core/formatters/formatter/base-formatter';
 
 export type StatementClassName =
   'm-editor__plain'
@@ -19,17 +9,12 @@ export const Regexp = {
   VariableStatement: /^(this|void|undefined|string|number|object|super|return|new|default|const|let|var|class|function|export|import|interface|type|public|private|static|protected|extends|implements|switch|case|break|continue$)/,
 };
 
-
 export class JavascriptCodeFormatter extends BaseFormatter {
   constructor() {
-    super();
+    super('js');
   }
 
-  public static get formatterName(): string {
-    return 'javascript';
-  }
-
-  public static parseKeyword(input: string): CodeStatement | undefined {
+  public parseKeyword(input: string): CodeStatement | undefined {
     const isVariableStatement = Regexp.VariableStatement.test(input);
 
     switch (true) {

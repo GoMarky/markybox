@@ -72,7 +72,7 @@ import { Component } from '@/code/vue/common/component-names';
 import { INoteService } from '@/code/notes/common/notes';
 import UISelect from '@/views/components/ui/UISelect.vue';
 import UIButton from '@/views/components/ui/UIButton.vue';
-import { EditorLang, EditorTheme } from '@/code/notes/browser/editor-settings';
+import * as markybox from '@/core/index';
 import { AppRoute } from '@/views/router/router';
 import { useRouter } from 'vue-router';
 
@@ -92,14 +92,15 @@ export default window.workbench.createComponent((accessor) => {
       const router = useRouter();
 
       const currentEditorTheme = ref('light');
-      const currentEditorLang = ref('js');
+      const currentEditorLang = ref('plain');
 
-      const editorThemes: EditorTheme[] = [
+      const editorThemes: markybox.EditorTheme[] = [
         'light',
         'dark'
       ];
 
-      const editorLanguages: EditorLang[] = [
+      const editorLanguages: markybox.EditorLang[] = [
+        'plain',
         'cpp',
         'python',
         'js',
