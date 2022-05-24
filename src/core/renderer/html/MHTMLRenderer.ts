@@ -4,7 +4,7 @@ import { MTextLayer } from '@/core/renderer/html/layers/MTextLayer';
 import { MHTMLEditorBodyNavigator } from '@/core/renderer/html/editor/MHTMLEditorBodyNavigator';
 import { HTMLDisplayRenderer } from '@/core/renderer/html/system/MHTMLDisplayRenderer';
 import { MHTMLEditorGutter } from '@/core/renderer/html/editor/MHTMLEditorGutter';
-import { MHTMLEditorBody } from '@/core/renderer/html/editor/MHTMLEditorBody';
+import { EditorLang, MHTMLEditorBody } from '@/core/renderer/html/editor/MHTMLEditorBody';
 import { MHTMLClipboard } from '@/core/renderer/html/system/MHTMLClipboard';
 import { MHTMLEditorSelection } from '@/core/renderer/html/editor/MHTMLEditorSelection';
 import { MMarkerLayer } from '@/core/renderer/html/layers/MMarkerLayer';
@@ -42,7 +42,10 @@ export class MHTMLRenderer extends MObject implements IAbstractRenderer {
   private readonly clipboard: MHTMLClipboard;
   private readonly partitionLayer: MPartitionLayer;
 
-  constructor(public readonly root: HTMLElement, author: string = 'user') {
+  constructor(
+    public readonly root: HTMLElement,
+    format: EditorLang = 'plain',
+    author: string = 'user') {
     super();
 
     if (!window.isSecureContext) {
@@ -52,7 +55,7 @@ export class MHTMLRenderer extends MObject implements IAbstractRenderer {
     this.storage = new MHTMLStorage();
     this.display = new HTMLDisplayRenderer(this);
     this.gutter = new MHTMLEditorGutter(this);
-    this.body = new MHTMLEditorBody(this);
+    this.body = new MHTMLEditorBody(this, format);
     this.selection = new MHTMLEditorSelection(this);
     this.navigator = new MHTMLEditorBodyNavigator(this, author);
     this.clipboard = new MHTMLClipboard();

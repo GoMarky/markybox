@@ -33,7 +33,7 @@ export class CodePageEditor {
     }
 
     const root = document.querySelector<HTMLElement>('#root') as HTMLElement;
-    const renderer = this.renderer = window.$renderer = new markybox.MHTMLRenderer(root, name);
+    const renderer = this.renderer = window.$renderer = new markybox.MHTMLRenderer(root, 'js', name);
 
     const editor = this.editor = window.$editor = new markybox.MEditor({
       renderer,

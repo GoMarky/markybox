@@ -1,4 +1,4 @@
-import { CodeStatement, BaseFormatter } from '@/core/formatters/formatter/base-formatter';
+import { BaseFormatter, CodeStatement } from '@/core/formatters/formatter/base-formatter';
 
 export type StatementClassName =
   'm-editor__plain'
@@ -21,7 +21,7 @@ export class JavascriptCodeFormatter extends BaseFormatter {
       case isVariableStatement:
         return CodeStatement.VariableDeclaration;
       default:
-        return undefined;
+        return CodeStatement.Text;
     }
   }
 }

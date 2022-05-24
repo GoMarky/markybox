@@ -1,7 +1,7 @@
 import { MObject } from '@/core/objects/MObject';
 import { IVisitor } from '@/core/renderer/html/editor/MHTMLEditorBody';
 import { MHTMLGlyphWord } from '@/core/renderer/html/common/MHTMLGlyphWord';
-import { JavascriptCodeFormatter, StatementClassName } from '@/core/formatters/javascript/javascript-formatter';
+import { StatementClassName } from '@/core/formatters/javascript/javascript-formatter';
 import { MHTMLNodeFragment } from '@/core/renderer/html/common/MHTMLNodeFragment';
 import { CodeStatement } from '@/core/formatters/formatter/base-formatter';
 import { MHTMLRenderer } from '@/core';
@@ -13,8 +13,10 @@ function getClassNameByStatement(statement?: CodeStatement): StatementClassName 
 
   switch (statement) {
     case CodeStatement.VariableDeclaration:
-    default:
       return 'm-editor__keyword-identifier';
+    case CodeStatement.Text:
+    default:
+      break;
   }
 }
 
@@ -58,8 +60,13 @@ export class MHTMLHighlightKeywordVisitor extends MObject implements IVisitor {
 
     const { formatter } = this.renderer.body;
 
-    if (formatter.parseKeyword(previous.text)) {
-      this.doAddClassName(current, 'm-editor__keyword-identifier-name');
+    const statement = formatter.parseKeyword(previous.text);
+
+    switch (statement) {
+      case CodeStatement.VariableDeclaration: {
+        this.doAddClassName(current, 'm-editor__keyword-identifier-name');
+        break;
+      }
     }
   }
 
@@ -67,6 +74,7 @@ export class MHTMLHighlightKeywordVisitor extends MObject implements IVisitor {
     const { formatter } = this.renderer.body;
 
     const statement = formatter.parseKeyword(glyph.text);
+
     const className = getClassNameByStatement(statement);
 
     if (className) {
