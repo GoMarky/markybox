@@ -113,8 +113,8 @@ module.exports = ({ mode } = { mode: 'production' }) => {
   plugins.push(new ExtractCssChunks({
     // Options similar to the same options in webpackOptions.output
     // all options are optional
-    filename: EnvironmentVariable.isDev ? '"[name]".css' : 'css/"[name].[hash]".css',
-    chunkFilename: EnvironmentVariable.isDev ? '"[id]".css' : 'css/"[id].[hash]".css',
+    filename: JSON.stringify(EnvironmentVariable.isDev ? '[name].css' : 'css/[name].[hash].css'),
+    chunkFilename: JSON.stringify(EnvironmentVariable.isDev ? '[id].css' : 'css/[id].[hash].css'),
     ignoreOrder: true, // Enable to remove warnings about conflicting order
   }));
 
