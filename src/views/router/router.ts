@@ -8,7 +8,7 @@ export enum AppRoute {
 }
 
 const router = createRouter({
-  history: isDev ? createWebHashHistory('/') : createWebHistory('/'),
+  history: isDev ? createWebHashHistory('/') : createWebHistory(''),
   routes,
 })
 
