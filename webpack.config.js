@@ -73,17 +73,21 @@ module.exports = ({ mode } = { mode: 'production' }) => {
 
   plugins.push(new HtmlWebpackPlugin(htmlWebpackPluginOptions));
 
+  const PROCESS_VARIABLES = {
+    'process.env.NODE_ENV': JSON.stringify(EnvironmentVariable.isDev ? 'development' : 'production'),
+    'process.env.BUILD_NUMBER': JSON.stringify(EnvironmentVariable.buildNumber),
+    'process.env.BUILD_DATE': JSON.stringify(new Date().toString()),
+    'process.env.APP_VERSION': JSON.stringify(EnvironmentVariable.appVersion),
+    'process.env.PUBLIC_PATH': JSON.stringify(EnvironmentVariable.publicPath),
+    'process.env.API_VERSION': JSON.stringify('v1')
+  }
+
   plugins.push(
       /**
        * @see https://github.com/TypeStrong/ts-loader#transpileonly
        */
       new IgnoreNotFoundExportPlugin(),
-      new webpack.ProvidePlugin({
-        'process.env.BUILD_NUMBER': JSON.stringify(EnvironmentVariable.buildNumber),
-        'process.env.BUILD_DATE': JSON.stringify(new Date().toString()),
-        'process.env.APP_VERSION': JSON.stringify(EnvironmentVariable.appVersion),
-        'process.env.PUBLIC_PATH': JSON.stringify(EnvironmentVariable.publicPath),
-      }),
+      new webpack.DefinePlugin(PROCESS_VARIABLES)
   );
 
   //#region TS
@@ -113,8 +117,8 @@ module.exports = ({ mode } = { mode: 'production' }) => {
   plugins.push(new ExtractCssChunks({
     // Options similar to the same options in webpackOptions.output
     // all options are optional
-    // filename: JSON.stringify(EnvironmentVariable.isDev ? '[name].css' : 'css/[name].[hash].css'),
-    // chunkFilename: JSON.stringify(EnvironmentVariable.isDev ? '[id].css' : 'css/[id].[hash].css'),
+    filename: EnvironmentVariable.isDev ? '[name].css' : 'css/[name].[hash].css',
+    chunkFilename: EnvironmentVariable.isDev ? '[id].css' : 'css/[id].[hash].css',
     ignoreOrder: true, // Enable to remove warnings about conflicting order
   }));
 

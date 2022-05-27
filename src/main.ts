@@ -2,7 +2,7 @@ import { App, createApp } from 'vue';
 import appServices from '@/constructors';
 import { IInstantiationService } from '@/platform/instantiation/common/instantiation';
 import { ILogService, now } from '@/platform/log/common/log';
-import { ICreateComponentFactory } from '@/base/platform';
+import { APP_VERSION, ICreateComponentFactory } from '@/base/platform';
 import { ServiceCollection } from '@/platform/instantiation/browser/collection';
 import { getSingletonServiceDescriptors } from '@/platform/instantiation/browser/singleton';
 import { IRequestService } from '@/platform/request/common/requestService';
@@ -13,6 +13,8 @@ import { RouteName } from '@/code/vue/common/route-names';
 import { timestamp } from '@/base/string';
 
 import '@/views/styles/marky.css';
+
+console.log(`markybox v${APP_VERSION}`)
 
 class Application {
   public init(services: ServiceCollection): void {
