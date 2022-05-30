@@ -21,9 +21,17 @@ import { MPartitionLayer } from '@/core/renderer/html/layers/MPartionLayer';
 import { MEditorAutoSave } from '@/core/objects/MEditorAutoSave';
 import { ILogger } from '@/core/app/common';
 import { MHTMLEditorNavigators } from '@/core/renderer/html/editor/MHTMLEditorNavigators';
+import { SecurityError } from '@/core/app/errors';
+
+interface IMHTMLRendererConstructorOptions {
+  readonly root: HTMLElement;
+  readonly lang: EditorLang;
+  readonly author: string;
+}
 
 export class MHTMLRenderer extends MObject implements IAbstractRenderer {
   public logger?: ILogger;
+  public readonly root: HTMLElement;
 
   public readonly display: HTMLDisplayRenderer;
   public readonly gutter: MHTMLEditorGutter;
@@ -42,20 +50,20 @@ export class MHTMLRenderer extends MObject implements IAbstractRenderer {
   private readonly clipboard: MHTMLClipboard;
   private readonly partitionLayer: MPartitionLayer;
 
-  constructor(
-    public readonly root: HTMLElement,
-    format: EditorLang = 'plain',
-    author: string = 'user') {
+  constructor(options: IMHTMLRendererConstructorOptions) {
     super();
 
     if (!window.isSecureContext) {
-      console.warn(`markybox works only in security context. Please, enable HTTPS`);
+      throw new SecurityError(`markybox works only in security context. Please, enable HTTPS`);
     }
+
+    const { root, lang, author } = options;
+    this.root = root;
 
     this.storage = new MHTMLStorage();
     this.display = new HTMLDisplayRenderer(this);
     this.gutter = new MHTMLEditorGutter(this);
-    this.body = new MHTMLEditorBody(this, format);
+    this.body = new MHTMLEditorBody(this, lang);
     this.selection = new MHTMLEditorSelection(this);
     this.navigator = new MHTMLEditorBodyNavigator(this, author);
     this.clipboard = new MHTMLClipboard();
@@ -147,7 +155,7 @@ export class MHTMLRenderer extends MObject implements IAbstractRenderer {
     this.currentState.setContext(this);
   }
 
-  public init(logger: ILogger): void {
+  public init(logger?: ILogger): void {
     this.logger = logger;
 
     this.unlock();
@@ -158,14 +166,14 @@ export class MHTMLRenderer extends MObject implements IAbstractRenderer {
     this.registerListeners();
   }
 
+  public clear(): void {
+    this.controller.clear();
+  }
+
   public getText(): string {
     const { rows } = this.storage;
 
     return rows.map((row) => row.toString()).join('\n');
-  }
-
-  public clear(): void {
-    this.controller.clear();
   }
 
   public setText(text?: string): void {

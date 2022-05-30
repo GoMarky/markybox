@@ -6,8 +6,10 @@ import { unref } from 'vue';
 import { CriticalError } from '@/base/errors';
 import { Note } from '@/code/notes/common/notes';
 import { BASE_URL } from '@/code/request/api';
+import { isDev } from '@/base/platform';
 
-const SOCKET_URL = `wss://${BASE_URL}/v1/subscribe/`;
+const WS_PROTOCOL = isDev ? 'ws' : 'wss';
+const SOCKET_URL = `${WS_PROTOCOL}://${BASE_URL}/v1/subscribe/`;
 
 export class SocketService extends Disposable implements ISocketService {
   private ws?: WebSocket;
@@ -24,9 +26,9 @@ export class SocketService extends Disposable implements ISocketService {
   }
 
   public createOrEnterRoom(noteId: Note.NoteId): void {
-    const { email } = this.sessionService.profile;
+    const { email, isAuth } = this.sessionService.profile;
 
-    const user_name = email.value ? email.value : 'anonymous';
+    const user_name = isAuth.value ? email.value : 'anonymous';
 
     const basePayload: IBaseSocketMessagePayload = {
       type: SocketCommandType.EnterRoom,

@@ -19,7 +19,7 @@ export class CodePageEditor {
   }
 
   private createFakeUsers(): void {
-    new DemoUserInteraction(this.renderer, typeWordActions,'user-2', 15);
+    new DemoUserInteraction(this.renderer, typeWordActions, 'user-2', 15);
   }
 
   public init(route: Ref<RouteLocationNormalizedLoaded>, note?: INoteInfo): void {
@@ -33,7 +33,7 @@ export class CodePageEditor {
     }
 
     const root = document.querySelector<HTMLElement>('#root') as HTMLElement;
-    const renderer = this.renderer = window.$renderer = new markybox.MHTMLRenderer(root, 'js', name);
+    const renderer = this.renderer = window.$renderer = new markybox.MHTMLRenderer({ lang: 'js', author: name, root });
 
     const editor = this.editor = window.$editor = new markybox.MEditor({
       renderer,
@@ -48,9 +48,5 @@ export class CodePageEditor {
     })
 
     editor.setText(initialText)
-
-    if (isDev) {
-      // this.createFakeUsers();
-    }
   }
 }

@@ -31,6 +31,18 @@ export class MHTMLEditorBody extends MHTMLGlyphDOM<HTMLDivElement> {
     this.init(format);
   }
 
+  public getCurrentLanguage(): string {
+    return this._formatter.toString();
+  }
+
+  public getAvailableLanguages(): EditorLang[] {
+    return [
+      'plain',
+      'python',
+      'cpp',
+    ]
+  }
+
   public get formatter(): BaseFormatter {
     return this._formatter;
   }

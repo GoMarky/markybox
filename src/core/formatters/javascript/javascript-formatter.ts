@@ -6,7 +6,7 @@ export type StatementClassName =
   | 'm-editor__keyword-identifier-name';
 
 export const Regexp = {
-  VariableStatement: /^(this|void|undefined|string|number|object|super|return|new|default|const|let|var|class|function|export|import|interface|type|public|private|static|protected|extends|implements|switch|case|break|continue$)/,
+  VariableStatement: /^(throw|as|this|void|undefined|string|number|object|super|return|new|default|const|let|var|class|function|export|import|interface|type|public|private|static|protected|extends|implements|switch|case|break|continue$)/,
 };
 
 export class JavascriptCodeFormatter extends BaseFormatter {

@@ -16,4 +16,8 @@ export abstract class BaseFormatter extends MObject {
   }
 
   public abstract parseKeyword(input: string): CodeStatement | undefined;
+
+  public toString(): string {
+    return this._name;
+  }
 }

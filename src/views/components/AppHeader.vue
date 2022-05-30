@@ -11,13 +11,22 @@
     <nav class="page-header__navigation">
       <ul class="page-header__nav-list">
         <li class="page-header__nav-item">
-          <button v-if="hasActiveNote" type="button" @click.prevent="copyNoteLink()"
+          <UISelect
+            label="Lang"
+            :value="currentEditorLang"
+            @update:value="currentEditorLang = $event"
+            v-model="currentEditorLang"
+            :options="editorLanguages"
+          ></UISelect>
+        </li>
+        <li class="page-header__nav-item">
+          <button type="button" @click.prevent="copyNoteLink()"
                   class="btn btn_primary page-header__nav-link">
             Share link
           </button>
         </li>
         <li class="page-header__nav-item">
-          <button v-if="hasActiveNote" type="button" @click.prevent="clearNote()"
+          <button type="button" @click.prevent="clearNote()"
                   class="btn btn_primary page-header__nav-link">
             Clear
           </button>
@@ -45,14 +54,15 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent } from 'vue';
+import { defineComponent, nextTick, onMounted, ref } from 'vue';
 import { ISessionService } from '@/code/session/common/session';
 import { Component } from '@/code/vue/common/component-names';
 import { ILayoutService } from '@/platform/layout/common/layout';
 import { INoteService } from '@/code/notes/common/notes';
 import { useRouter } from 'vue-router';
-import { AppRoute } from '@/views/router/router';
 import { Mime } from '@/base/string';
+import UISelect from '@/views/components/ui/UISelect.vue';
+import * as markybox from '@/core';
 
 export default window.workbench.createComponent((accessor) => {
   const sessionService = accessor.get(ISessionService);
@@ -61,11 +71,22 @@ export default window.workbench.createComponent((accessor) => {
 
   return defineComponent({
     name: Component.AppHeader,
+    components: {
+      UISelect,
+    },
     setup() {
       const { name, isAuth } = sessionService.profile;
-      const router = useRouter();
+      const currentEditorLang = ref('plain');
 
-      const hasActiveNote = computed(() => Reflect.has(router.currentRoute.value.params, 'id'))
+      const editorLanguages: markybox.EditorLang[] = [
+        'plain',
+        'cpp',
+        'python',
+        'js',
+        'json'
+      ];
+
+      const router = useRouter();
 
       function openUserProfileModal(): void {
         layoutService.modal.open('UserProfileModal');
@@ -99,7 +120,16 @@ export default window.workbench.createComponent((accessor) => {
         })
       }
 
-      return { hasActiveNote, isAuth, name, openUserProfileModal, openLoginModal, clearNote, copyNoteLink }
+      return {
+        currentEditorLang,
+        editorLanguages,
+        isAuth,
+        name,
+        openUserProfileModal,
+        openLoginModal,
+        clearNote,
+        copyNoteLink
+      }
     },
   })
 });
