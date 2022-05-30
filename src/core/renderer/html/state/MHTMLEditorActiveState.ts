@@ -2,8 +2,6 @@ import { Char } from '@/base/char';
 import { MHTMLEditorState } from '@/core/renderer/html/state/MHTMLEditorState';
 import { MChar } from '@/core/renderer/html/editor/MHTMLEditorBodyTextarea';
 import { IPosition } from '@/core/app/common';
-import { BASE_INDENT_VALUE } from '@/core/renderer/html/common/helpers';
-import { copyStringNumberOfTimes } from '@/base/string';
 
 export class MHTMLEditorActiveState extends MHTMLEditorState {
   public onSelectionStart(event: MouseEvent): void {
@@ -123,159 +121,16 @@ export class MHTMLEditorActiveState extends MHTMLEditorState {
   }
 
   private enter(): void {
+    const { applicator } = this.renderer.body.formatter;
     const { navigator, controller } = this.renderer;
-    const { currentRow } = controller;
-    const { position } = navigator;
-    const isCurrentRowEmpty = currentRow.empty();
 
-    const isChosenLastLetter = position.column >= currentRow.columnsCount;
-
-    /**
-     * Если текущая строка пустая - просто добавляем еще пустую строку
-     */
-    if (isCurrentRowEmpty) {
-      return this.addEmptyRowAtPosition(currentRow.index);
-    }
-
-    /**
-     * Если текущий символ - последний
-     */
-    if (isChosenLastLetter) {
-      // Если текущий символ - это lparen -> { / [ / (
-      if (currentRow.isLastCharOpenBracket()) {
-        return this.addRowAtPositionWithIndent(currentRow.index);
-      } else {
-        // Если текущий символ последний иной - то добавляем пустую строку.
-        return this.addEmptyRowAtPosition(currentRow.index);
-      }
-    }
-
-    return this.splitCurrentRow();
+    return applicator.enter(navigator, controller);
   }
 
   private backspace(): void {
-    const { navigator, controller } = this.renderer;
-    const { currentRow } = controller;
-
-    /**
-     * Если текущая строка пустая - удаляем ее.
-     */
-    if (currentRow.empty()) {
-      return this.removeCurrentEmptyRow();
-    }
-
-    /**
-     * Если текущая строка содержит только пробелы, то не удаляем ее - а просто очищаем от пробелов
-     */
-    if (currentRow.containsOnlyWhitespaces()) {
-      navigator.setPosition({ row: currentRow.index, column: 0 })
-      return currentRow.erase();
-    }
-
-    const { position: { column } } = navigator;
-
-    /**
-     * Если мы находимся в начале строки и
-     * предыдущая строчка пустая -> то удаляем предыдущую строчку.
-     */
-    if (column === 0 && controller.prevRow?.empty()) {
-      controller.removeRow(controller.prevRow);
-      navigator.setPosition({ row: currentRow.index, column })
-      return;
-    }
-
-    /**
-     * Если мы находимся в начале строки и
-     * предыдущая строчка НЕ пустая, то склеиваем текущую
-     * с предыдущей.
-     * Текущую удаляем
-     */
-    if (column === 0 && controller.prevRow && !controller.prevRow?.empty()) {
-      const currentRowText = controller.currentRow.text;
-
-      const prevRow = controller.prevRow;
-      prevRow.append(currentRowText);
-      controller.removeRow(controller.currentRow);
-      navigator.setPosition({ row: prevRow.index, column: prevRow.columnsCount - currentRowText.length })
-      return;
-    }
-
-    return this.removeLetterByPosition(column);
-  }
-
-  private addRowAtPositionWithIndent(index: number): void {
+    const { applicator } = this.renderer.body.formatter;
     const { navigator, controller } = this.renderer;
 
-    // Индекс строчки с пробелами
-    const indentRowIndex = index + 1;
-    // Индекс строчки с правой скобкой
-    const rightParenRowIndex = indentRowIndex + 1;
-    // Строчка с пробелами, добавляем ее в редактор
-    const indentRow = controller.addRowAt(indentRowIndex);
-
-    // Считаем количество отступов (учитываем соседние скобки до этого)
-    const amountLeftParen = controller.getLeftParenAmountFromStartByIndex(indentRowIndex);
-    const amountRightParen = controller.getRightParenAmountFromStartByIndex(indentRowIndex);
-    // Выставляем нужно количество пробелов в зависимости от количества левых скобок
-    const indentWhitespace = copyStringNumberOfTimes(BASE_INDENT_VALUE, amountLeftParen);
-    indentRow.setText(indentWhitespace);
-
-    const existRightParenWindow = controller.findClosestRightParenRowDown(indentRowIndex);
-
-    if (existRightParenWindow) {
-      const rightParenRow = controller.addRowAt(rightParenRowIndex);
-      rightParenRow.setText(copyStringNumberOfTimes(BASE_INDENT_VALUE, amountLeftParen - 1) + '}');
-    } else {
-      const rightParenRow = controller.addRowAt(rightParenRowIndex);
-      rightParenRow.setText('}');
-    }
-
-    navigator.setPosition({ row: indentRowIndex, column: indentWhitespace.length });
-  }
-
-  private addEmptyRowAtPosition(index: number): void {
-    const { navigator, controller } = this.renderer;
-
-    const newIndex = index + 1;
-    controller.addRowAt(newIndex);
-    navigator.nextRow();
-  }
-
-  private splitCurrentRow(): void {
-    const { navigator, controller } = this.renderer;
-    const { currentRow } = controller;
-    const { position: { column } } = navigator;
-
-    controller.splitCurrentRow(column);
-    return navigator.setPosition({ row: currentRow.index, column: 0 })
-  }
-
-  private removeLetterByPosition(column: number): void {
-    const { navigator, controller } = this.renderer;
-    const { currentRow } = controller
-
-    if (column === 0) {
-      return;
-    }
-
-    navigator.prevColumn();
-    currentRow.clearLetterByPosition(column);
-  }
-
-  private removeCurrentEmptyRow(): void {
-    const { controller, storage, navigator } = this.renderer;
-    const { currentRow } = controller;
-    const { index } = currentRow;
-
-    storage.removeRow(currentRow);
-    const prevRow = controller.prevRow;
-
-    let column = 0;
-
-    if (prevRow) {
-      column = prevRow.columnsCount;
-    }
-
-    navigator.setPosition({ row: index - 1, column })
+    return applicator.backspace(navigator, controller);
   }
 }
