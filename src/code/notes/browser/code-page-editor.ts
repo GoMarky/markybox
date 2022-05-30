@@ -41,7 +41,7 @@ export class CodePageEditor {
       logger: this.logService,
     });
 
-    renderer.editorAutoSave.onDidSave((text: string) => {
+    renderer.controller.editorAutoSave.onDidSave((text: string) => {
       const noteId = route.value.params.id as string;
 
       void this.noteService.updateNote(noteId, text);

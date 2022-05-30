@@ -134,6 +134,18 @@ export function isParen(char?: string): boolean {
   return isOpenBrace(char) || isCloseBrace(char) || isOpenBracket(char) || isCloseBracket(char) || isOpenParenthesis(char) || isCloseParenthesis(char);
 }
 
+export function isDot(char?: string): boolean {
+  if (!char) {
+    return false;
+  }
+
+  return char === '.';
+}
+
+export function containsDot(text: string): boolean {
+  return text.includes('.');
+}
+
 export function containsParen(text: string): boolean {
   for (let i = 0; i < text.length; i++) {
     if (isParen(text.charAt(i))) {

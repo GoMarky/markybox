@@ -3,13 +3,18 @@ import { MHTMLRenderer } from '@/core';
 import { MHTMLGlyphRow } from '@/core/renderer/html/common/MHTMLGlyphRow';
 import { splitAtIndex } from '@/core/app/common';
 import * as dom from '@/base/dom';
-import { _endl, BASE_INDENT_VALUE } from '@/core/renderer/html/common/helpers';
+import { BASE_INDENT_VALUE } from '@/core/renderer/html/common/helpers';
+import { MEditorAutoSave } from '@/core/objects/MEditorAutoSave';
 
 export class MHTMLEditorController extends MObject {
+  public readonly editorAutoSave: MEditorAutoSave
+
   private _currentRow: MHTMLGlyphRow;
 
   constructor(private readonly renderer: MHTMLRenderer) {
     super();
+
+    this.editorAutoSave = new MEditorAutoSave(this.renderer)
   }
 
   public get currentRow(): MHTMLGlyphRow {
@@ -59,7 +64,9 @@ export class MHTMLEditorController extends MObject {
   }
 
   public addRowAt(index: number): MHTMLGlyphRow {
-    const { storage, textLayer } = this.renderer;
+    const { storage } = this.renderer;
+    const { textLayer } = this.renderer.display;
+
     const row = new MHTMLGlyphRow(this.renderer, index);
     storage.addRowAt(row, index);
     dom.insertChildAtIndex(textLayer.el, row.el, index);
@@ -69,7 +76,9 @@ export class MHTMLEditorController extends MObject {
 
   public addRow(text: string): MHTMLGlyphRow {
     const { renderer } = this;
-    const { storage, textLayer } = renderer;
+    const { storage } = renderer;
+    const { textLayer } = this.renderer.display;
+
     const row = new MHTMLGlyphRow(renderer, storage.count);
     row.setText(text);
     storage.addRow(row);
@@ -81,11 +90,12 @@ export class MHTMLEditorController extends MObject {
 
   public addEmptyRow(): MHTMLGlyphRow {
     const { renderer } = this;
-    const { storage } = renderer;
+    const { storage, display } = renderer;
+
     const row = new MHTMLGlyphRow(renderer, storage.count);
     this._currentRow = row;
     storage.addRow(row);
-    renderer.textLayer.el.appendChild(row.el);
+    display.textLayer.el.appendChild(row.el);
 
     return row;
   }

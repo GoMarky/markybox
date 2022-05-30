@@ -5,16 +5,36 @@ import { IPosition } from '@/core/app/common';
 import { IDOMPosition } from '@/core/renderer/html/common/helpers';
 import { IRendererDisplay } from '@/core/app/renderer';
 import { debounce } from '@/base/async';
+import { MHTMLEditorGutter } from '@/core/renderer/html/editor/MHTMLEditorGutter';
+import { MTextLayer } from '@/core/renderer/html/layers/MTextLayer';
+import { MMarkerLayer } from '@/core/renderer/html/layers/MMarkerLayer';
+import { MPartitionLayer } from '@/core/renderer/html/layers/MPartionLayer';
+import { MHTMLStorage } from '@/core/renderer/html/system/MHTMLStorage';
+import { MHTMLEditorBodyNavigator } from '@/core/renderer/html/editor/MHTMLEditorBodyNavigator';
 
-// TODO: do not use clientX
 const EDITOR_OFFSET_POSITION: IDOMPosition = {
   top: 52,
   left: 42,
 }
 
-export class HTMLDisplayRenderer extends MObject implements IRendererDisplay {
-  constructor(private readonly renderer: MHTMLRenderer) {
+export class MHTMLDisplayRenderer extends MObject implements IRendererDisplay {
+  public readonly gutter: MHTMLEditorGutter;
+  public readonly textLayer: MTextLayer;
+  public readonly markerLayer: MMarkerLayer;
+  private readonly partitionLayer: MPartitionLayer;
+
+  constructor(
+    private readonly root: HTMLElement,
+    private readonly body: HTMLElement,
+    private readonly storage: MHTMLStorage,
+    private readonly navigator: MHTMLEditorBodyNavigator,
+  ) {
     super();
+
+    this.gutter = new MHTMLEditorGutter(root);
+    this.textLayer = new MTextLayer(body);
+    this.markerLayer = new MMarkerLayer(body, navigator, this);
+    this.partitionLayer = new MPartitionLayer(body);
 
     this.registerListeners();
   }
@@ -42,14 +62,14 @@ export class HTMLDisplayRenderer extends MObject implements IRendererDisplay {
 
   public setFullScreen(): void {
     const { innerWidth, innerHeight } = window;
-    const { root } = this.renderer;
+    const { root } = this;
 
     root.style.width = toPixel(innerWidth);
     root.style.height = toPixel(innerHeight);
   }
 
   private registerListeners(): void {
-    const { storage, root } = this.renderer;
+    const { storage, root } = this;
 
     const debounced = debounce(() => {
       const { count } = storage;

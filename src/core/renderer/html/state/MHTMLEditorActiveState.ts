@@ -6,10 +6,6 @@ import { BASE_INDENT_VALUE } from '@/core/renderer/html/common/helpers';
 import { copyStringNumberOfTimes } from '@/base/string';
 
 export class MHTMLEditorActiveState extends MHTMLEditorState {
-  constructor() {
-    super();
-  }
-
   public onSelectionStart(event: MouseEvent): void {
     const isLeftClick = event.button === 0;
 
@@ -55,14 +51,14 @@ export class MHTMLEditorActiveState extends MHTMLEditorState {
   }
 
   public onInput(char: MChar): void {
-    const { controller, navigator, editorAutoSave } = this.renderer;
+    const { controller, navigator } = this.renderer;
     const { position: { column, row } } = navigator;
     const { currentRow } = controller;
 
     currentRow.inputAt(char, column);
     navigator.setPosition({ row, column: column + 1 });
 
-    editorAutoSave.save();
+    controller.editorAutoSave.save();
   }
 
   public onClick(event: MouseEvent): void {
@@ -123,7 +119,7 @@ export class MHTMLEditorActiveState extends MHTMLEditorState {
       }
     }
 
-    return this.renderer.editorAutoSave.save();
+    return controller.editorAutoSave.save();
   }
 
   private enter(): void {

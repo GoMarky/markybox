@@ -1,7 +1,6 @@
 import { MHTMLGlyphWord } from '@/core/renderer/html/common/MHTMLGlyphWord';
 import { MChar } from '@/core/renderer/html/editor/MHTMLEditorBodyTextarea';
 import * as string from '@/base/string';
-import { containsParen, isParen } from '@/base/string';
 import * as dom from '@/base/dom';
 import { MHTMLGlyphTextNode } from '@/core/renderer/html/common/MHTMLGlyphTextNode';
 import { MHTMLGlyphDOM } from '@/core/renderer/html/common/MHTMLGlyphDOM';
@@ -36,7 +35,7 @@ export class MHTMLGlyphRow extends MHTMLGlyphDOM<HTMLDivElement> {
     rowElement.classList.add('m-editor__row');
     this.gutterElement = new MHTMLGlyphRowGutter(renderer, index);
 
-    dom.insertChildAtIndex(this.renderer.gutter.el, this.gutterElement.el, index);
+    dom.insertChildAtIndex(this.renderer.display.gutter.el, this.gutterElement.el, index);
 
     this._el = rowElement;
   }
@@ -54,12 +53,9 @@ export class MHTMLGlyphRow extends MHTMLGlyphDOM<HTMLDivElement> {
         throw new CriticalError(`MHTMLGlyphRow.parseWord - expected currentChar to be defined.`);
       }
 
-      if (isParen(currentChar)) {
+      if (string.isParen(currentChar) || string.isDot(currentChar)) {
         if (tempString.length) {
-          result.push({
-            type: 'text',
-            data: tempString,
-          })
+          result.push({ type: 'text', data: tempString });
           tempString = '';
         }
 
@@ -98,11 +94,11 @@ export class MHTMLGlyphRow extends MHTMLGlyphDOM<HTMLDivElement> {
         case isWhitespace:
           type = 'whitespace';
           break;
-        case isParen(word):
+        case string.isParen(word):
           type = 'paren'
           break;
         default: {
-          if (containsParen(word)) {
+          if (string.containsParen(word) || string.containsDot(word)) {
             result.push(...MHTMLGlyphRow.parseWord(word));
             continue;
           }

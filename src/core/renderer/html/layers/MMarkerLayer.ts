@@ -1,11 +1,15 @@
 import { MLayer } from '@/core/renderer/html/layers/MLayer';
-import { MHTMLRenderer } from '@/core';
 import { toPixel } from '@/base/dom';
+import { MHTMLEditorBodyNavigator } from '@/core/renderer/html/editor/MHTMLEditorBodyNavigator';
+import { MHTMLDisplayRenderer } from '@/core/renderer/html/system/MHTMLDisplayRenderer';
 
 export class MMarkerLayer extends MLayer {
   private _line: HTMLDivElement;
 
-  constructor(private readonly renderer: MHTMLRenderer) {
+  constructor(
+    private readonly body: HTMLElement,
+    private readonly navigator: MHTMLEditorBodyNavigator,
+    private readonly display: MHTMLDisplayRenderer) {
     super();
 
     this.init();
@@ -21,14 +25,13 @@ export class MMarkerLayer extends MLayer {
   }
 
   private init(): void {
-    const { renderer } = this;
-    const { navigator, display } = renderer;
+    const { navigator, display, body } = this;
 
     const layerElement = document.createElement('div');
     layerElement.classList.add('m-editor__layer');
     layerElement.classList.add('m-editor__layer-marker')
     this._el = layerElement;
-    renderer.body.el.appendChild(layerElement);
+    body.appendChild(layerElement);
 
     this.createActiveLine();
 

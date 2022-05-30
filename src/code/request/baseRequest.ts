@@ -22,10 +22,6 @@ export interface ISuccessResultWrapper {
 }
 
 export class BaseTransformer extends Disposable {
-  constructor() {
-    super();
-  }
-
   public static createNullInstance(): BaseTransformer {
     return new BaseTransformer();
   }

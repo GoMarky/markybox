@@ -7,9 +7,6 @@ import { MHTMLGlyphDOM } from '@/core/renderer/html/common/MHTMLGlyphDOM';
 import { ISelectionPosition } from '@/core/renderer/html/editor/MHTMLEditorSelection';
 
 export class MSelectionRowLayer extends MHTMLGlyphDOM {
-  constructor() {
-    super();
-  }
 }
 
 export class MSelectionLayer extends MLayer {

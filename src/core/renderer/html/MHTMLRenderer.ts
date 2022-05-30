@@ -1,13 +1,10 @@
 import windowShortcut from '@gomarky/window-shortcut';
 import { MObject } from '@/core/objects/MObject';
-import { MTextLayer } from '@/core/renderer/html/layers/MTextLayer';
 import { MHTMLEditorBodyNavigator } from '@/core/renderer/html/editor/MHTMLEditorBodyNavigator';
-import { HTMLDisplayRenderer } from '@/core/renderer/html/system/MHTMLDisplayRenderer';
-import { MHTMLEditorGutter } from '@/core/renderer/html/editor/MHTMLEditorGutter';
+import { MHTMLDisplayRenderer } from '@/core/renderer/html/system/MHTMLDisplayRenderer';
 import { EditorLang, MHTMLEditorBody } from '@/core/renderer/html/editor/MHTMLEditorBody';
 import { MHTMLClipboard } from '@/core/renderer/html/system/MHTMLClipboard';
 import { MHTMLEditorSelection } from '@/core/renderer/html/editor/MHTMLEditorSelection';
-import { MMarkerLayer } from '@/core/renderer/html/layers/MMarkerLayer';
 import { MHTMLStorage } from '@/core/renderer/html/system/MHTMLStorage';
 import { MHTMLEditorActiveState } from '@/core/renderer/html/state/MHTMLEditorActiveState';
 import { MHTMLEditorState } from '@/core/renderer/html/state/MHTMLEditorState';
@@ -17,8 +14,6 @@ import { MHTMLEditorController } from '@/core/renderer/html/editor/MHTMLEditorCo
 import { IAbstractRenderer } from '@/core/app/renderer';
 import { MHTMLTextHintVisitor } from '@/core/renderer/html/visitors/MHTMLTextHintVisitor';
 import { MHTMLHighlightKeywordVisitor } from '@/core/renderer/html/visitors/MHTMLHighlightKeywordVisitor';
-import { MPartitionLayer } from '@/core/renderer/html/layers/MPartionLayer';
-import { MEditorAutoSave } from '@/core/objects/MEditorAutoSave';
 import { ILogger } from '@/core/app/common';
 import { MHTMLEditorNavigators } from '@/core/renderer/html/editor/MHTMLEditorNavigators';
 import { SecurityError } from '@/core/app/errors';
@@ -33,22 +28,17 @@ export class MHTMLRenderer extends MObject implements IAbstractRenderer {
   public logger?: ILogger;
   public readonly root: HTMLElement;
 
-  public readonly display: HTMLDisplayRenderer;
-  public readonly gutter: MHTMLEditorGutter;
+  public readonly display: MHTMLDisplayRenderer;
   public readonly body: MHTMLEditorBody;
-  public readonly textLayer: MTextLayer;
-  public readonly markerLayer: MMarkerLayer;
   public readonly navigator: MHTMLEditorBodyNavigator;
   public readonly selection: MHTMLEditorSelection;
   public readonly storage: MHTMLStorage;
   public readonly controller: MHTMLEditorController;
-  public readonly editorAutoSave: MEditorAutoSave
   public readonly navigatorManager: MHTMLEditorNavigators;
 
   public currentState: MHTMLEditorState;
 
   private readonly clipboard: MHTMLClipboard;
-  private readonly partitionLayer: MPartitionLayer;
 
   constructor(options: IMHTMLRendererConstructorOptions) {
     super();
@@ -60,18 +50,14 @@ export class MHTMLRenderer extends MObject implements IAbstractRenderer {
     const { root, lang, author } = options;
     this.root = root;
 
-    this.storage = new MHTMLStorage();
-    this.display = new HTMLDisplayRenderer(this);
-    this.gutter = new MHTMLEditorGutter(this);
-    this.body = new MHTMLEditorBody(this, lang);
+    const storage = this.storage = new MHTMLStorage();
+    const body = this.body = new MHTMLEditorBody(this, lang);
+    const navigator = this.navigator = new MHTMLEditorBodyNavigator(this, author);
+
     this.selection = new MHTMLEditorSelection(this);
-    this.navigator = new MHTMLEditorBodyNavigator(this, author);
+    this.display = new MHTMLDisplayRenderer(root, body.el, storage, navigator);
     this.clipboard = new MHTMLClipboard();
-    this.textLayer = new MTextLayer(this);
-    this.markerLayer = new MMarkerLayer(this);
-    this.partitionLayer = new MPartitionLayer(this);
     this.controller = new MHTMLEditorController(this);
-    this.editorAutoSave = new MEditorAutoSave(this);
     this.navigatorManager = new MHTMLEditorNavigators(this);
   }
 
