@@ -34,6 +34,8 @@ class JavascriptKeyApplicator extends AbstractKeyApplicator implements IAbstract
 
     const existRightParenWindow = controller.findClosestRightParenRowDown(indentRowIndex);
 
+    console.log(existRightParenWindow);
+
     if (existRightParenWindow) {
       const rightParenRow = controller.addRowAt(rightParenRowIndex);
       rightParenRow.setText(copyStringNumberOfTimes(BASE_INDENT_VALUE, amountLeftParen - 1) + '}');
@@ -65,7 +67,7 @@ class JavascriptKeyApplicator extends AbstractKeyApplicator implements IAbstract
      */
     if (isChosenLastLetter) {
       // Если текущий символ - это lparen -> { / [ / (
-      if (currentRow.lastCharIs(ParenType.OpenBracket)) {
+      if (currentRow.lastCharIs(ParenType.OpenBrace) || currentRow.lastCharIs(ParenType.OpenBracket)) {
         return this.addRowAtPositionWithIndent(currentRow.index);
       } else {
         // Если текущий символ последний иной - то добавляем пустую строку.

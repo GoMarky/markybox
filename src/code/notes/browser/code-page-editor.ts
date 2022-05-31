@@ -28,7 +28,7 @@ export class CodePageEditor {
 
     const name = userName.value || 'anonymous';
 
-    this.noteService.store.currentNote.value = note;
+    this.noteService.store.currentNote.value = note || null;
 
     if (note) {
       initialText = note.data;

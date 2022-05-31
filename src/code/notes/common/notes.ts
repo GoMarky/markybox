@@ -1,6 +1,6 @@
 import * as markybox from '@/core';
 import { createDecorator } from '@/platform/instantiation/common/instantiation';
-import { UserNoteStore } from '@/code/notes/browser/note-service';
+import { UserNotesStore } from '@/code/notes/browser/note-service';
 
 export namespace Note {
   export type NoteId = string;

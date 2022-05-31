@@ -7,6 +7,7 @@ import { PlainFormatter } from '@/core/formatters/plain/plain-formatter';
 import { JavascriptCodeFormatter } from '@/core/formatters/javascript/javascript-formatter';
 import { JSONCodeFormatter } from '@/core/formatters/json/json-formatter';
 import { PythonCodeFormatter } from '@/core/formatters/python/python-formatter';
+import { CPPCodeFormatter } from '@/core/formatters/cpp/cpp-formatter';
 
 export type EditorLang = 'cpp' | 'python' | 'js' | 'json' | 'plain';
 
@@ -40,6 +41,8 @@ export class MHTMLEditorBody extends MHTMLGlyphDOM<HTMLDivElement> {
       'plain',
       'python',
       'cpp',
+      'json',
+      'js'
     ]
   }
 
@@ -49,22 +52,21 @@ export class MHTMLEditorBody extends MHTMLGlyphDOM<HTMLDivElement> {
 
   public setFormat(type: EditorLang): void {
     switch (type) {
-      case 'plain': {
+      case 'cpp':
+        this._formatter = new CPPCodeFormatter();
+        break;
+      case 'plain':
         this._formatter = new PlainFormatter();
         break;
-      }
-      case 'js': {
+      case 'js':
         this._formatter = new JavascriptCodeFormatter();
         break;
-      }
-      case 'json': {
+      case 'json':
         this._formatter = new JSONCodeFormatter();
         break;
-      }
-      case 'python': {
+      case 'python':
         this._formatter = new PythonCodeFormatter();
         break;
-      }
     }
   }
 

@@ -53,7 +53,8 @@ export class MHTMLGlyphRow extends MHTMLGlyphDOM<HTMLDivElement> {
         throw new CriticalError(`MHTMLGlyphRow.parseWord - expected currentChar to be defined.`);
       }
 
-      if (string.isParen(currentChar) || string.isDot(currentChar) || string.isColon(currentChar)) {
+      // TODO: make string.isColon only for python
+      if (string.isParen(currentChar) || string.isDot(currentChar) /* || string.isColon(currentChar) */) {
         if (tempString.length) {
           result.push({ type: 'text', data: tempString });
           tempString = '';
@@ -98,7 +99,8 @@ export class MHTMLGlyphRow extends MHTMLGlyphDOM<HTMLDivElement> {
           type = 'paren'
           break;
         default: {
-          if (string.containsParen(word) || string.containsDot(word) || word.includes(':')) {
+          // TODO: Make word.includes('.) only for python
+          if (string.containsParen(word) || string.containsDot(word) /* || word.includes(':') */) {
             result.push(...MHTMLGlyphRow.parseWord(word));
             continue;
           }

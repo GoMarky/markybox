@@ -1,6 +1,6 @@
 import { AbstractKeyApplicator, BaseFormatter, CodeStatement, IAbstractKeyApplicator } from '@/core/formatters/formatter/base-formatter';
 
-class JSONKeyApplicator extends AbstractKeyApplicator implements IAbstractKeyApplicator {
+class CPPKeyApplicator extends AbstractKeyApplicator implements IAbstractKeyApplicator {
   constructor() {
     super();
   }
@@ -14,13 +14,13 @@ class JSONKeyApplicator extends AbstractKeyApplicator implements IAbstractKeyApp
   }
 }
 
-export class JSONCodeFormatter extends BaseFormatter {
+export class CPPCodeFormatter extends BaseFormatter {
   public readonly applicator: IAbstractKeyApplicator;
 
   constructor() {
     super('json');
 
-    this.applicator = new JSONKeyApplicator();
+    this.applicator = new CPPKeyApplicator();
   }
 
   public parseKeyword(_: string): CodeStatement | undefined {

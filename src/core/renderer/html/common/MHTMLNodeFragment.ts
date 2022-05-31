@@ -15,9 +15,14 @@ export class MHTMLNodeFragment extends MHTMLGlyphDOM<DocumentFragment> {
       this._el.appendChild(glyph.el);
 
       if (glyph instanceof MHTMLGlyphParen) {
-        if (glyph.type === ParenType.OpenBrace || glyph.type === ParenType.Colon) {
+        if (glyph.type === ParenType.OpenBrace) {
           this._hasOpenBrace = true;
         }
+
+        // TODO: MAKE ONLY FOR PYTHON
+        // if (glyph.type === ParenType.Colon) {
+        //   this._hasOpenBrace = true;
+        // }
 
         if (glyph.type === ParenType.CloseBrace) {
           this._hasCloseBrace = true;

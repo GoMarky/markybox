@@ -1,5 +1,5 @@
 import { toPixel } from '@/base/dom';
-import { IMRow } from '@/core/objects/MAbstractFactory';
+import { MHTMLGlyphRow } from '@/core/renderer/html/common/MHTMLGlyphRow';
 
 export interface IDOMPosition {
   left: number;
@@ -19,7 +19,7 @@ export function createSelectionRowElement(): HTMLElement {
   return element;
 }
 
-export function mRowToBodyElement(row: IMRow): HTMLElement {
+export function mRowToBodyElement(row: MHTMLGlyphRow): HTMLElement {
   const { index } = row;
 
   const element = document.createElement('span');
