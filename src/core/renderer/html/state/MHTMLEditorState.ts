@@ -28,6 +28,8 @@ export abstract class MHTMLEditorState extends MObject {
     }
 
     this.renderer = renderer;
+    const { navigator, controller } = renderer;
+    this.renderer.body.formatter.setContext(navigator, controller)
   }
 }
 

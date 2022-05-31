@@ -1,31 +1,34 @@
 import { MHTMLGlyphDOM } from '@/core/renderer/html/common/MHTMLGlyphDOM';
 import { MChar } from '@/core/renderer/html/editor/MHTMLEditorBodyTextarea';
-import { isCloseBrace, isCloseBracket, isCloseParenthesis, isOpenBrace, isOpenBracket, isOpenParenthesis } from '@/base/string';
+import * as string from '@/base/string';
 
 export enum ParenType {
-  Unknown ,
+  Unknown,
   OpenBrace,
   CloseBrace,
   OpenBracket,
   CloseBracket,
   OpenParenthesis,
-  CloseParenthesis
+  CloseParenthesis,
+  Colon,
 }
 
 function getParenType(char: MChar): ParenType {
   switch (true) {
-    case isOpenBrace(char):
+    case string.isOpenBrace(char):
       return ParenType.OpenBrace;
-    case isCloseBrace(char):
+    case string.isCloseBrace(char):
       return ParenType.CloseBrace
-    case isOpenBracket(char):
+    case string.isOpenBracket(char):
       return ParenType.OpenBracket;
-    case isCloseBracket(char):
+    case string.isCloseBracket(char):
       return ParenType.CloseBracket
-    case isOpenParenthesis(char):
+    case string.isOpenParenthesis(char):
       return ParenType.OpenParenthesis
-    case isCloseParenthesis(char):
+    case string.isCloseParenthesis(char):
       return ParenType.CloseParenthesis
+    case string.isColon(char):
+      return ParenType.Colon;
     default:
       return ParenType.Unknown
   }

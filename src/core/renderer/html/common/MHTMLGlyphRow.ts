@@ -53,7 +53,7 @@ export class MHTMLGlyphRow extends MHTMLGlyphDOM<HTMLDivElement> {
         throw new CriticalError(`MHTMLGlyphRow.parseWord - expected currentChar to be defined.`);
       }
 
-      if (string.isParen(currentChar) || string.isDot(currentChar)) {
+      if (string.isParen(currentChar) || string.isDot(currentChar) || string.isColon(currentChar)) {
         if (tempString.length) {
           result.push({ type: 'text', data: tempString });
           tempString = '';
@@ -98,7 +98,7 @@ export class MHTMLGlyphRow extends MHTMLGlyphDOM<HTMLDivElement> {
           type = 'paren'
           break;
         default: {
-          if (string.containsParen(word) || string.containsDot(word)) {
+          if (string.containsParen(word) || string.containsDot(word) || word.includes(':')) {
             result.push(...MHTMLGlyphRow.parseWord(word));
             continue;
           }
@@ -160,10 +160,10 @@ export class MHTMLGlyphRow extends MHTMLGlyphDOM<HTMLDivElement> {
     this._el.appendChild(nodeFragment.el);
   }
 
-  public isLastCharOpenBracket(): boolean {
+  public lastCharIs(char: ParenType): boolean {
     const last = getLastElement(this.fragment.children);
 
-    return last instanceof MHTMLGlyphParen && last.type === ParenType.OpenBrace;
+    return last instanceof MHTMLGlyphParen && last.type === char;
   }
 
   public containsOnlyWhitespaces(): boolean {

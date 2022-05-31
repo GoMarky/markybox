@@ -7,10 +7,24 @@ import { INoteDeleteRequestAttributes, INoteDeleteRequestResponse, NoteDeleteReq
 import { ISessionService } from '@/code/session/common/session';
 import { INoteGetAllRequestAttributes, INoteGetAllRequestResponse, NoteGetAllRequest } from '@/code/request/note-get-all/note-get-all';
 import { INoteGetByIdRequestAttributes, INoteGetByIdRequestResponse, NoteGetByIdRequest } from '@/code/request/note-get-by-id/note-get-by-id';
-import { RouteName } from '@/code/vue/common/route-names';
+import { ref, Ref } from 'vue';
+
+export class UserNotesStore extends Disposable {
+  public readonly currentNote: Ref<INoteInfo | null> = ref(null);
+
+  constructor() {
+    super();
+  }
+
+  public dispose(): void {
+    this.currentNote.value = null;
+  }
+}
 
 export class NoteService extends Disposable implements INoteService {
   public createNoteAfterLogin: boolean = false;
+
+  public readonly store: UserNotesStore = new UserNotesStore();
 
   constructor(
     @IRequestService private readonly requestService: IRequestService,
@@ -37,10 +51,10 @@ export class NoteService extends Disposable implements INoteService {
       INoteDeleteRequestResponse>(NoteDeleteRequest.staticId, { noteId })
   }
 
-  public async updateNote(noteId: Note.NoteId, data: Note.NoteId): Promise<void> {
+  public async updateNote(noteId: Note.NoteId, data: Note.NoteId, lang?: Note.NoteLang): Promise<void> {
     await this.requestService.call<INoteUpdateRequestAttributes,
       INoteUpdateRequestResponse,
-      INoteUpdateRequestResponse>(NoteUpdateRequest.staticId, { noteId, data })
+      INoteUpdateRequestResponse>(NoteUpdateRequest.staticId, { noteId, data, lang })
   }
 
   public async getNoteById(noteId: Note.NoteId): Promise<INoteInfo> {

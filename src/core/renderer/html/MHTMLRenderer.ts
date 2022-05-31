@@ -59,6 +59,8 @@ export class MHTMLRenderer extends MObject implements IAbstractRenderer {
     this.clipboard = new MHTMLClipboard();
     this.controller = new MHTMLEditorController(this);
     this.navigatorManager = new MHTMLEditorNavigators(this);
+
+    console.info(`Document start with lang - ${lang}`);
   }
 
   private registerListeners(): void {
@@ -136,7 +138,7 @@ export class MHTMLRenderer extends MObject implements IAbstractRenderer {
     this.currentState.setContext(this);
   }
 
-  public lock(): void {
+  public lock(): void  {
     this.currentState = new MHTMLEditorLockedState();
     this.currentState.setContext(this);
   }

@@ -6,6 +6,7 @@ import { INoteInfo, Note } from '@/code/notes/common/notes';
 export interface INoteUpdateRequestAttributes {
   readonly sessionId?: Session.SessionId;
   readonly noteId: Note.NoteId;
+  readonly lang?: Note.NoteLang;
   readonly data: Note.NoteContent;
 }
 

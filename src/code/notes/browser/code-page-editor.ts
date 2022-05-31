@@ -28,12 +28,18 @@ export class CodePageEditor {
 
     const name = userName.value || 'anonymous';
 
+    this.noteService.store.currentNote.value = note;
+
     if (note) {
       initialText = note.data;
     }
 
     const root = document.querySelector<HTMLElement>('#root') as HTMLElement;
-    const renderer = this.renderer = window.$renderer = new markybox.MHTMLRenderer({ lang: 'js', author: name, root });
+    const renderer = this.renderer = window.$renderer = new markybox.MHTMLRenderer({
+      lang: note?.lang || 'plain',
+      author: name,
+      root
+    });
 
     const editor = this.editor = window.$editor = new markybox.MEditor({
       renderer,

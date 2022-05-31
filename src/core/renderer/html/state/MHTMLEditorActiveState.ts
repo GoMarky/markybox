@@ -4,6 +4,10 @@ import { MChar } from '@/core/renderer/html/editor/MHTMLEditorBodyTextarea';
 import { IPosition } from '@/core/app/common';
 
 export class MHTMLEditorActiveState extends MHTMLEditorState {
+  constructor() {
+    super();
+  }
+
   public onSelectionStart(event: MouseEvent): void {
     const isLeftClick = event.button === 0;
 
@@ -122,15 +126,12 @@ export class MHTMLEditorActiveState extends MHTMLEditorState {
 
   private enter(): void {
     const { applicator } = this.renderer.body.formatter;
-    const { navigator, controller } = this.renderer;
 
-    return applicator.enter(navigator, controller);
+    return applicator.enter();
   }
 
   private backspace(): void {
     const { applicator } = this.renderer.body.formatter;
-    const { navigator, controller } = this.renderer;
-
-    return applicator.backspace(navigator, controller);
+    return applicator.backspace();
   }
 }

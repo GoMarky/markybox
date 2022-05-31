@@ -118,6 +118,14 @@ export function isOpenParenthesis(char: string): boolean {
   return char === '(';
 }
 
+export function isColon(char: string): boolean {
+  if (char.length > 1) {
+    return false;
+  }
+
+  return char === ':';
+}
+
 export function isCloseParenthesis(char: string): boolean {
   if (char.length > 1) {
     return false;

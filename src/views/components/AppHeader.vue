@@ -54,7 +54,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, nextTick, onMounted, ref } from 'vue';
+import { defineComponent, nextTick, onMounted, ref, watch } from 'vue';
 import { ISessionService } from '@/code/session/common/session';
 import { Component } from '@/code/vue/common/component-names';
 import { ILayoutService } from '@/platform/layout/common/layout';
@@ -76,7 +76,7 @@ export default window.workbench.createComponent((accessor) => {
     },
     setup() {
       const { name, isAuth } = sessionService.profile;
-      const currentEditorLang = ref('plain');
+      const currentEditorLang = ref<markybox.EditorLang>('plain');
 
       const editorLanguages: markybox.EditorLang[] = [
         'plain',
@@ -104,6 +104,19 @@ export default window.workbench.createComponent((accessor) => {
           window.$renderer?.clear();
         }
       }
+
+      watch(noteService.store.currentNote, (note) => {
+        currentEditorLang.value = note?.lang;
+      })
+
+      watch(currentEditorLang, async (lang: markybox.EditorLang) => {
+        const noteId = router.currentRoute.value.params.id as string;
+        const text = window.$editor?.getText();
+
+        if (noteId && text) {
+          await noteService.updateNote(noteId, text, lang);
+        }
+      })
 
       async function copyNoteLink(): Promise<void> {
         const link = window.location.href;
