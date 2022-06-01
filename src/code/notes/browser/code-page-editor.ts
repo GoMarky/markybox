@@ -4,9 +4,9 @@ import { INoteInfo, INoteService } from '@/code/notes/common/notes';
 import { Ref } from 'vue';
 import { RouteLocationNormalizedLoaded } from 'vue-router';
 import * as markybox from '@/core';
-import { isDev } from '@/base/platform';
 import { DemoUserInteraction } from '../../../../test/demo/demo-user-interaction';
 import { typeWordActions } from '../../../../test/demo/actions/type-word-actions';
+import { ISocketService, SocketCommandType } from '@/code/socket/common/socket-service';
 
 export class CodePageEditor {
   private editor: markybox.MEditor;
@@ -15,7 +15,9 @@ export class CodePageEditor {
   constructor(
     private readonly logService: ILogService,
     private readonly sessionService: ISessionService,
-    private readonly noteService: INoteService) {
+    private readonly noteService: INoteService,
+    private readonly socketService: ISocketService
+  ) {
   }
 
   private createFakeUsers(): void {
@@ -46,6 +48,45 @@ export class CodePageEditor {
       fullscreen: true,
       logger: this.logService,
     });
+
+    this.socketService.onMessage((event) => {
+      switch (event.type) {
+        case SocketCommandType.LeaveRoom:
+          break;
+        case SocketCommandType.EnterRoom: {
+          const { text, user_name } = event.data;
+
+          this.renderer.navigatorManager.add(user_name);
+
+          break;
+        }
+        case SocketCommandType.EditorAction: {
+          type EditorActionPayload = { position: string, user_name: string };
+          const { position, user_name } = event.data as EditorActionPayload;
+
+          const [row, column] = position.split(',').map((coordinate) => Number(coordinate));
+
+          if (name === user_name) {
+            return;
+          }
+
+          this.renderer.navigatorManager.commandCenter.changePosition(user_name, { row, column });
+
+          return;
+        }
+      }
+    })
+
+    renderer.navigator.onDidUpdatePosition((position) => {
+      const { row, column } = position;
+
+      this.socketService.send({
+        type: SocketCommandType.EditorAction,
+        position: `${row},${column}`,
+        user_name: name,
+        note_nanoid: note?.id
+      })
+    })
 
     renderer.controller.editorAutoSave.onDidSave((text: string) => {
       const noteId = route.value.params.id as string;

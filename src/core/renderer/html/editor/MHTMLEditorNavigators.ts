@@ -31,13 +31,16 @@ class MHTMLEditorNavigatorCommandManager extends MObject {
   }
 
   public changePosition(name: string, position: IPosition): void {
-    return this.with(name, (navigator) => {
-      navigator.setPosition(position);
-    })
+    return this.with(name, (navigator) => navigator.setPosition(position))
   }
 
-  private with(name: string, callback: (navigator: MHTMLEditorNavigator) => void) {
+  private with(name: string, callback: (navigator: MHTMLEditorNavigator) => void): void {
     const navigator = this.navigators.get(name);
+
+    if (!navigator) {
+      this.renderer.navigatorManager.add(name);
+      return this.with(name, callback);
+    }
 
     return Reflect.apply(callback, undefined, [navigator]);
   }

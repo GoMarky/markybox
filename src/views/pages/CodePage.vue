@@ -31,7 +31,7 @@ export default window.workbench.createComponent((accessor) => {
     setup() {
       const { currentRoute, push } = useRouter();
       const errorMessage = ref('');
-      const editor = new CodePageEditor(logService, sessionService, noteService);
+      const editor = new CodePageEditor(logService, sessionService, noteService, socketService);
 
       function initEditor(note?: INoteInfo): void {
         editor.init(currentRoute, note);
@@ -41,31 +41,6 @@ export default window.workbench.createComponent((accessor) => {
         const noteId = currentRoute.value.params.id as string;
         socketService.createOrEnterRoom(noteId);
       }
-
-      onMounted(() => {
-        socketService.onMessage((event) => {
-          const { type, data } = event;
-
-          switch (type) {
-            case SocketCommandType.Info:
-              const { text } = data;
-              break;
-            case SocketCommandType.LeaveRoom:
-              break;
-            case SocketCommandType.EnterRoom: {
-              const { text, user_name } = data;
-
-              break;
-            }
-            case SocketCommandType.RoomCreated: {
-              const { note_id } = data;
-
-              console.log(`Room ${note_id} created`);
-              break;
-            }
-          }
-        })
-      })
 
       sessionService.onDidUserLogin(() => connectSocket());
 

@@ -16,13 +16,8 @@ export enum EditorActionType {
   ChangePosition = 'cn',
 }
 
-export interface ISocketEditorActionPayload {
-  type: EditorActionType;
-  position: string; // '1,2' 'row, column'
-}
-
 export enum SocketCommandType {
-  EditorAction = 'editor-action',
+  EditorAction = 'editor_action',
   Info = 'info',
   Ping = 'ping',
   RoomCreated = 'create_room',
@@ -42,7 +37,7 @@ export interface ISocketService {
 
   connect(): Promise<void>;
 
-  send(payload: unknown & IBaseSocketMessagePayload): void;
+  send<T>(payload: T & IBaseSocketMessagePayload): void;
 
   disconnect(): void;
 }
