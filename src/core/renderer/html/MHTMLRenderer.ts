@@ -138,7 +138,7 @@ export class MHTMLRenderer extends MObject implements IAbstractRenderer {
     this.currentState.setContext(this);
   }
 
-  public lock(): void  {
+  public lock(): void {
     this.currentState = new MHTMLEditorLockedState();
     this.currentState.setContext(this);
   }
@@ -156,6 +156,7 @@ export class MHTMLRenderer extends MObject implements IAbstractRenderer {
 
   public clear(): void {
     this.controller.clear();
+    this.navigator.setPosition({ row: 0, column: 0 });
   }
 
   public getText(): string {

@@ -10,13 +10,16 @@ export class MHTMLStorage extends MObject {
   private readonly _onDidUpdate: Emitter<void> = new Emitter<void>();
   public readonly onDidUpdate: IEvent<void> = this._onDidUpdate.event;
 
+  constructor() {
+    super();
+  }
+
   public clear(): void {
     for (const row of this._rows) {
-      this.removeRow(row, true);
+      row.dispose();
     }
 
-    this.last().dispose();
-    this._rows.splice(0, this._rows.length - 1)
+    this._rows.splice(0, this._rows.length);
     this._update();
   }
 
@@ -36,8 +39,9 @@ export class MHTMLStorage extends MObject {
     }
   }
 
-  public removeRow(row: MHTMLGlyphRow, tick = true): void {
+  public removeRow(row: MHTMLGlyphRow): void {
     const index = this._rows.findIndex((r) => r === row);
+
 
     // Если удаляемая строчка первая и единственная - то не удаляем ее.
     if (this.count === 1 && index === 0) {
@@ -50,10 +54,7 @@ export class MHTMLStorage extends MObject {
 
     row.dispose();
     this._rows.splice(index, 1);
-
-    if (tick) {
-      this._update();
-    }
+    this._update();
   }
 
   public last(): MHTMLGlyphRow {

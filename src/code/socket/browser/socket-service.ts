@@ -21,8 +21,16 @@ export class SocketService extends Disposable implements ISocketService {
     super();
   }
 
+  private onError(_: unknown): void {
+    //
+  }
+
   private _send(payload: unknown & IBaseSocketMessagePayload): void {
-    this.ws?.send(JSON.stringify(payload));
+    try {
+      this.ws?.send(JSON.stringify(payload));
+    } catch (error) {
+      this.onError(error);
+    }
   }
 
   public createOrEnterRoom(noteId: Note.NoteId): void {

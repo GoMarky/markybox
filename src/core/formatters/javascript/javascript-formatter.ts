@@ -34,8 +34,6 @@ class JavascriptKeyApplicator extends AbstractKeyApplicator implements IAbstract
 
     const existRightParenWindow = controller.findClosestRightParenRowDown(indentRowIndex);
 
-    console.log(existRightParenWindow);
-
     if (existRightParenWindow) {
       const rightParenRow = controller.addRowAt(rightParenRowIndex);
       rightParenRow.setText(copyStringNumberOfTimes(BASE_INDENT_VALUE, amountLeftParen - 1) + '}');

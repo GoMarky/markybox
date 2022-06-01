@@ -3,6 +3,7 @@ import { MObject } from '@/core/objects/MObject';
 import { MCaretLayer } from '@/core/renderer/html/layers/MCaretLayer';
 import { Emitter, IEvent } from '@/base/event';
 import { IPosition } from '@/core/app/common';
+import { isObject } from '@/base/types';
 
 export class MHTMLEditorNavigator extends MObject {
   protected _currentPosition: IPosition = { row: 0, column: 0 };
@@ -18,7 +19,7 @@ export class MHTMLEditorNavigator extends MObject {
     return this._currentPosition;
   }
 
-  public setPosition(position: IPosition) {
+  public setPosition(position: IPosition): void {
     return this.doSetPosition(position);
   }
 

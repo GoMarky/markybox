@@ -1,7 +1,3 @@
 import { MObject } from '@/core/objects/MObject';
 
-export abstract class MGlyph extends MObject {
-  protected constructor() {
-    super();
-  }
-}
+export abstract class MGlyph extends MObject {}

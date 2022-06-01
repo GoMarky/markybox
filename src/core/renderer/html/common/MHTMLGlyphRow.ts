@@ -247,8 +247,6 @@ export class MHTMLGlyphRow extends MHTMLGlyphDOM<HTMLDivElement> {
   }
 
   public dispose(): void {
-    super.dispose();
-
     this.gutterElement.dispose();
     this.fragment?.dispose();
     this._el.remove();

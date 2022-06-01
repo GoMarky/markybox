@@ -74,7 +74,6 @@ export class MHTMLHighlightKeywordVisitor extends MObject implements IVisitor {
     const { formatter } = this.renderer.body;
 
     const statement = formatter.parseKeyword(glyph.text);
-
     const className = getClassNameByStatement(statement);
 
     if (className) {
