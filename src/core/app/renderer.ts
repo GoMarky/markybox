@@ -5,7 +5,6 @@ export interface IRendererDisplay {
 }
 
 export interface IAbstractRenderer {
-  logger?: ILogger;
   readonly display: IRendererDisplay;
 
   unlock(): void;

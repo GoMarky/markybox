@@ -74,6 +74,7 @@ export class MHTMLEditorActiveState extends MHTMLEditorState {
 
     const { clientX, clientY } = event;
     const position = display.toEditorPosition({ top: clientY, left: clientX });
+
     const row = storage.at(position.row);
 
     // Если попали в существующую строку, переводим курсор в нее

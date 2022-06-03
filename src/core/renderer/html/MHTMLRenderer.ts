@@ -2,7 +2,7 @@ import windowShortcut from '@gomarky/window-shortcut';
 import { MObject } from '@/core/objects/MObject';
 import { MHTMLEditorBodyNavigator } from '@/core/renderer/html/editor/MHTMLEditorBodyNavigator';
 import { MHTMLDisplayRenderer } from '@/core/renderer/html/system/MHTMLDisplayRenderer';
-import { EditorLang, MHTMLEditorBody } from '@/core/renderer/html/editor/MHTMLEditorBody';
+import { MHTMLEditorBody } from '@/core/renderer/html/editor/MHTMLEditorBody';
 import { MHTMLClipboard } from '@/core/renderer/html/system/MHTMLClipboard';
 import { MHTMLEditorSelection } from '@/core/renderer/html/editor/MHTMLEditorSelection';
 import { MHTMLStorage } from '@/core/renderer/html/system/MHTMLStorage';
@@ -11,56 +11,99 @@ import { MHTMLEditorState } from '@/core/renderer/html/state/MHTMLEditorState';
 import { MHTMLEditorLockedState } from '@/core/renderer/html/state/MHTMLEditorLockedState';
 import { CriticalError } from '@/base/errors';
 import { MHTMLEditorController } from '@/core/renderer/html/editor/MHTMLEditorController';
-import { IAbstractRenderer } from '@/core/app/renderer';
 import { MHTMLTextHintVisitor } from '@/core/renderer/html/visitors/MHTMLTextHintVisitor';
 import { MHTMLHighlightKeywordVisitor } from '@/core/renderer/html/visitors/MHTMLHighlightKeywordVisitor';
-import { ILogger } from '@/core/app/common';
 import { MHTMLEditorNavigators } from '@/core/renderer/html/editor/MHTMLEditorNavigators';
-import { SecurityError } from '@/core/app/errors';
-
-interface IMHTMLRendererConstructorOptions {
-  readonly root: HTMLElement;
-  readonly lang: EditorLang;
-  readonly author: string;
-}
+import { IAbstractRenderer } from '@/core/app/renderer';
 
 export class MHTMLRenderer extends MObject implements IAbstractRenderer {
-  public logger?: ILogger;
-  public readonly root: HTMLElement;
-
-  public readonly display: MHTMLDisplayRenderer;
-  public readonly body: MHTMLEditorBody;
-  public readonly navigator: MHTMLEditorBodyNavigator;
-  public readonly selection: MHTMLEditorSelection;
-  public readonly storage: MHTMLStorage;
-  public readonly controller: MHTMLEditorController;
-  public readonly navigatorManager: MHTMLEditorNavigators;
-
-  public currentState: MHTMLEditorState;
-
+  private readonly selection: MHTMLEditorSelection;
+  private readonly storage: MHTMLStorage;
   private readonly clipboard: MHTMLClipboard;
 
-  constructor(options: IMHTMLRendererConstructorOptions) {
+  public readonly navigatorManager: MHTMLEditorNavigators;
+  public readonly display: MHTMLDisplayRenderer;
+  public readonly navigator: MHTMLEditorBodyNavigator;
+  public readonly controller: MHTMLEditorController;
+  public readonly body: MHTMLEditorBody;
+  public currentState: MHTMLEditorState;
+
+  constructor() {
     super();
 
     if (!window.isSecureContext) {
-      throw new SecurityError(`markybox works only in security context. Please, enable HTTPS`);
+      console.warn(`markybox works only in https context.`);
     }
 
-    const { root, lang, author } = options;
-    this.root = root;
-
     const storage = this.storage = new MHTMLStorage();
-    const body = this.body = new MHTMLEditorBody(this, lang);
-    const navigator = this.navigator = new MHTMLEditorBodyNavigator(this, author);
+    const display = this.display = new MHTMLDisplayRenderer(storage);
+    const navigator = this.navigator = new MHTMLEditorBodyNavigator(display, storage, 'user');
+    const body = this.body = new MHTMLEditorBody(display, navigator, this);
+    const controller = this.controller = new MHTMLEditorController(this, storage, body);
 
-    this.selection = new MHTMLEditorSelection(this);
-    this.display = new MHTMLDisplayRenderer(root, body.el, storage, navigator);
+
+    this.selection = new MHTMLEditorSelection(this, storage, display);
     this.clipboard = new MHTMLClipboard();
-    this.controller = new MHTMLEditorController(this);
-    this.navigatorManager = new MHTMLEditorNavigators(this);
+    this.navigatorManager = new MHTMLEditorNavigators(controller, display, storage);
+  }
 
-    console.info(`Document start with lang - ${lang}`);
+  public unlock(): void {
+    this.currentState = new MHTMLEditorActiveState();
+    this.currentState.setContext(this);
+  }
+
+  public lock(): void {
+    this.currentState = new MHTMLEditorLockedState();
+    this.currentState.setContext(this);
+  }
+
+  public init(): void {
+    this.unlock();
+
+    this.body.addVisitor(new MHTMLTextHintVisitor(this));
+    this.body.addVisitor(new MHTMLHighlightKeywordVisitor(this));
+
+    this.registerListeners();
+  }
+
+  public mount(selector: string): void {
+    const rootElement = document.querySelector<HTMLElement>(selector);
+
+    if (!rootElement) {
+      throw new CriticalError(`Element ${selector} not found.`);
+    }
+
+    this.body.mount(rootElement);
+    this.display.mount(rootElement);
+
+    const bodyElement = this.body.el;
+
+    this.navigator.mount(bodyElement);
+    this.selection.mount(bodyElement);
+
+    this.display.setFullScreen();
+
+    this.init();
+  }
+
+  public clear(): void {
+    this.controller.clear();
+    this.navigator.setPosition({ row: 0, column: 0 });
+  }
+
+  public getText(): string {
+    const { rows } = this.storage;
+
+    return rows.map((row) => row.toString()).join('\n');
+  }
+
+  public setText(text?: string): void {
+    if (!text) {
+      this.controller.addEmptyRow();
+      return;
+    }
+
+    this.controller.setWholeText(text);
   }
 
   private registerListeners(): void {
@@ -131,46 +174,5 @@ export class MHTMLRenderer extends MObject implements IAbstractRenderer {
 
     window.addEventListener('mousedown', (event) => this.currentState.onClick(event));
     window.addEventListener('keydown', (event) => this.currentState.onKeyDown(event));
-  }
-
-  public unlock(): void {
-    this.currentState = new MHTMLEditorActiveState();
-    this.currentState.setContext(this);
-  }
-
-  public lock(): void {
-    this.currentState = new MHTMLEditorLockedState();
-    this.currentState.setContext(this);
-  }
-
-  public init(logger?: ILogger): void {
-    this.logger = logger;
-
-    this.unlock();
-
-    this.body.addVisitor(new MHTMLTextHintVisitor(this));
-    this.body.addVisitor(new MHTMLHighlightKeywordVisitor(this));
-
-    this.registerListeners();
-  }
-
-  public clear(): void {
-    this.controller.clear();
-    this.navigator.setPosition({ row: 0, column: 0 });
-  }
-
-  public getText(): string {
-    const { rows } = this.storage;
-
-    return rows.map((row) => row.toString()).join('\n');
-  }
-
-  public setText(text?: string): void {
-    if (!text) {
-      this.controller.addEmptyRow();
-      return;
-    }
-
-    this.controller.setWholeText(text);
   }
 }

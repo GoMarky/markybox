@@ -2,6 +2,8 @@ import { MObject } from '@/core/objects/MObject';
 import { IPosition } from '@/core/app/common';
 import { MSelectionLayer } from '@/core/renderer/html/layers/MSelectionLayer';
 import { MHTMLRenderer } from '@/core';
+import { MHTMLDisplayRenderer } from '@/core/renderer/html/system/MHTMLDisplayRenderer';
+import { MHTMLStorage } from '@/core/renderer/html/system/MHTMLStorage';
 
 export interface ISelectionPosition {
   row: number;
@@ -23,16 +25,18 @@ export class MHTMLEditorSelection extends MObject {
     return this._positions;
   }
 
-  constructor(private readonly renderer: MHTMLRenderer) {
+  constructor(
+    private readonly renderer: MHTMLRenderer,
+    private readonly storage: MHTMLStorage,
+    private readonly display: MHTMLDisplayRenderer
+  ) {
     super();
 
-    this.layer = new MSelectionLayer(renderer);
-
-    this.init();
+    this.layer = new MSelectionLayer(display);
   }
 
   public getSelectedText(): string {
-    const { rows } = this.renderer.storage;
+    const { rows } = this.storage;
 
     return rows
       .filter((row) => this._positions.find((position) => position.row === row.index))
@@ -40,7 +44,7 @@ export class MHTMLEditorSelection extends MObject {
   }
 
   public selectAll(): void {
-    const { rows } = this.renderer.storage;
+    const { rows } = this.storage;
 
     for (const row of rows) {
       this._positions.push({ row: row.index, startColumn: 0, endColumn: 0 })
@@ -50,7 +54,7 @@ export class MHTMLEditorSelection extends MObject {
   }
 
   public updateSelection(position: { start: IPosition, end: IPosition }): void {
-    const { storage } = this.renderer;
+    const { storage } = this;
     const { start, end } = position;
 
     const isNotMoved = start.row === end.row && start.column === end.column;
@@ -83,8 +87,9 @@ export class MHTMLEditorSelection extends MObject {
     this.layer.clear();
   }
 
-  private init(): void {
-    this.renderer.body.el.addEventListener('contextmenu', (event) => event.preventDefault());
+  public mount(body: HTMLElement): void {
+    this.layer.mount(body);
+    body.addEventListener('contextmenu', (event) => event.preventDefault());
     window.addEventListener('mousedown', (event) => this.renderer.currentState.onSelectionStart(event));
     window.addEventListener('mousemove', (event) => this.renderer.currentState.onSelectionMove(event));
     window.addEventListener('mouseup', (event) => this.renderer.currentState.onSelectionEnd(event));

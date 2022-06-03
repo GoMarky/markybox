@@ -2,14 +2,11 @@ import { MLayer } from '@/core/renderer/html/layers/MLayer';
 import { MHTMLRenderer } from '@/core';
 
 export class MTextLayer extends MLayer {
-  constructor(private readonly body: HTMLElement) {
+  constructor() {
     super();
-
-    this.init();
   }
 
-  private init(): void {
-    const { body } = this;
+  public mount(body: HTMLElement): void {
     const bodyElement = document.createElement('div');
     bodyElement.style.width = '100%';
     bodyElement.classList.add('m-editor__layer');

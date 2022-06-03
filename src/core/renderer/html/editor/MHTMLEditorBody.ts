@@ -8,6 +8,11 @@ import { JavascriptCodeFormatter } from '@/core/formatters/javascript/javascript
 import { JSONCodeFormatter } from '@/core/formatters/json/json-formatter';
 import { PythonCodeFormatter } from '@/core/formatters/python/python-formatter';
 import { CPPCodeFormatter } from '@/core/formatters/cpp/cpp-formatter';
+import { MTextLayer } from '@/core/renderer/html/layers/MTextLayer';
+import { MMarkerLayer } from '@/core/renderer/html/layers/MMarkerLayer';
+import { MPartitionLayer } from '@/core/renderer/html/layers/MPartionLayer';
+import { MHTMLDisplayRenderer } from '@/core/renderer/html/system/MHTMLDisplayRenderer';
+import { MHTMLEditorBodyNavigator } from '@/core/renderer/html/editor/MHTMLEditorBodyNavigator';
 
 export type EditorLang = 'cpp' | 'python' | 'js' | 'json' | 'plain';
 
@@ -18,21 +23,36 @@ export interface IVisitor {
 }
 
 export class MHTMLEditorBody extends MHTMLGlyphDOM<HTMLDivElement> {
-  private textarea: MHTMLEditorBodyTextarea;
-  private _formatter: BaseFormatter;
+  public readonly textLayer: MTextLayer;
+  private readonly markerLayer: MMarkerLayer;
+  private readonly partitionLayer: MPartitionLayer;
 
   public visitors: IVisitor[] = [];
 
   constructor(
+    private readonly display: MHTMLDisplayRenderer,
+    private readonly navigator: MHTMLEditorBodyNavigator,
     private readonly renderer: MHTMLRenderer,
-    format: EditorLang = 'plain'
   ) {
     super();
 
-    this.init(format);
+    this.textLayer = new MTextLayer();
+    this.markerLayer = new MMarkerLayer();
+    this.partitionLayer = new MPartitionLayer();
+
+    this.navigator.onDidUpdatePosition((position) => {
+      const { top } = this.display.toDOMPosition(position);
+
+      this.markerLayer.top(top);
+    })
   }
 
-  public getCurrentLanguage(): string {
+  private _formatter: BaseFormatter = new PlainFormatter();
+  public get formatter(): BaseFormatter {
+    return this._formatter;
+  }
+
+  public get currentLang(): string {
     return this._formatter.toString();
   }
 
@@ -46,11 +66,7 @@ export class MHTMLEditorBody extends MHTMLGlyphDOM<HTMLDivElement> {
     ]
   }
 
-  public get formatter(): BaseFormatter {
-    return this._formatter;
-  }
-
-  public setFormat(type: EditorLang): void {
+  public setFormat(type: EditorLang = 'plain'): void {
     switch (type) {
       case 'cpp':
         this._formatter = new CPPCodeFormatter();
@@ -74,22 +90,20 @@ export class MHTMLEditorBody extends MHTMLGlyphDOM<HTMLDivElement> {
     this.visitors.push(visitor);
   }
 
-  private init(format: EditorLang): void {
-    const { renderer } = this;
-    const { root } = renderer;
-    this.createHTMLElement();
+  public mount(root: HTMLElement): void {
+    this.createHTMLElement(root);
 
-    this.setFormat(format);
+    const body = this._el;
+
+    this.textLayer.mount(body);
+    this.markerLayer.mount(body);
+    this.partitionLayer.mount(body)
 
     const textarea = new MHTMLEditorBodyTextarea(root);
-    this.textarea = textarea;
     textarea.onDidUpdate((letter) => this.renderer.currentState.onInput(letter));
   }
 
-  private createHTMLElement(): void {
-    const { renderer } = this;
-    const { root } = renderer;
-
+  private createHTMLElement(root: HTMLElement): void {
     const bodyElement = document.createElement('div');
     bodyElement.style.width = '100%';
     bodyElement.classList.add('m-editor__body')

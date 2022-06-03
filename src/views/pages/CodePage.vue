@@ -60,7 +60,7 @@ export default window.workbench.createComponent((accessor) => {
             return push({ name: AppRoute.HomePage })
           }
 
-          console.error(error.toString());
+          throw error;
         }
       })
 

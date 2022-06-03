@@ -37,17 +37,14 @@ export class CodePageEditor {
     }
 
     const root = document.querySelector<HTMLElement>('#root') as HTMLElement;
-    const renderer = this.renderer = window.$renderer = new markybox.MHTMLRenderer({
-      lang: note?.lang || 'plain',
-      author: name,
-      root
-    });
+    const renderer = this.renderer = window.$renderer = new markybox.MHTMLRenderer();
 
     const editor = this.editor = window.$editor = new markybox.MEditor({
       renderer,
-      fullscreen: true,
       logger: this.logService,
     });
+
+    renderer.mount('#root');
 
     this.socketService.onMessage((event) => {
       switch (event.type) {

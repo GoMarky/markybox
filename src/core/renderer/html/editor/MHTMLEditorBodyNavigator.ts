@@ -1,18 +1,21 @@
-import { MHTMLRenderer } from '@/core';
 import { MObject } from '@/core/objects/MObject';
 import { MCaretLayer } from '@/core/renderer/html/layers/MCaretLayer';
 import { Emitter, IEvent } from '@/base/event';
 import { IPosition } from '@/core/app/common';
-import { isObject } from '@/base/types';
+import { MHTMLStorage } from '@/core/renderer/html/system/MHTMLStorage';
+import { MHTMLDisplayRenderer } from '@/core/renderer/html/system/MHTMLDisplayRenderer';
 
 export class MHTMLEditorNavigator extends MObject {
   protected _currentPosition: IPosition = { row: 0, column: 0 };
-  private layer: MCaretLayer;
+  private readonly layer: MCaretLayer;
 
-  constructor(private readonly renderer: MHTMLRenderer, public readonly name: string) {
+  constructor(
+    protected readonly display: MHTMLDisplayRenderer,
+    protected readonly storage: MHTMLStorage,
+    public readonly name: string) {
     super();
 
-    this.layer = new MCaretLayer(renderer, name);
+    this.layer = new MCaretLayer(name);
   }
 
   public get position(): IPosition {
@@ -21,6 +24,10 @@ export class MHTMLEditorNavigator extends MObject {
 
   public setPosition(position: IPosition): void {
     return this.doSetPosition(position);
+  }
+
+  public mount(root: HTMLElement): void {
+    this.layer.mount(root);
   }
 
   public prevColumn() {
@@ -58,9 +65,10 @@ export class MHTMLEditorNavigator extends MObject {
   }
 
   protected doSetPosition(position: IPosition): void {
-    const { layer, renderer } = this;
-    const { storage } = renderer;
+    const { layer, storage } = this;
     let { row, column } = position;
+
+    console.log(position);
 
     if (row < 0) {
       row = 0;
@@ -83,8 +91,10 @@ export class MHTMLEditorNavigator extends MObject {
     }
 
     const normalizedPosition: IPosition = { row, column };
+    console.log(normalizedPosition);
+    const displayPosition = this.display.toDOMPosition(normalizedPosition);
 
-    layer.setPosition(normalizedPosition);
+    layer.setPosition(displayPosition);
     this._currentPosition = normalizedPosition;
   }
 }
@@ -93,8 +103,12 @@ export class MHTMLEditorBodyNavigator extends MHTMLEditorNavigator {
   private readonly _onDidUpdatePosition: Emitter<IPosition> = new Emitter<IPosition>();
   public readonly onDidUpdatePosition: IEvent<IPosition> = this._onDidUpdatePosition.event;
 
-  constructor(renderer: MHTMLRenderer, name: string) {
-    super(renderer, name);
+  constructor(
+    display: MHTMLDisplayRenderer,
+    storage: MHTMLStorage,
+    name: string
+  ) {
+    super(display, storage, name);
   }
 
   protected doSetPosition(position: IPosition): void {

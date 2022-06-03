@@ -5,13 +5,18 @@ import { splitAtIndex } from '@/core/app/common';
 import * as dom from '@/base/dom';
 import { BASE_INDENT_VALUE } from '@/core/renderer/html/common/helpers';
 import { MEditorAutoSave } from '@/core/objects/MEditorAutoSave';
+import { MHTMLStorage } from '@/core/renderer/html/system/MHTMLStorage';
+import { MHTMLEditorBody } from '@/core/renderer/html/editor/MHTMLEditorBody';
 
 export class MHTMLEditorController extends MObject {
   public readonly editorAutoSave: MEditorAutoSave
 
   private _currentRow: MHTMLGlyphRow;
 
-  constructor(private readonly renderer: MHTMLRenderer) {
+  constructor(
+    private readonly renderer: MHTMLRenderer,
+    private readonly storage: MHTMLStorage,
+    private readonly body: MHTMLEditorBody) {
     super();
 
     this.editorAutoSave = new MEditorAutoSave(this.renderer)
@@ -23,14 +28,14 @@ export class MHTMLEditorController extends MObject {
 
   public get prevRow(): MHTMLGlyphRow | null {
     const { index } = this.currentRow;
-    const { storage } = this.renderer;
+    const { storage } = this;
 
     return storage.at(index - 1);
   }
 
   public get nextRow(): MHTMLGlyphRow | null {
     const { index } = this.currentRow;
-    const { storage } = this.renderer;
+    const { storage } = this;
 
     return storage.at(index + 1);
   }
@@ -48,8 +53,7 @@ export class MHTMLEditorController extends MObject {
   }
 
   public expandOrShrinkRow(index: number): void {
-    const { renderer } = this;
-    const { storage } = renderer;
+    const { storage } = this;
 
     const leftParenRow = storage.at(index);
     const rightParenRow = this.findClosestRightParenRowDown(index);
@@ -64,8 +68,8 @@ export class MHTMLEditorController extends MObject {
   }
 
   public addRowAt(index: number): MHTMLGlyphRow {
-    const { storage } = this.renderer;
-    const { textLayer } = this.renderer.display;
+    const { storage, body } = this;
+    const { textLayer } = body;
 
     const row = new MHTMLGlyphRow(this.renderer, index);
     storage.addRowAt(row, index);
@@ -75,9 +79,8 @@ export class MHTMLEditorController extends MObject {
   }
 
   public addRow(text: string): MHTMLGlyphRow {
-    const { renderer } = this;
-    const { storage } = renderer;
-    const { textLayer } = this.renderer.display;
+    const { storage, body, renderer } = this;
+    const { textLayer } = body;
 
     const row = new MHTMLGlyphRow(renderer, storage.count);
     row.setText(text);
@@ -89,20 +92,19 @@ export class MHTMLEditorController extends MObject {
   }
 
   public addEmptyRow(): MHTMLGlyphRow {
-    const { renderer } = this;
-    const { storage, display } = renderer;
+    const { storage, body, renderer } = this;
+    const { textLayer } = body;
 
     const row = new MHTMLGlyphRow(renderer, storage.count);
     this._currentRow = row;
     storage.addRow(row);
-    display.textLayer.el.appendChild(row.el);
+    textLayer.el.appendChild(row.el);
 
     return row;
   }
 
   public removeLastRow(): void {
-    const { renderer } = this;
-    const { storage } = renderer;
+    const { storage } = this;
 
     const lastRow = storage.last();
     storage.removeRow(lastRow);
@@ -110,8 +112,7 @@ export class MHTMLEditorController extends MObject {
   }
 
   public removeRow(row: MHTMLGlyphRow): void {
-    const { renderer } = this;
-    const { storage } = renderer;
+    const { storage } = this;
 
     storage.removeRow(row);
   }
@@ -155,7 +156,7 @@ export class MHTMLEditorController extends MObject {
   }
 
   public findClosestLeftParenRowDown(startIndex: number): MHTMLGlyphRow | undefined {
-    const { storage } = this.renderer;
+    const { storage } = this;
 
     for (let i = startIndex + 1; i < storage.count; i++) {
       const row = storage.at(i);
@@ -174,7 +175,7 @@ export class MHTMLEditorController extends MObject {
   }
 
   public findClosestRightParenRowDown(startIndex: number): MHTMLGlyphRow | undefined {
-    const { storage } = this.renderer;
+    const { storage } = this;
 
     for (let i = startIndex + 1; i < storage.count; i++) {
       const row = storage.at(i);
@@ -193,7 +194,7 @@ export class MHTMLEditorController extends MObject {
   }
 
   public getRightParenAmountFromStartByIndex(startIndex: number): number {
-    const { storage } = this.renderer;
+    const { storage } = this;
     let amount = 0;
 
     for (let i = startIndex; i >= 0; i--) {
@@ -212,7 +213,7 @@ export class MHTMLEditorController extends MObject {
   }
 
   public getLeftParenAmountFromStartByIndex(startIndex: number): number {
-    const { storage } = this.renderer;
+    const { storage } = this;
     let amount = 0;
 
     for (let i = startIndex; i >= 0; i--) {
@@ -231,7 +232,7 @@ export class MHTMLEditorController extends MObject {
   }
 
   public clear(): void {
-    this.renderer.storage.clear();
+    this.storage.clear();
     this.addEmptyRow();
   }
 }

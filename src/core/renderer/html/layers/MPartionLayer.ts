@@ -3,15 +3,11 @@ import { MHTMLRenderer } from '@/core';
 import { toPixel } from '@/base/dom';
 
 export class MPartitionLayer extends MLayer {
-  constructor(private readonly body: HTMLElement) {
+  constructor() {
     super();
-
-    this.init();
   }
 
-  private init(): void {
-    const { body } = this;
-
+  public mount(body: HTMLElement): void {
     // создаем элемент
     this.createPartitionElement();
     body.appendChild(this._el);

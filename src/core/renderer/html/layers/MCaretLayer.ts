@@ -1,7 +1,6 @@
 import { MLayer } from '@/core/renderer/html/layers/MLayer';
-import { MHTMLRenderer } from '@/core';
-import { IPosition } from '@/core/app/common';
 import { toPixel } from '@/base/dom';
+import { IDOMPosition } from '@/core/renderer/html/common/helpers';
 
 const colors: string[] = [
   'rgba(255,87,51,0.4)',
@@ -17,30 +16,25 @@ const getRandomColor = (): string => {
 }
 
 export class MCaretLayer extends MLayer {
-  constructor(private readonly renderer: MHTMLRenderer, private readonly label: string) {
+  constructor(private readonly label: string) {
     super();
-
-    this.init();
   }
 
-  public setPosition(position: IPosition): void {
-    const { display } = this.renderer;
-    const { left, top } = display.toDOMPosition(position);
+  public setPosition(position: IDOMPosition): void {
+    const { left, top } = position;
 
     this._el.style.left = toPixel(left);
     this._el.style.top = toPixel(top);
   }
 
-  private init(): void {
-    const { renderer } = this;
-
+  public mount(body: HTMLElement): void {
     const bodyElement = document.createElement('div');
     bodyElement.classList.add('m-editor__layer-caret-container')
     this._el = bodyElement;
-    renderer.body.el.appendChild(bodyElement);
+    body.appendChild(bodyElement);
 
     this.createCaretElement();
-    this.createUserLabelElement();
+    this.createUserLabelElement(body);
   }
 
   private createCaretElement(): void {
@@ -51,14 +45,14 @@ export class MCaretLayer extends MLayer {
     this._el.appendChild(caretElement);
   }
 
-  private createUserLabelElement(): void {
-    const { renderer, label } = this;
+  private createUserLabelElement(body: HTMLElement): void {
+    const { label } = this;
 
     const labelElement = document.createElement('div');
     labelElement.classList.add('m-editor__layer-caret-label')
     labelElement.textContent = label;
-    labelElement.style.background = getRandomColor()
-    renderer.body.el.appendChild(labelElement);
+    labelElement.style.background = getRandomColor();
+    body.appendChild(labelElement);
 
     this._el.appendChild(labelElement);
   }

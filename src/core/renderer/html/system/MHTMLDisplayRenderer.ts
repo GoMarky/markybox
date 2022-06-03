@@ -1,16 +1,11 @@
 import { MObject } from '@/core/objects/MObject';
 import { toPixel } from '@/base/dom';
-import { MHTMLRenderer } from '@/core';
 import { IPosition } from '@/core/app/common';
 import { IDOMPosition } from '@/core/renderer/html/common/helpers';
 import { IRendererDisplay } from '@/core/app/renderer';
 import { debounce } from '@/base/async';
 import { MHTMLEditorGutter } from '@/core/renderer/html/editor/MHTMLEditorGutter';
-import { MTextLayer } from '@/core/renderer/html/layers/MTextLayer';
-import { MMarkerLayer } from '@/core/renderer/html/layers/MMarkerLayer';
-import { MPartitionLayer } from '@/core/renderer/html/layers/MPartionLayer';
 import { MHTMLStorage } from '@/core/renderer/html/system/MHTMLStorage';
-import { MHTMLEditorBodyNavigator } from '@/core/renderer/html/editor/MHTMLEditorBodyNavigator';
 
 const EDITOR_OFFSET_POSITION: IDOMPosition = {
   top: 52,
@@ -18,25 +13,12 @@ const EDITOR_OFFSET_POSITION: IDOMPosition = {
 }
 
 export class MHTMLDisplayRenderer extends MObject implements IRendererDisplay {
-  public readonly gutter: MHTMLEditorGutter;
-  public readonly textLayer: MTextLayer;
-  public readonly markerLayer: MMarkerLayer;
-  private readonly partitionLayer: MPartitionLayer;
+  private root: HTMLElement;
+  private readonly gutter: MHTMLEditorGutter;
 
-  constructor(
-    private readonly root: HTMLElement,
-    private readonly body: HTMLElement,
-    private readonly storage: MHTMLStorage,
-    private readonly navigator: MHTMLEditorBodyNavigator,
-  ) {
+  constructor(private readonly storage: MHTMLStorage) {
     super();
-
-    this.gutter = new MHTMLEditorGutter(root);
-    this.textLayer = new MTextLayer(body);
-    this.markerLayer = new MMarkerLayer(body, navigator, this);
-    this.partitionLayer = new MPartitionLayer(body);
-
-    this.registerListeners();
+    this.gutter = new MHTMLEditorGutter();
   }
 
   public toDOMPosition(position: IPosition): IDOMPosition {
@@ -68,8 +50,16 @@ export class MHTMLDisplayRenderer extends MObject implements IRendererDisplay {
     root.style.height = toPixel(innerHeight);
   }
 
+  public mount(root: HTMLElement): void {
+    this.root = root;
+    this.gutter.mount(root);
+
+    this.registerListeners();
+  }
+
   private registerListeners(): void {
     const { storage, root } = this;
+    const resizeBodyDelayMilliseconds = 250;
 
     const debounced = debounce(() => {
       const { count } = storage;
@@ -79,7 +69,7 @@ export class MHTMLDisplayRenderer extends MObject implements IRendererDisplay {
       const rootHeight = totalRowsHeight > innerHeight ? totalRowsHeight : innerHeight;
 
       root.style.height = toPixel(rootHeight);
-    }, 250);
+    }, resizeBodyDelayMilliseconds);
 
     storage.onDidUpdate(debounced)
   }

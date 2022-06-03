@@ -5,7 +5,6 @@ import { ILogger } from '@/core/app/common';
 export interface IEditorOptions {
   readonly renderer: IAbstractRenderer;
   readonly logger?: ILogger;
-  readonly fullscreen: boolean;
 }
 
 export class MEditor extends MObject {
@@ -15,15 +14,9 @@ export class MEditor extends MObject {
   constructor(options: IEditorOptions) {
     super();
 
-    const { renderer, fullscreen, logger } = options;
+    const { renderer, logger } = options;
     this.renderer = renderer;
     this.logger = logger;
-
-    if (fullscreen) {
-      this.renderer.display.setFullScreen();
-    }
-
-    this.renderer.init(logger);
   }
 
   public lock(): void {

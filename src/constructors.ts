@@ -16,6 +16,8 @@ import { SocketService } from '@/code/socket/browser/socket-service';
 import { ISocketService } from '@/code/socket/common/socket-service';
 import { NoteService } from '@/code/notes/browser/note-service';
 import { INoteService } from '@/code/notes/common/notes';
+import { EditorService } from '@/code/editor/browser/editor-service';
+import { IEditorService } from '@/code/editor/common/editor-service';
 
 const services = new ServiceCollection();
 
@@ -52,5 +54,8 @@ services.set(ILayoutService, layoutService);
 
 const noteService = new NoteService(requestService, sessionService);
 services.set(INoteService, noteService);
+
+const editorService = new EditorService();
+services.set(IEditorService, editorService);
 
 export default services;

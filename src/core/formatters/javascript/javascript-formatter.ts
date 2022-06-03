@@ -9,7 +9,7 @@ export type StatementClassName =
   | 'm-editor__keyword-identifier-name';
 
 const Regexp = {
-  VariableStatement: /^(throw|as|this|void|undefined|string|number|object|super|return|new|default|const|let|var|class|function|export|import|interface|type|public|private|static|protected|extends|implements|switch|case|break|continue$)/,
+  VariableStatement: /^(from|import|global|declare|object|class|async|await|return|true|false|any|extends|static|let|package|implements|interface|function|new|try|yeild|const|continue|do|catch|in|this|break|as|switch|case|if|throw|else|var|number|string|get|module|type|instanceof|typeof|public|private|enum|export|finally|for|while|void|null|super$)/,
 };
 
 class JavascriptKeyApplicator extends AbstractKeyApplicator implements IAbstractKeyApplicator {

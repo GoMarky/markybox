@@ -2,23 +2,16 @@ import { MLayer } from '@/core/renderer/html/layers/MLayer';
 import { IPosition } from '@/core/app/common';
 import { removeChildren, toPixel } from '@/base/dom';
 import { createSelectionRowElement } from '@/core/renderer/html/common/helpers';
-import { MHTMLRenderer } from '@/core';
-import { MHTMLGlyphDOM } from '@/core/renderer/html/common/MHTMLGlyphDOM';
 import { ISelectionPosition } from '@/core/renderer/html/editor/MHTMLEditorSelection';
-
-export class MSelectionRowLayer extends MHTMLGlyphDOM {
-}
+import { MHTMLDisplayRenderer } from '@/core/renderer/html/system/MHTMLDisplayRenderer';
 
 export class MSelectionLayer extends MLayer {
-  constructor(private readonly renderer: MHTMLRenderer) {
+  constructor(private readonly display: MHTMLDisplayRenderer) {
     super();
-
-    this.init();
   }
 
   public addSelectionRows(positions: readonly ISelectionPosition[]): void {
-    const { renderer } = this;
-    const { display } = renderer;
+    const { display } = this;
     this.clear();
 
     const useRightPosition = positions.length > 1;
@@ -58,13 +51,12 @@ export class MSelectionLayer extends MLayer {
     removeChildren(el);
   }
 
-  private init(): void {
-    const { renderer } = this;
-
+  public mount(body: HTMLElement): void {
     const bodyElement = document.createElement('div');
+
     bodyElement.style.width = '100%';
     bodyElement.classList.add('m-editor__layer-selection')
     this._el = bodyElement;
-    renderer.body.el.appendChild(bodyElement);
+    body.appendChild(bodyElement);
   }
 }
