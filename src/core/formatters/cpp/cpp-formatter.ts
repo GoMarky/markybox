@@ -1,18 +1,6 @@
-import { AbstractKeyApplicator, BaseFormatter, CodeStatement, IAbstractKeyApplicator } from '@/core/formatters/formatter/base-formatter';
-
-class CPPKeyApplicator extends AbstractKeyApplicator implements IAbstractKeyApplicator {
-  constructor() {
-    super();
-  }
-
-  public backspace() {
-    super.backspace();
-  }
-
-  public enter() {
-    super.enter();
-  }
-}
+import { BaseFormatter, CodeStatement } from '@/core/formatters/formatter/base-formatter';
+import { CPPKeyApplicator } from '@/core/formatters/cpp/cpp-applicator';
+import { IAbstractKeyApplicator } from '@/core/formatters/formatter/base-applicator';
 
 export class CPPCodeFormatter extends BaseFormatter {
   public readonly applicator: IAbstractKeyApplicator;

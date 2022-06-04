@@ -49,13 +49,13 @@ services.set(ISessionService, sessionService);
 const socketService = new SocketService(sessionService);
 services.set(ISocketService, socketService);
 
-const layoutService = new LayoutService();
-services.set(ILayoutService, layoutService);
-
 const noteService = new NoteService(requestService, sessionService);
 services.set(INoteService, noteService);
 
 const editorService = new EditorService(logService, sessionService, noteService, socketService);
 services.set(IEditorService, editorService);
+
+const layoutService = new LayoutService(editorService);
+services.set(ILayoutService, layoutService);
 
 export default services;

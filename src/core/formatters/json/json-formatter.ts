@@ -1,18 +1,6 @@
-import { AbstractKeyApplicator, BaseFormatter, CodeStatement, IAbstractKeyApplicator } from '@/core/formatters/formatter/base-formatter';
-
-class JSONKeyApplicator extends AbstractKeyApplicator implements IAbstractKeyApplicator {
-  constructor() {
-    super();
-  }
-
-  public backspace() {
-    super.backspace();
-  }
-
-  public enter() {
-    super.enter();
-  }
-}
+import { BaseFormatter, CodeStatement} from '@/core/formatters/formatter/base-formatter';
+import { IAbstractKeyApplicator } from '@/core/formatters/formatter/base-applicator';
+import { JSONKeyApplicator } from '@/core/formatters/json/json-applicator';
 
 export class JSONCodeFormatter extends BaseFormatter {
   public readonly applicator: IAbstractKeyApplicator;

@@ -43,6 +43,7 @@ export class EditorService extends Disposable implements IEditorService {
 
     this.noteService.store.currentNote.value = note || null;
 
+    this._renderer.body.setFormat(note.lang);
     this._renderer.mount('#root');
     this._editor.setText(initialText)
 

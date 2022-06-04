@@ -47,22 +47,15 @@ export class MHTMLEditorBody extends MHTMLGlyphDOM<HTMLDivElement> {
     })
   }
 
-  private _formatter: BaseFormatter = new JavascriptCodeFormatter();
+  private _formatter: BaseFormatter = new PlainFormatter();
   public get formatter(): BaseFormatter {
     return this._formatter;
-  }
-
-  public get currentLang(): string {
-    return this._formatter.toString();
   }
 
   public setFormat(type: EditorLang = 'plain'): void {
     switch (type) {
       case 'cpp':
         this._formatter = new CPPCodeFormatter();
-        break;
-      case 'plain':
-        this._formatter = new PlainFormatter();
         break;
       case 'js':
         this._formatter = new JavascriptCodeFormatter();
@@ -73,7 +66,16 @@ export class MHTMLEditorBody extends MHTMLGlyphDOM<HTMLDivElement> {
       case 'python':
         this._formatter = new PythonCodeFormatter();
         break;
+      case 'plain':
+        this._formatter = new PlainFormatter();
+        break;
+      default:
+        this._formatter = new PlainFormatter();
+        console.warn(`Get unrecognized lang syntax value - ${type}.`)
+        break;
     }
+
+    this.renderer.currentState.setContext(this.renderer);
   }
 
   public addVisitor(visitor: IVisitor): void {

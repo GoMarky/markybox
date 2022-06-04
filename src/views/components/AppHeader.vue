@@ -63,11 +63,13 @@ import { useRouter } from 'vue-router';
 import { Mime } from '@/base/string';
 import UISelect from '@/views/components/ui/UISelect.vue';
 import * as markybox from '@/core';
+import { IEditorService } from '@/code/editor/common/editor-service';
 
 export default window.workbench.createComponent((accessor) => {
   const sessionService = accessor.get(ISessionService);
   const layoutService = accessor.get(ILayoutService);
   const noteService = accessor.get(INoteService);
+  const editorService = accessor.get(IEditorService);
 
   return defineComponent({
     name: Component.AppHeader,
@@ -75,12 +77,12 @@ export default window.workbench.createComponent((accessor) => {
       UISelect,
     },
     setup() {
+      const router = useRouter();
       const { name, isAuth } = sessionService.profile;
       const currentEditorLang = ref<markybox.EditorLang>('plain');
 
       const editorLanguages: markybox.EditorLang[] = markybox.getSupportedSyntaxes();
 
-      const router = useRouter();
 
       function openUserProfileModal(): void {
         layoutService.modal.open('UserProfileModal');
@@ -95,21 +97,20 @@ export default window.workbench.createComponent((accessor) => {
 
         if (noteId) {
           await noteService.updateNote(noteId, '');
-          window.$renderer?.clear();
+          editorService.renderer.clear();
         }
       }
 
       watch(noteService.store.currentNote, (note) => {
-        currentEditorLang.value = note?.lang;
+        currentEditorLang.value = note?.lang as markybox.EditorLang;
       })
 
       watch(currentEditorLang, async (lang: markybox.EditorLang) => {
         const noteId = router.currentRoute.value.params.id as string;
-        const text = window.$editor?.getText();
+        const text = editorService.renderer.getText() as string;
 
-        if (noteId && text) {
-          await noteService.updateNote(noteId, text, lang);
-        }
+        await noteService.updateNote(noteId, text, lang);
+        editorService.renderer.body.setFormat(lang);
       })
 
       async function copyNoteLink(): Promise<void> {

@@ -25,7 +25,7 @@ export class MHTMLRenderer extends MObject implements IAbstractRenderer {
   public readonly navigator: MHTMLEditorBodyNavigator;
   public readonly controller: MHTMLEditorController;
   public readonly body: MHTMLEditorBody;
-  public currentState: MHTMLEditorState;
+  public currentState: MHTMLEditorState = new MHTMLEditorLockedState();
 
   constructor() {
     super();
