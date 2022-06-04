@@ -54,7 +54,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, nextTick, onMounted, ref, watch } from 'vue';
+import { defineComponent, ref, watch } from 'vue';
 import { ISessionService } from '@/code/session/common/session';
 import { Component } from '@/code/vue/common/component-names';
 import { ILayoutService } from '@/platform/layout/common/layout';
@@ -78,13 +78,7 @@ export default window.workbench.createComponent((accessor) => {
       const { name, isAuth } = sessionService.profile;
       const currentEditorLang = ref<markybox.EditorLang>('plain');
 
-      const editorLanguages: markybox.EditorLang[] = [
-        'plain',
-        'cpp',
-        'python',
-        'js',
-        'json'
-      ];
+      const editorLanguages: markybox.EditorLang[] = markybox.getSupportedSyntaxes();
 
       const router = useRouter();
 

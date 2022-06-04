@@ -1,10 +1,9 @@
 import { MObject } from '@/core/objects/MObject';
-import { IVisitor } from '@/core/renderer/html/editor/MHTMLEditorBody';
+import { IVisitor, MHTMLEditorBody } from '@/core/renderer/html/editor/MHTMLEditorBody';
 import { MHTMLGlyphWord } from '@/core/renderer/html/common/MHTMLGlyphWord';
 import { StatementClassName } from '@/core/formatters/javascript/javascript-formatter';
 import { MHTMLNodeFragment } from '@/core/renderer/html/common/MHTMLNodeFragment';
 import { CodeStatement } from '@/core/formatters/formatter/base-formatter';
-import { MHTMLRenderer } from '@/core';
 
 function getClassNameByStatement(statement?: CodeStatement): StatementClassName | undefined {
   if (!statement) {
@@ -22,7 +21,7 @@ function getClassNameByStatement(statement?: CodeStatement): StatementClassName 
 
 export class MHTMLHighlightKeywordVisitor extends MObject implements IVisitor {
   constructor(
-    private readonly renderer: MHTMLRenderer,
+    private readonly body: MHTMLEditorBody
   ) {
     super();
   }
@@ -58,7 +57,7 @@ export class MHTMLHighlightKeywordVisitor extends MObject implements IVisitor {
       return;
     }
 
-    const { formatter } = this.renderer.body;
+    const { formatter } = this.body;
 
     const statement = formatter.parseKeyword(previous.text);
 
@@ -71,7 +70,7 @@ export class MHTMLHighlightKeywordVisitor extends MObject implements IVisitor {
   }
 
   private checkStatement(glyph: MHTMLGlyphWord): void {
-    const { formatter } = this.renderer.body;
+    const { formatter } = this.body;
 
     const statement = formatter.parseKeyword(glyph.text);
     const className = getClassNameByStatement(statement);

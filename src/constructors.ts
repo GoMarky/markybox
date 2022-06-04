@@ -55,7 +55,7 @@ services.set(ILayoutService, layoutService);
 const noteService = new NoteService(requestService, sessionService);
 services.set(INoteService, noteService);
 
-const editorService = new EditorService();
+const editorService = new EditorService(logService, sessionService, noteService, socketService);
 services.set(IEditorService, editorService);
 
 export default services;

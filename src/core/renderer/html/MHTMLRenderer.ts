@@ -17,10 +17,9 @@ import { MHTMLEditorNavigators } from '@/core/renderer/html/editor/MHTMLEditorNa
 import { IAbstractRenderer } from '@/core/app/renderer';
 
 export class MHTMLRenderer extends MObject implements IAbstractRenderer {
-  private readonly selection: MHTMLEditorSelection;
-  private readonly storage: MHTMLStorage;
-  private readonly clipboard: MHTMLClipboard;
-
+  public readonly storage: MHTMLStorage;
+  public readonly clipboard: MHTMLClipboard;
+  public readonly selection: MHTMLEditorSelection;
   public readonly navigatorManager: MHTMLEditorNavigators;
   public readonly display: MHTMLDisplayRenderer;
   public readonly navigator: MHTMLEditorBodyNavigator;
@@ -57,16 +56,8 @@ export class MHTMLRenderer extends MObject implements IAbstractRenderer {
     this.currentState.setContext(this);
   }
 
-  public init(): void {
-    this.unlock();
-
-    this.body.addVisitor(new MHTMLTextHintVisitor(this));
-    this.body.addVisitor(new MHTMLHighlightKeywordVisitor(this));
-
-    this.registerListeners();
-  }
-
   public mount(selector: string): void {
+    const { navigator, body } = this;
     const rootElement = document.querySelector<HTMLElement>(selector);
 
     if (!rootElement) {
@@ -83,7 +74,12 @@ export class MHTMLRenderer extends MObject implements IAbstractRenderer {
 
     this.display.setFullScreen();
 
-    this.init();
+    this.unlock();
+
+    this.body.addVisitor(new MHTMLTextHintVisitor(navigator));
+    this.body.addVisitor(new MHTMLHighlightKeywordVisitor(body));
+
+    this.registerListeners();
   }
 
   public clear(): void {

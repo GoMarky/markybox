@@ -14,7 +14,7 @@ const EDITOR_OFFSET_POSITION: IDOMPosition = {
 
 export class MHTMLDisplayRenderer extends MObject implements IRendererDisplay {
   private root: HTMLElement;
-  private readonly gutter: MHTMLEditorGutter;
+  public readonly gutter: MHTMLEditorGutter;
 
   constructor(private readonly storage: MHTMLStorage) {
     super();

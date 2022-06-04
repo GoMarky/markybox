@@ -9,15 +9,12 @@ export class MHTMLEditorActiveState extends MHTMLEditorState {
   }
 
   public onSelectionStart(event: MouseEvent): void {
+    const { selection, display } = this.context;
     const isLeftClick = event.button === 0;
 
     if (!isLeftClick) {
       return;
     }
-
-    const { selection } = this.renderer;
-    const { display } = this.renderer;
-
     const { clientX, clientY } = event;
 
     if (selection.startPosition) {
@@ -30,13 +27,12 @@ export class MHTMLEditorActiveState extends MHTMLEditorState {
   }
 
   public onSelectionMove(event: MouseEvent): void {
-    const { selection } = this.renderer;
+    const { selection, display } = this.context;
 
     if (!selection.started) {
       return;
     }
 
-    const { display } = this.renderer;
     const { clientX, clientY } = event;
     selection.lastPosition = display.toEditorPosition({ left: clientX, top: clientY });
 
@@ -47,13 +43,13 @@ export class MHTMLEditorActiveState extends MHTMLEditorState {
   }
 
   public onSelectionEnd(_: MouseEvent): void {
-    const { selection } = this.renderer;
+    const { selection } = this.context;
 
     selection.started = false;
   }
 
   public onInput(char: MChar): void {
-    const { controller, navigator } = this.renderer;
+    const { controller, navigator } = this.context;
     const { position: { column, row } } = navigator;
     const { currentRow } = controller;
 
@@ -64,13 +60,12 @@ export class MHTMLEditorActiveState extends MHTMLEditorState {
   }
 
   public onClick(event: MouseEvent): void {
+    const { display, storage, navigator } = this.context;
     const isLeftMouseKey = event.button === 0;
 
     if (!isLeftMouseKey) {
       return;
     }
-
-    const { display, storage, navigator } = this.renderer;
 
     const { clientX, clientY } = event;
     const position = display.toEditorPosition({ top: clientY, left: clientX });
@@ -90,7 +85,7 @@ export class MHTMLEditorActiveState extends MHTMLEditorState {
   }
 
   public onKeyDown(event: KeyboardEvent): void {
-    const { storage, navigator, controller } = this.renderer;
+    const { storage, navigator, controller } = this.context;
     const code = event.code as Char;
     const { position: { row } } = navigator;
 
@@ -126,13 +121,13 @@ export class MHTMLEditorActiveState extends MHTMLEditorState {
   }
 
   private enter(): void {
-    const { applicator } = this.renderer.body.formatter;
+    const { applicator } = this.context.body.formatter;
 
     return applicator.enter();
   }
 
   private backspace(): void {
-    const { applicator } = this.renderer.body.formatter;
+    const { applicator } = this.context.body.formatter;
     return applicator.backspace();
   }
 }

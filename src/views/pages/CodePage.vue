@@ -11,31 +11,23 @@
 <script lang="ts">
 import { defineComponent, nextTick, onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
-import { ILogService } from '@/platform/log/common/log';
 import { ISessionService } from '@/code/session/common/session';
 import { Component } from '@/code/vue/common/component-names';
-import { ISocketService, SocketCommandType } from '@/code/socket/common/socket-service';
-import { INoteInfo, INoteService } from '@/code/notes/common/notes';
-import { CodePageEditor } from '@/code/notes/browser/code-page-editor';
+import { ISocketService} from '@/code/socket/common/socket-service';
 import { APIError, ApiError } from '@/platform/request/common/request';
 import { AppRoute } from '@/views/router/router';
+import { IEditorService } from '@/code/editor/common/editor-service';
 
 export default window.workbench.createComponent((accessor) => {
-  const logService = accessor.get(ILogService);
   const sessionService = accessor.get(ISessionService);
   const socketService = accessor.get(ISocketService);
-  const noteService = accessor.get(INoteService);
+  const editorService = accessor.get(IEditorService);
 
   return defineComponent({
     name: Component.CodePage,
     setup() {
       const { currentRoute, push } = useRouter();
       const errorMessage = ref('');
-      const editor = new CodePageEditor(logService, sessionService, noteService, socketService);
-
-      function initEditor(note?: INoteInfo): void {
-        editor.init(currentRoute, note);
-      }
 
       const connectSocket = () => {
         const noteId = currentRoute.value.params.id as string;
@@ -50,11 +42,9 @@ export default window.workbench.createComponent((accessor) => {
         try {
           const noteId = currentRoute.value.params.id as string;
 
-          const note = await noteService.getNoteById(noteId);
-
           connectSocket();
 
-          initEditor(note);
+          await editorService.create(noteId);
         } catch (error) {
           if (error instanceof ApiError && error.is(APIError.NotFoundError)) {
             return push({ name: AppRoute.HomePage })

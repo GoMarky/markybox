@@ -2,9 +2,24 @@ import { MObject } from '@/core/objects/MObject';
 import { MHTMLRenderer } from '@/core';
 import { isUndefinedOrNull } from '@/base/types';
 import { CriticalError } from '@/base/errors';
+import { MHTMLEditorBodyNavigator } from '@/core/renderer/html/editor/MHTMLEditorBodyNavigator';
+import { MHTMLEditorController } from '@/core/renderer/html/editor/MHTMLEditorController';
+import { MHTMLEditorBody } from '@/core/renderer/html/editor/MHTMLEditorBody';
+import { MHTMLDisplayRenderer } from '@/core/renderer/html/system/MHTMLDisplayRenderer';
+import { MHTMLEditorSelection } from '@/core/renderer/html/editor/MHTMLEditorSelection';
+import { MHTMLStorage } from '@/core/renderer/html/system/MHTMLStorage';
+
+export interface IEditorStateContext {
+  navigator: MHTMLEditorBodyNavigator;
+  controller: MHTMLEditorController;
+  body: MHTMLEditorBody;
+  display: MHTMLDisplayRenderer;
+  selection: MHTMLEditorSelection;
+  storage: MHTMLStorage;
+}
 
 export abstract class MHTMLEditorState extends MObject {
-  protected renderer: MHTMLRenderer
+  protected context: IEditorStateContext;
 
   protected constructor() {
     super();
@@ -22,14 +37,12 @@ export abstract class MHTMLEditorState extends MObject {
 
   public abstract onSelectionMove(event: MouseEvent): void
 
-  public setContext(renderer: MHTMLRenderer): void {
-    if (isUndefinedOrNull(renderer)) {
-      throw new CriticalError(`Context for state must exist. Got - ${renderer}`);
-    }
+  public setContext(context: IEditorStateContext): void {
+    const { navigator, controller, body } = context;
 
-    this.renderer = renderer;
-    const { navigator, controller } = renderer;
-    this.renderer.body.formatter.setContext(navigator, controller)
+    this.context = context;
+
+    body.formatter.setContext(navigator, controller)
   }
 }
 

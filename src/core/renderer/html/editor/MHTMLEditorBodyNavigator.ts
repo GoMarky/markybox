@@ -68,8 +68,6 @@ export class MHTMLEditorNavigator extends MObject {
     const { layer, storage } = this;
     let { row, column } = position;
 
-    console.log(position);
-
     if (row < 0) {
       row = 0;
     }
@@ -91,7 +89,6 @@ export class MHTMLEditorNavigator extends MObject {
     }
 
     const normalizedPosition: IPosition = { row, column };
-    console.log(normalizedPosition);
     const displayPosition = this.display.toDOMPosition(normalizedPosition);
 
     layer.setPosition(displayPosition);
