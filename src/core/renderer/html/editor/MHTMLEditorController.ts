@@ -68,10 +68,13 @@ export class MHTMLEditorController extends MObject {
   }
 
   public addRowAt(index: number): MHTMLGlyphRow {
-    const { storage, body } = this;
+    const { storage, body, renderer } = this;
     const { textLayer } = body;
 
-    const row = new MHTMLGlyphRow(this.renderer, index);
+    const factory = renderer.body.formatter.factory;
+    const row = factory.createGlyphRow();
+
+    row.setParent(renderer, index);
     storage.addRowAt(row, index);
     dom.insertChildAtIndex(textLayer.el, row.el, index);
 
@@ -81,8 +84,12 @@ export class MHTMLEditorController extends MObject {
   public addRow(text: string): MHTMLGlyphRow {
     const { storage, body, renderer } = this;
     const { textLayer } = body;
+    const factory = renderer.body.formatter.factory;
 
-    const row = new MHTMLGlyphRow(renderer, storage.count);
+    const index = storage.count;
+    const row = factory.createGlyphRow();
+
+    row.setParent(renderer, index);
     row.setText(text);
     storage.addRow(row);
 
@@ -94,8 +101,12 @@ export class MHTMLEditorController extends MObject {
   public addEmptyRow(): MHTMLGlyphRow {
     const { storage, body, renderer } = this;
     const { textLayer } = body;
+    const factory = renderer.body.formatter.factory;
 
-    const row = new MHTMLGlyphRow(renderer, storage.count);
+    const index = storage.count;
+    const row = factory.createGlyphRow();
+
+    row.setParent(renderer, index);
     this._currentRow = row;
     storage.addRow(row);
     textLayer.el.appendChild(row.el);
@@ -162,11 +173,11 @@ export class MHTMLEditorController extends MObject {
       const row = storage.at(i);
 
       // Если во время поиска нашли правую скобку, значит следующая левая скобка уже не принадлежит искомой позиции
-      if (row?.fragment.hasCloseBrace) {
+      if (row?.fragment?.hasCloseBrace) {
         return undefined;
       }
 
-      if (row?.fragment.hasOpenBrace) {
+      if (row?.fragment?.hasOpenBrace) {
         return row;
       }
     }
@@ -181,11 +192,11 @@ export class MHTMLEditorController extends MObject {
       const row = storage.at(i);
 
       // Если во время поиска нашли левую скобку, значит следующая правая скобка уже не принадлежит искомой позиции
-      if (row?.fragment.hasOpenBrace) {
+      if (row?.fragment?.hasOpenBrace) {
         return undefined;
       }
 
-      if (row?.fragment.hasCloseBrace) {
+      if (row?.fragment?.hasCloseBrace) {
         return row;
       }
     }
@@ -200,11 +211,11 @@ export class MHTMLEditorController extends MObject {
     for (let i = startIndex; i >= 0; i--) {
       const row = storage.at(i);
 
-      if (row?.fragment.hasOpenBrace) {
+      if (row?.fragment?.hasOpenBrace) {
         amount -= 1;
       }
 
-      if (row?.fragment.hasCloseBrace) {
+      if (row?.fragment?.hasCloseBrace) {
         amount += 1;
       }
     }
@@ -219,11 +230,11 @@ export class MHTMLEditorController extends MObject {
     for (let i = startIndex; i >= 0; i--) {
       const row = storage.at(i);
 
-      if (row?.fragment.hasCloseBrace) {
+      if (row?.fragment?.hasCloseBrace) {
         amount -= 1;
       }
 
-      if (row?.fragment.hasOpenBrace) {
+      if (row?.fragment?.hasOpenBrace) {
         amount += 1;
       }
     }

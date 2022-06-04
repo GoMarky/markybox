@@ -48,7 +48,7 @@ export class LifecycleService extends Disposable implements ILifecycleService {
 
   public set phase(value: LifePhase) {
     if (value < this.phase) {
-      throw new LifecycleError('Lifecycle cannot go backwards', this._phase);
+      throw new LifecycleError('Lifecycle cannot golang backwards', this._phase);
     }
 
     if (this._phase === value) {

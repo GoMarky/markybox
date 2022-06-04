@@ -13,8 +13,9 @@ import { MMarkerLayer } from '@/core/renderer/html/layers/MMarkerLayer';
 import { MPartitionLayer } from '@/core/renderer/html/layers/MPartionLayer';
 import { MHTMLDisplayRenderer } from '@/core/renderer/html/system/MHTMLDisplayRenderer';
 import { MHTMLEditorBodyNavigator } from '@/core/renderer/html/editor/MHTMLEditorBodyNavigator';
+import { GolangCodeFormatter } from '@/core/formatters/golang/golang-formatter';
 
-export type EditorLang = 'cpp' | 'python' | 'js' | 'json' | 'plain';
+export type EditorLang = 'cpp' | 'python' | 'js' | 'json' | 'plain' | 'golang';
 
 export type EditorTheme = 'light' | 'dark';
 
@@ -68,6 +69,9 @@ export class MHTMLEditorBody extends MHTMLGlyphDOM<HTMLDivElement> {
         break;
       case 'plain':
         this._formatter = new PlainFormatter();
+        break;
+      case 'golang':
+        this._formatter = new GolangCodeFormatter();
         break;
       default:
         this._formatter = new PlainFormatter();

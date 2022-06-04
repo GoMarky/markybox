@@ -1,22 +1,22 @@
 import {  BaseFormatter, CodeStatement} from '@/core/formatters/formatter/base-formatter';
 import { IAbstractKeyApplicator } from '@/core/formatters/formatter/base-applicator';
-import { PythonKeyApplicator } from '@/core/formatters/python/python-applicator';
 import { IAbstractFormatterFactory } from '@/core/formatters/formatter/base-factory';
-import { PythonFactory } from '@/core/formatters/python/python-factory';
+import { GolangFactory } from '@/core/formatters/golang/golang-factory';
+import { GolangKeyApplicator } from '@/core/formatters/golang/golang-applicator';
 
 const Regexp = {
-  VariableStatement: /^(def|class|False|await|else|import|pass|None|break|except|in|rais|True|finally|is|return|and|continue|for|lambda|try|as|from|nonlocal|while|assert|del|global|not|with|async|elif|if|or|yield$)/,
+  VariableStatement: /^(break|default|func|interface|select|case|defer|go|map|struct|chan|else|goto|package|switch|const|fallthrough|if|range|type|continue|for|import|return|var$)/,
 };
 
-export class PythonCodeFormatter extends BaseFormatter {
+export class GolangCodeFormatter extends BaseFormatter {
   public readonly applicator: IAbstractKeyApplicator;
   public readonly factory: IAbstractFormatterFactory;
 
   constructor() {
     super('python');
 
-    this.applicator = new PythonKeyApplicator();
-    this.factory = new PythonFactory();
+    this.applicator = new GolangKeyApplicator();
+    this.factory = new GolangFactory();
   }
 
   public parseKeyword(input: string): CodeStatement | undefined {

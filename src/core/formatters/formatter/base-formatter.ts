@@ -3,6 +3,7 @@ import { EditorLang } from '@/core';
 import { MHTMLEditorBodyNavigator } from '@/core/renderer/html/editor/MHTMLEditorBodyNavigator';
 import { MHTMLEditorController } from '@/core/renderer/html/editor/MHTMLEditorController';
 import { IAbstractKeyApplicator } from '@/core/formatters/formatter/base-applicator';
+import { IAbstractFormatterFactory } from '@/core/formatters/formatter/base-factory';
 
 export enum CodeStatement {
   Text = 'text',
@@ -11,6 +12,7 @@ export enum CodeStatement {
 
 export abstract class BaseFormatter extends MObject {
   public abstract readonly applicator: IAbstractKeyApplicator;
+  public abstract readonly factory: IAbstractFormatterFactory;
 
   protected constructor(public readonly name: EditorLang) {
     super();

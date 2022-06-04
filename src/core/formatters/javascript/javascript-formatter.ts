@@ -1,6 +1,8 @@
 import { BaseFormatter, CodeStatement } from '@/core/formatters/formatter/base-formatter';
 import { IAbstractKeyApplicator } from '@/core/formatters/formatter/base-applicator';
 import { JavascriptKeyApplicator } from '@/core/formatters/javascript/javascript-applicator';
+import { IAbstractFormatterFactory } from '@/core/formatters/formatter/base-factory';
+import { JavascriptFactory } from '@/core/formatters/javascript/javascript-factory';
 
 export type StatementClassName =
   'm-editor__plain'
@@ -13,11 +15,13 @@ const Regexp = {
 
 export class JavascriptCodeFormatter extends BaseFormatter {
   public readonly applicator: IAbstractKeyApplicator;
+  public readonly factory: IAbstractFormatterFactory;
 
   constructor() {
     super('js');
 
     this.applicator = new JavascriptKeyApplicator();
+    this.factory = new JavascriptFactory();
   }
 
   public parseKeyword(input: string): CodeStatement | undefined {

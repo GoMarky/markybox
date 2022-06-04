@@ -3,15 +3,21 @@ import { MHTMLGlyphParen, ParenType } from '@/core/renderer/html/common/MHTMLGly
 import { MHTMLGlyphWord } from '@/core/renderer/html/common/MHTMLGlyphWord';
 
 export class MHTMLNodeFragment extends MHTMLGlyphDOM<DocumentFragment> {
-  private readonly _hasOpenBrace: boolean;
-  private readonly _hasCloseBrace: boolean;
+  private _hasOpenBrace: boolean;
+  private _hasCloseBrace: boolean;
+  private _children: MHTMLGlyphDOM[];
 
-  constructor(private _children: MHTMLGlyphDOM[]) {
+  constructor() {
     super();
 
+  }
+
+  public setChildren(children: MHTMLGlyphDOM[]): void {
     this._el = document.createDocumentFragment();
 
-    for (const glyph of this._children) {
+    this._children = children;
+
+    for (const glyph of children) {
       this._el.appendChild(glyph.el);
 
       if (glyph instanceof MHTMLGlyphParen) {

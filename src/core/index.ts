@@ -8,7 +8,8 @@ function getSupportedSyntaxes(): EditorLang[] {
     'python',
     'cpp',
     'json',
-    'js'
+    'js',
+    'golang'
   ];
 }
 

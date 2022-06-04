@@ -21,23 +21,130 @@ interface IInputParseResult {
 }
 
 export class MHTMLGlyphRow extends MHTMLGlyphDOM<HTMLDivElement> {
-  public fragment: MHTMLNodeFragment = new MHTMLNodeFragment([]);
   private _text: string = '';
+  private _renderer: MHTMLRenderer;
+  private _gutter: MHTMLGlyphRowGutter;
 
-  private readonly gutterElement: MHTMLGlyphRowGutter;
+  public fragment: MHTMLNodeFragment | undefined;
+  public index: number;
 
-  constructor(
-    private readonly renderer: MHTMLRenderer,
-    public index: number
-  ) {
+  constructor() {
     super();
+  }
+
+  public setParent(renderer: MHTMLRenderer, index: number): void {
+    this._renderer = renderer;
+
+    this.index = index;
     const rowElement = document.createElement('div');
     rowElement.classList.add('m-editor__row');
-    this.gutterElement = new MHTMLGlyphRowGutter(renderer, index);
-
-    dom.insertChildAtIndex(this.renderer.display.gutter.el, this.gutterElement.el, index);
+    this._gutter = new MHTMLGlyphRowGutter(renderer, index);
+    dom.insertChildAtIndex(this._renderer.display.gutter.el, this._gutter.el, index);
 
     this._el = rowElement;
+  }
+
+  public lastCharIs(char: ParenType): boolean {
+    if (!this.fragment) {
+      throw new CriticalError(`this.fragment must be defined`);
+    }
+
+    const last = getLastElement(this.fragment.children);
+
+    return last instanceof MHTMLGlyphParen && last.type === char;
+  }
+
+  public containsOnlyWhitespaces(): boolean {
+    if (!this.fragment) {
+      throw new CriticalError(`this.fragment must be defined`);
+    }
+
+    return this.fragment.children.every(child => child instanceof MHTMLGlyphTextNode);
+  }
+
+  public get columnsCount(): number {
+    return this._text.length;
+  }
+
+  public get text(): string {
+    return this._text;
+  }
+
+  public empty(): boolean {
+    return this._text.length === 0;
+  }
+
+  public setIndex(index: number): void {
+    this.index = index;
+    this._gutter.index = index;
+  }
+
+  public contains(column: number): boolean {
+    return (this.columnsCount - 1) >= column;
+  }
+
+  public clearLetterByPosition(column: number): void {
+    const index = column - 1;
+
+    const { _text } = this;
+    const [first, last] = splitAtIndex(index)(_text);
+    this._text = first + string.removeFirstLetter(last);
+
+    this.render();
+  }
+
+  public erase(): void {
+    return this.setText('');
+  }
+
+  public slice(start: number, _: number): void {
+    if (this.containsOnlyWhitespaces()) {
+      const slicedText = this._text.slice(0, start);
+
+      this._text = slicedText;
+      this.render();
+    }
+
+    // TODO:
+    // Write logic for non-empty rows.
+  }
+
+  public append(text: string): void {
+    this._text = this._text + text;
+    this.render();
+  }
+
+  public setText(text: string): void {
+    this._text = text;
+
+    this.render();
+  }
+
+  public inputAt(char: MChar, index: number): void {
+    const [first, last] = splitAtIndex(index)(this._text);
+    this._text = first + char + last;
+
+    this.render();
+  }
+
+  public accept(visitors: IVisitor[]): void {
+    if (!this.fragment) {
+      throw new CriticalError(`this.fragment must be defined`);
+    }
+
+    const { fragment } = this;
+
+    visitors.forEach((visitor) => visitor.visit(fragment));
+  }
+
+  public dispose(): void {
+    this._gutter.dispose();
+    this.fragment?.dispose();
+    this._el.remove();
+  }
+
+  public toString(): string {
+    return this._text;
   }
 
   private static parseWord(word: string): IInputParseResult[] {
@@ -122,15 +229,15 @@ export class MHTMLGlyphRow extends MHTMLGlyphDOM<HTMLDivElement> {
   }
 
   private render(): void {
-    const { _text, fragment, renderer } = this;
-    const { body } = renderer;
+    const { _text, fragment, _renderer } = this;
+    const { body } = _renderer;
     const { visitors } = body;
     const words = MHTMLGlyphRow.parseText(_text);
 
     // Очищаем старые
     if (fragment) {
       this._el.replaceChildren();
-      fragment.dispose();
+      fragment?.dispose();
     }
 
     const children: MHTMLGlyphDOM[] = [];
@@ -154,105 +261,12 @@ export class MHTMLGlyphRow extends MHTMLGlyphDOM<HTMLDivElement> {
       }
     }
 
-    const nodeFragment = new MHTMLNodeFragment(children);
+    const nodeFragment = new MHTMLNodeFragment();
+    nodeFragment.setChildren(children);
     this.fragment = nodeFragment;
 
     this.accept(visitors);
-    this.gutterElement.expandable = nodeFragment.hasOpenBrace;
+    this._gutter.expandable = nodeFragment.hasOpenBrace;
     this._el.appendChild(nodeFragment.el);
-  }
-
-  public lastCharIs(char: ParenType): boolean {
-    const last = getLastElement(this.fragment.children);
-
-    return last instanceof MHTMLGlyphParen && last.type === char;
-  }
-
-  public containsOnlyWhitespaces(): boolean {
-    return this.fragment.children.every(child => child instanceof MHTMLGlyphTextNode);
-  }
-
-  public get columnsCount(): number {
-    return this._text.length;
-  }
-
-  public get text(): string {
-    return this._text;
-  }
-
-  public empty(): boolean {
-    return this._text.length === 0;
-  }
-
-  public setIndex(index: number): void {
-    this._el.setAttribute('data-row-index', index.toString());
-    this.gutterElement.el.setAttribute('data-row-index', index.toString());
-
-    this.index = index;
-    this.gutterElement.index = index;
-  }
-
-  public contains(column: number): boolean {
-    return (this.columnsCount - 1) >= column;
-  }
-
-  public clearLetterByPosition(column: number): void {
-    const index = column - 1;
-
-    const { _text } = this;
-    const [first, last] = splitAtIndex(index)(_text);
-    this._text = first + string.removeFirstLetter(last);
-
-    this.render();
-  }
-
-  public erase(): void {
-    return this.setText('');
-  }
-
-  public slice(start: number, _: number): void {
-    if (this.containsOnlyWhitespaces()) {
-      const slicedText = this._text.slice(0, start);
-
-      this._text = slicedText;
-      this.render();
-    }
-
-    // TODO:
-    // Write logic for non-empty rows.
-  }
-
-  public append(text: string): void {
-    this._text = this._text + text;
-    this.render();
-  }
-
-  public setText(text: string): void {
-    this._text = text;
-
-    this.render();
-  }
-
-  public inputAt(char: MChar, index: number): void {
-    const [first, last] = splitAtIndex(index)(this._text);
-    this._text = first + char + last;
-
-    this.render();
-  }
-
-  public accept(visitors: IVisitor[]): void {
-    const { fragment } = this;
-
-    visitors.forEach((visitor) => visitor.visit(fragment));
-  }
-
-  public dispose(): void {
-    this.gutterElement.dispose();
-    this.fragment?.dispose();
-    this._el.remove();
-  }
-
-  public toString(): string {
-    return this._text;
   }
 }
