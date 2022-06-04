@@ -3,13 +3,12 @@ import { MHTMLGlyphParen, ParenType } from '@/core/renderer/html/common/MHTMLGly
 import { MHTMLGlyphWord } from '@/core/renderer/html/common/MHTMLGlyphWord';
 
 export class MHTMLNodeFragment extends MHTMLGlyphDOM<DocumentFragment> {
-  private _hasOpenBrace: boolean;
-  private _hasCloseBrace: boolean;
-  private _children: MHTMLGlyphDOM[];
+  protected _hasOpenBrace: boolean;
+  protected _hasCloseBrace: boolean;
+  protected _children: MHTMLGlyphDOM[];
 
   constructor() {
     super();
-
   }
 
   public setChildren(children: MHTMLGlyphDOM[]): void {
@@ -24,11 +23,6 @@ export class MHTMLNodeFragment extends MHTMLGlyphDOM<DocumentFragment> {
         if (glyph.type === ParenType.OpenBrace) {
           this._hasOpenBrace = true;
         }
-
-        // TODO: MAKE ONLY FOR PYTHON
-        // if (glyph.type === ParenType.Colon) {
-        //   this._hasOpenBrace = true;
-        // }
 
         if (glyph.type === ParenType.CloseBrace) {
           this._hasCloseBrace = true;
