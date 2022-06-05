@@ -22,7 +22,7 @@ declare global {
     workbench: ICreateComponentFactory;
 
     $editor?: markybox.MEditor;
-    $renderer?: markybox.MHTMLRenderer
+    $renderer?: markybox.HTMLRenderer
   }
 }
 

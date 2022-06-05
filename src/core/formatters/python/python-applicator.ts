@@ -1,7 +1,7 @@
 import { AbstractKeyApplicator, IAbstractKeyApplicator } from '@/core/formatters/formatter/base-applicator';
 import { copyStringNumberOfTimes } from '@/base/string';
 import { BASE_INDENT_VALUE } from '@/core/renderer/html/common/helpers';
-import { ParenType } from '@/core/renderer/html/common/MHTMLGlyphParen';
+import { ParenType } from '@/core/renderer/html/common/GlyphParenNode';
 
 export class PythonKeyApplicator extends AbstractKeyApplicator implements IAbstractKeyApplicator {
   constructor() {
@@ -10,20 +10,23 @@ export class PythonKeyApplicator extends AbstractKeyApplicator implements IAbstr
 
   private addRowAtPositionWithIndent(index: number): void {
     const { navigator, controller } = this;
+    const { currentRow } = controller;
     // Индекс строчки с пробелами
     const indentRowIndex = index + 1;
     // Индекс строчки с правой скобкой
     const rightParenRowIndex = indentRowIndex + 1;
     // Строчка с пробелами, добавляем ее в редактор
     const indentRow = controller.addRowAt(indentRowIndex);
-
     // Считаем количество отступов (учитываем соседние скобки до этого)
     const amountLeftParen = controller.getLeftParenAmountFromStartByIndex(indentRowIndex);
+
+    console.log(currentRow.fragment.parenDepthLevel)
+
     // Выставляем нужно количество пробелов в зависимости от количества левых скобок
     const indentWhitespace = copyStringNumberOfTimes(BASE_INDENT_VALUE, amountLeftParen);
     indentRow.setText(indentWhitespace);
 
-    const existRightParenWindow = controller.findClosestRightParenRowDown(indentRowIndex);
+    const existRightParenWindow = controller.findClosestLeftParenRowDown(indentRowIndex);
 
     if (existRightParenWindow) {
       const rightParenRow = controller.addRowAt(rightParenRowIndex);

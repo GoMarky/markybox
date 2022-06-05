@@ -4,7 +4,7 @@ import { Note } from '@/code/notes/common/notes';
 
 export interface IEditorService {
   readonly editor: markybox.MEditor;
-  readonly renderer: markybox.MHTMLRenderer;
+  readonly renderer: markybox.HTMLRenderer;
 
   create(noteId: Note.NoteId): Promise<void>;
 }

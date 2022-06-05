@@ -1,7 +1,7 @@
 import { AbstractKeyApplicator, IAbstractKeyApplicator } from '@/core/formatters/formatter/base-applicator';
 import { copyStringNumberOfTimes } from '@/base/string';
 import { BASE_INDENT_VALUE } from '@/core/renderer/html/common/helpers';
-import { ParenType } from '@/core/renderer/html/common/MHTMLGlyphParen';
+import { ParenType } from '@/core/renderer/html/common/GlyphParenNode';
 
 export class GolangKeyApplicator extends AbstractKeyApplicator implements IAbstractKeyApplicator {
   constructor() {
@@ -10,6 +10,7 @@ export class GolangKeyApplicator extends AbstractKeyApplicator implements IAbstr
 
   private addRowAtPositionWithIndent(index: number): void {
     const { navigator, controller } = this;
+    const { currentRow } = controller;
     // Индекс строчки с пробелами
     const indentRowIndex = index + 1;
     // Индекс строчки с правой скобкой

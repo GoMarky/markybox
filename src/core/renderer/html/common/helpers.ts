@@ -1,5 +1,5 @@
 import { toPixel } from '@/base/dom';
-import { MHTMLGlyphRow } from '@/core/renderer/html/common/MHTMLGlyphRow';
+import { GlyphRowElement } from '@/core/renderer/html/common/GlyphRowElement';
 
 export interface IDOMPosition {
   left: number;
@@ -19,7 +19,7 @@ export function createSelectionRowElement(): HTMLElement {
   return element;
 }
 
-export function mRowToBodyElement(row: MHTMLGlyphRow): HTMLElement {
+export function mRowToBodyElement(row: GlyphRowElement): HTMLElement {
   const { index } = row;
 
   const element = document.createElement('span');

@@ -1,18 +1,18 @@
-import { MHTMLEditorBodyNavigator } from '@/core/renderer/html/editor/MHTMLEditorBodyNavigator';
-import { MHTMLEditorController } from '@/core/renderer/html/editor/MHTMLEditorController';
-import { MObject } from '@/core/objects/MObject';
+import { EditorBodyNavigator } from '@/core/renderer/html/editor/EditorBodyNavigator';
+import { EditorRowsController } from '@/core/renderer/html/editor/EditorRowsController';
+import { BaseObject } from '@/core/objects/BaseObject';
 
 export interface IAbstractKeyApplicator {
-  setContext(navigator: MHTMLEditorBodyNavigator, controller: MHTMLEditorController): void;
+  setContext(navigator: EditorBodyNavigator, controller: EditorRowsController): void;
 
   backspace(): void;
 
   enter(): void;
 }
 
-export class AbstractKeyApplicator extends MObject implements IAbstractKeyApplicator {
-  protected navigator: MHTMLEditorBodyNavigator;
-  protected controller: MHTMLEditorController;
+export class AbstractKeyApplicator extends BaseObject implements IAbstractKeyApplicator {
+  protected navigator: EditorBodyNavigator;
+  protected controller: EditorRowsController;
 
   constructor() {
     super();
@@ -63,7 +63,7 @@ export class AbstractKeyApplicator extends MObject implements IAbstractKeyApplic
     return navigator.setPosition({ row: currentRow.index, column: 0 })
   }
 
-  public setContext(navigator: MHTMLEditorBodyNavigator, controller: MHTMLEditorController): void {
+  public setContext(navigator: EditorBodyNavigator, controller: EditorRowsController): void {
     this.navigator = navigator;
     this.controller = controller;
   }

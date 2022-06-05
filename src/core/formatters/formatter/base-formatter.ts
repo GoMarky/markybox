@@ -1,7 +1,7 @@
-import { MObject } from '@/core/objects/MObject';
+import { BaseObject } from '@/core/objects/BaseObject';
 import { EditorLang } from '@/core';
-import { MHTMLEditorBodyNavigator } from '@/core/renderer/html/editor/MHTMLEditorBodyNavigator';
-import { MHTMLEditorController } from '@/core/renderer/html/editor/MHTMLEditorController';
+import { EditorBodyNavigator } from '@/core/renderer/html/editor/EditorBodyNavigator';
+import { EditorRowsController } from '@/core/renderer/html/editor/EditorRowsController';
 import { IAbstractKeyApplicator } from '@/core/formatters/formatter/base-applicator';
 import { IAbstractFormatterFactory } from '@/core/formatters/formatter/base-factory';
 
@@ -10,7 +10,7 @@ export enum CodeStatement {
   VariableDeclaration = 'VariableDeclaration',
 }
 
-export abstract class BaseFormatter extends MObject {
+export abstract class BaseFormatter extends BaseObject {
   public abstract readonly applicator: IAbstractKeyApplicator;
   public abstract readonly factory: IAbstractFormatterFactory;
 
@@ -20,7 +20,7 @@ export abstract class BaseFormatter extends MObject {
 
   public abstract parseKeyword(input: string): CodeStatement | undefined;
 
-  public setContext(navigator: MHTMLEditorBodyNavigator, controller: MHTMLEditorController): void {
+  public setContext(navigator: EditorBodyNavigator, controller: EditorRowsController): void {
     this.applicator.setContext(navigator, controller);
   }
 

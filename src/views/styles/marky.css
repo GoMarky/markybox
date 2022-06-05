@@ -1,5 +1,9 @@
 @import 'marky-keyword-style.css';
 
+.marky__indent-node {
+    background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAACCAYAAACZgbYnAAAAE0lEQVQImWP4////f4bLly//BwAmVgd1/w11/gAAAABJRU5ErkJggg==) right repeat-y;
+}
+
 .marky__textarea {
     border: 0;
     resize: none;

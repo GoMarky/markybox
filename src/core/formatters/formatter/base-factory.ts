@@ -1,23 +1,23 @@
-import { MObject } from '@/core/objects/MObject';
-import { MHTMLGlyphRow } from '@/core/renderer/html/common/MHTMLGlyphRow';
-import { MHTMLNodeFragment } from '@/core/renderer/html/common/MHTMLNodeFragment';
+import { BaseObject } from '@/core/objects/BaseObject';
+import { GlyphRowElement } from '@/core/renderer/html/common/GlyphRowElement';
+import { GlyphNodeFragment } from '@/core/renderer/html/common/GlyphNodeFragment';
 
 export interface IAbstractFormatterFactory {
-  createGlyphRow(): MHTMLGlyphRow;
+  createGlyphRow(): GlyphRowElement;
 
-  createNodeFragment(): MHTMLNodeFragment;
+  createNodeFragment(): GlyphNodeFragment;
 }
 
-export class BaseFormatterFactory extends MObject implements IAbstractFormatterFactory {
+export class BaseFormatterFactory extends BaseObject implements IAbstractFormatterFactory {
   constructor() {
     super();
   }
 
-  public createGlyphRow(): MHTMLGlyphRow {
-    return new MHTMLGlyphRow()
+  public createGlyphRow(): GlyphRowElement {
+    return new GlyphRowElement()
   }
 
-  public createNodeFragment(): MHTMLNodeFragment {
-    return new MHTMLNodeFragment();
+  public createNodeFragment(): GlyphNodeFragment {
+    return new GlyphNodeFragment();
   }
 }

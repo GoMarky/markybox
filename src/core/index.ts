@@ -1,6 +1,6 @@
 import { MEditor } from '@/core/app/editor';
-import { MHTMLRenderer } from '@/core/renderer/html/MHTMLRenderer';
-import { EditorLang, EditorTheme } from '@/core/renderer/html/editor/MHTMLEditorBody';
+import { HTMLRenderer } from '@/core/renderer/html/HTMLRenderer';
+import { EditorLang, EditorTheme } from '@/core/renderer/html/editor/EditorBodyContainer';
 
 function getSupportedSyntaxes(): EditorLang[] {
   return [
@@ -17,6 +17,6 @@ export {
   EditorLang,
   EditorTheme,
   MEditor,
-  MHTMLRenderer,
+  HTMLRenderer,
   getSupportedSyntaxes,
 }

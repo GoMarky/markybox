@@ -1,4 +1,4 @@
-import { MObject } from '@/core/objects/MObject';
+import { BaseObject } from '@/core/objects/BaseObject';
 import { IAbstractRenderer } from '@/core/app/renderer';
 import { ILogger } from '@/core/app/common';
 
@@ -7,7 +7,7 @@ export interface IEditorOptions {
   readonly logger?: ILogger;
 }
 
-export class MEditor extends MObject {
+export class MEditor extends BaseObject {
   private readonly renderer: IAbstractRenderer;
   private readonly logger: ILogger | undefined;
 

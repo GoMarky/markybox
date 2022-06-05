@@ -35,7 +35,7 @@ export class DemoUserInteraction {
   private animationFrameId: number;
 
   constructor(
-    private readonly renderer: markybox.MHTMLRenderer,
+    private readonly renderer: markybox.HTMLRenderer,
     private readonly actions: IFakeUserInteraction[],
     private readonly userName: string,
     private readonly fps: number) {

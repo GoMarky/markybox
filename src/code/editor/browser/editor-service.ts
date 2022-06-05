@@ -12,8 +12,8 @@ type EditorEnterRoomPayload = { user_name: string };
 type EditorLeaveRoomPayload = { user_name: string };
 
 export class EditorService extends Disposable implements IEditorService {
-  private readonly _renderer: markybox.MHTMLRenderer;
-  public get renderer(): markybox.MHTMLRenderer {
+  private readonly _renderer: markybox.HTMLRenderer;
+  public get renderer(): markybox.HTMLRenderer {
     return this._renderer;
   }
 
@@ -30,7 +30,7 @@ export class EditorService extends Disposable implements IEditorService {
   ) {
     super();
 
-    const renderer = this._renderer = new markybox.MHTMLRenderer();
+    const renderer = this._renderer = new markybox.HTMLRenderer();
     this._editor = new markybox.MEditor({ renderer });
   }
 
