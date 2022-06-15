@@ -1,11 +1,11 @@
 import { GlyphDOMNode } from '@/core/renderer/html/common/GlyphDOMNode';
 
 export class GlyphIndentNode extends GlyphDOMNode<HTMLSpanElement> {
-  constructor(public readonly text: string) {
+  constructor(private readonly rawText: string) {
     super();
 
     this._el = document.createElement('span');
-    this._el.textContent = this.text;
+    this._el.textContent = this.rawText;
     this._el.classList.add('marky__indent-node');
   }
 

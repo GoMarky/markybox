@@ -1,18 +1,18 @@
 import { Disposable } from '@/platform/lifecycle/common/lifecycle';
 import { IBaseSocketMessagePayload, ISocketMessageResponse, ISocketService, SocketCommandType } from '@/code/socket/common/socket-service';
 import { Emitter, IEvent } from '@/base/event';
-import { ISessionService, Session } from '@/code/session/common/session';
-import { unref } from 'vue';
+import { ISessionService } from '@/code/session/common/session';
 import { CriticalError } from '@/base/errors';
 import { Note } from '@/code/notes/common/notes';
 import { BASE_URL } from '@/code/request/api';
 import { isDev } from '@/base/platform';
+import { isUndefinedOrNull } from '@/base/types';
 
 const WS_PROTOCOL = isDev ? 'ws' : 'wss';
 const SOCKET_URL = `${WS_PROTOCOL}://${BASE_URL}/v1/subscribe/`;
 
 export class SocketService extends Disposable implements ISocketService {
-  private ws?: WebSocket;
+  private ws: WebSocket | null;
 
   private readonly _onMessage: Emitter<ISocketMessageResponse> = new Emitter<ISocketMessageResponse>();
   public readonly onMessage: IEvent<ISocketMessageResponse> = this._onMessage.event;
@@ -42,6 +42,10 @@ export class SocketService extends Disposable implements ISocketService {
       type: SocketCommandType.EnterRoom,
       note_nanoid: noteId,
       user_name,
+    }
+
+    if (!isUndefinedOrNull(this.ws)) {
+      this.disconnect();
     }
 
     void this.connect()
@@ -83,6 +87,7 @@ export class SocketService extends Disposable implements ISocketService {
   }
 
   public disconnect(): void {
-    return this.ws?.close(1000, 'Client closed connection')
+    this.ws?.close(1000, 'Client closed connection');
+    this.ws = null;
   }
 }

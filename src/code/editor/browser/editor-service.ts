@@ -42,10 +42,17 @@ export class EditorService extends Disposable implements IEditorService {
     const name = isAuth.value ? userName.value : 'anonymous';
 
     this.noteService.store.currentNote.value = note || null;
-
     this._renderer.body.setFormat(note.lang);
-    this._renderer.mount('#root');
-    this._editor.setText(initialText)
+
+    if (this._renderer.$isMount) {
+      this._renderer.clear();
+    } else {
+      this._renderer.mount('#root');
+    }
+
+    this._editor.setText(initialText);
+
+    this.socketService.createOrEnterRoom(noteId);
 
     this.socketService.onMessage((event) => {
       switch (event.type) {
@@ -56,7 +63,7 @@ export class EditorService extends Disposable implements IEditorService {
         case SocketCommandType.EditorAction:
           return this.onEditorAction(event.data);
       }
-    })
+    });
 
     this._renderer.navigator.onDidUpdatePosition((position) => {
       const { row, column } = position;
@@ -67,8 +74,9 @@ export class EditorService extends Disposable implements IEditorService {
         user_name: name,
         note_nanoid: note?.id
       })
-    })
-    this._renderer.controller.editorAutoSave.onDidSave((text: string) => this.noteService.updateNote(noteId, text))
+    });
+
+    this._renderer.controller.editorAutoSave.onDidSave((text: string) => this.noteService.updateNote(noteId, text));
   }
 
   private onLeaveRoom(data: EditorLeaveRoomPayload): void {

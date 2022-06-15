@@ -26,6 +26,7 @@ export class HTMLRenderer extends BaseObject implements IAbstractRenderer {
   public readonly controller: EditorRowsController;
   public readonly body: MHTMLEditorBody;
   public currentState: AbstractEditorState = new EditorLockedState();
+  public $isMount: boolean = false;
 
   constructor() {
     super();
@@ -37,9 +38,8 @@ export class HTMLRenderer extends BaseObject implements IAbstractRenderer {
     const storage = this.storage = new EditorStorage();
     const display = this.display = new EditorDisplayController(storage);
     const navigator = this.navigator = new EditorBodyNavigator(display, storage, 'user');
-    const body = this.body = new MHTMLEditorBody(display, navigator, this);
+    const body = this.body = new MHTMLEditorBody(display, navigator, storage, this);
     const controller = this.controller = new EditorRowsController(this, storage, body);
-
 
     this.selection = new EditorSelectionContainer(this, storage, display);
     this.clipboard = new UserClipboardController();
@@ -80,6 +80,8 @@ export class HTMLRenderer extends BaseObject implements IAbstractRenderer {
     this.body.addVisitor(new KeywordCheckerVisitor(body));
 
     this.registerListeners();
+
+    this.$isMount = true;
   }
 
   public clear(): void {

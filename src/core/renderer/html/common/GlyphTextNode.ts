@@ -1,11 +1,11 @@
 import { GlyphDOMNode } from '@/core/renderer/html/common/GlyphDOMNode';
 
 export class GlyphTextNode extends GlyphDOMNode<Text> {
-  constructor(public readonly text: string) {
+  constructor(private readonly rawText: string) {
     super();
 
-    this._el = document.createTextNode(text);
-    this._el.textContent = this.text;
+    this._el = document.createTextNode(rawText);
+    this._el.textContent = this.rawText;
   }
 
   public dispose(): void {

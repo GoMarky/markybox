@@ -14,6 +14,7 @@ import { MPartitionLayer } from '@/core/renderer/html/layers/UserPartitionLayer'
 import { EditorDisplayController } from '@/core/renderer/html/system/EditorDisplayController';
 import { EditorBodyNavigator } from '@/core/renderer/html/editor/EditorBodyNavigator';
 import { GolangCodeFormatter } from '@/core/formatters/golang/golang-formatter';
+import { EditorStorage } from '@/core/renderer/html/system/EditorStorage';
 
 export type EditorLang = 'cpp' | 'python' | 'js' | 'json' | 'plain' | 'golang';
 
@@ -33,6 +34,7 @@ export class MHTMLEditorBody extends GlyphDOMNode<HTMLDivElement> {
   constructor(
     private readonly display: EditorDisplayController,
     private readonly navigator: EditorBodyNavigator,
+    private readonly storage: EditorStorage,
     private readonly renderer: HTMLRenderer,
   ) {
     super();
@@ -79,7 +81,17 @@ export class MHTMLEditorBody extends GlyphDOMNode<HTMLDivElement> {
         break;
     }
 
+    if (this.storage.count) {
+      this.reRenderExistNodes();
+    }
+
     this.renderer.currentState.setContext(this.renderer);
+  }
+
+  public reRenderExistNodes(): void {
+    const text = this.renderer.getText();
+    this.renderer.clear();
+    this.renderer.setText(text);
   }
 
   public addVisitor(visitor: IVisitor): void {

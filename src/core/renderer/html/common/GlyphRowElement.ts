@@ -32,6 +32,14 @@ export class GlyphRowElement extends GlyphDOMNode<HTMLDivElement> {
     super();
   }
 
+  public get columnsCount(): number {
+    return this._text.length;
+  }
+
+  public get text(): string {
+    return this._text;
+  }
+
   public setParent(renderer: HTMLRenderer, index: number): void {
     this._renderer = renderer;
 
@@ -60,14 +68,6 @@ export class GlyphRowElement extends GlyphDOMNode<HTMLDivElement> {
     }
 
     return this.fragment.children.every(child => child instanceof GlyphTextNode);
-  }
-
-  public get columnsCount(): number {
-    return this._text.length;
-  }
-
-  public get text(): string {
-    return this._text;
   }
 
   public empty(): boolean {
@@ -226,17 +226,38 @@ export class GlyphRowElement extends GlyphDOMNode<HTMLDivElement> {
     return result;
   }
 
-  private render(): void {
-    const { _text, fragment, _renderer } = this;
-    const { body } = _renderer;
-    const { visitors } = body;
-    const words = this.parseText(_text);
+  private clearNodeFragment(): void {
+    const { fragment } = this;
 
     // Очищаем старые
-    if (fragment) {
-      this._el.replaceChildren();
-      fragment?.dispose();
+    if (!fragment) {
+      return;
     }
+
+    this._el.replaceChildren();
+    fragment.dispose();
+  }
+
+  public renderGlyphs(children: GlyphDOMNode[]): void {
+    this.clearNodeFragment();
+
+    const text = children.reduce((acc, glyph) => {
+      acc += glyph.text
+      return acc;
+    }, '');
+
+    this._text = text;
+
+    console.log(text);
+
+    this.doRender(children);
+  }
+
+  private render(): void {
+    const { _text } = this;
+    const words = this.parseText(_text);
+
+    this.clearNodeFragment();
 
     const children: GlyphDOMNode[] = [];
 
@@ -258,6 +279,13 @@ export class GlyphRowElement extends GlyphDOMNode<HTMLDivElement> {
           break;
       }
     }
+
+    return this.doRender(children);
+  }
+
+  private doRender(children: GlyphDOMNode[]): void {
+    const { body } = this._renderer;
+    const { visitors } = body;
 
     const nodeFragment = this._renderer.body.formatter.factory.createNodeFragment();
     nodeFragment.setChildren(children);

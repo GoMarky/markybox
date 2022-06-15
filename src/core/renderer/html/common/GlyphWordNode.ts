@@ -1,11 +1,11 @@
 import { GlyphDOMNode } from '@/core/renderer/html/common/GlyphDOMNode';
 
 export class GlyphWordNode extends GlyphDOMNode<HTMLSpanElement> {
-  constructor(public readonly text: string, public readonly startColumn: number, public readonly endColumn: number) {
+  constructor(private readonly rawText: string, public readonly startColumn: number, public readonly endColumn: number) {
     super();
 
     this._el = document.createElement('span');
-    this._el.textContent = this.text;
+    this._el.textContent = this.rawText;
   }
 
   public dispose(): void {

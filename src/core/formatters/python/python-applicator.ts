@@ -2,6 +2,8 @@ import { AbstractKeyApplicator, IAbstractKeyApplicator } from '@/core/formatters
 import { copyStringNumberOfTimes } from '@/base/string';
 import { BASE_INDENT_VALUE } from '@/core/renderer/html/common/helpers';
 import { ParenType } from '@/core/renderer/html/common/GlyphParenNode';
+import { GlyphTextNode } from '@/core/renderer/html/common/GlyphTextNode';
+import { GlyphIndentNode } from '@/core/renderer/html/common/GlyphIndentNode';
 
 export class PythonKeyApplicator extends AbstractKeyApplicator implements IAbstractKeyApplicator {
   constructor() {
@@ -19,12 +21,21 @@ export class PythonKeyApplicator extends AbstractKeyApplicator implements IAbstr
     const indentRow = controller.addRowAt(indentRowIndex);
     // Считаем количество отступов (учитываем соседние скобки до этого)
     const amountLeftParen = controller.getLeftParenAmountFromStartByIndex(indentRowIndex);
+    let _amountLeftParen = amountLeftParen;
 
-    console.log(currentRow.fragment.parenDepthLevel)
+    const indentGlyphs: GlyphIndentNode[] = [];
+
+    while (_amountLeftParen) {
+      --_amountLeftParen;
+
+      const glyph = new GlyphIndentNode(BASE_INDENT_VALUE);
+      indentGlyphs.push(glyph);
+    }
+
+    indentRow.renderGlyphs(indentGlyphs);
 
     // Выставляем нужно количество пробелов в зависимости от количества левых скобок
     const indentWhitespace = copyStringNumberOfTimes(BASE_INDENT_VALUE, amountLeftParen);
-    indentRow.setText(indentWhitespace);
 
     const existRightParenWindow = controller.findClosestLeftParenRowDown(indentRowIndex);
 
