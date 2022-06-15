@@ -90,7 +90,7 @@ export class MHTMLEditorBody extends GlyphDOMNode<HTMLDivElement> {
 
   public reRenderExistNodes(): void {
     const text = this.renderer.getText();
-    this.renderer.clear();
+    this.storage.clear();
     this.renderer.setText(text);
   }
 

@@ -32,29 +32,48 @@ export class KeywordCheckerVisitor extends BaseObject implements IVisitor {
     const glyphs = children.filter((glyph) => glyph instanceof GlyphWordNode) as GlyphWordNode[];
 
     for (const [index, glyph] of glyphs.entries()) {
-      this.checkStatement(glyph);
+      const isStatement = this.checkStatement(glyph);
+
+      if (isStatement) {
+        continue;
+      }
 
       const previousGlyph = glyphs[index - 1];
-      this.checkStatementName(glyph, previousGlyph);
-      this.checkIsString(glyph);
-      this.checkParentheses();
+      const isStatementName = this.checkStatementName(glyph, previousGlyph);
+
+      if (isStatementName) {
+        continue;
+      }
+
+      const isStringStatement = this.checkIsString(glyph);
+
+      if (isStringStatement) {
+        continue;
+      }
+
+      const isTypeStatement = this.isTypeStatement(glyph, previousGlyph);
     }
   }
 
-  private checkParentheses(): void {
+  private isTypeStatement(current: GlyphWordNode, previous?: GlyphWordNode): boolean {
+    console.log(current, previous);
+    return false;
   }
 
-  private checkIsString(word: GlyphWordNode): void {
+  private checkIsString(word: GlyphWordNode): boolean {
     const { text } = word;
 
     if (text.startsWith('\'') && text.endsWith('\'')) {
       this.doAddClassName(word, 'm-editor__keyword-identifier-string');
+      return true;
     }
+
+    return false;
   }
 
-  private checkStatementName(current: GlyphWordNode, previous?: GlyphWordNode): void {
+  private checkStatementName(current: GlyphWordNode, previous?: GlyphWordNode): boolean {
     if (!previous) {
-      return;
+      return false;
     }
 
     const { formatter } = this.body;
@@ -64,12 +83,14 @@ export class KeywordCheckerVisitor extends BaseObject implements IVisitor {
     switch (statement) {
       case CodeStatement.VariableDeclaration: {
         this.doAddClassName(current, 'm-editor__keyword-identifier-name');
-        break;
+        return true;
       }
     }
+
+    return false;
   }
 
-  private checkStatement(glyph: GlyphWordNode): void {
+  private checkStatement(glyph: GlyphWordNode): boolean {
     const { formatter } = this.body;
 
     const statement = formatter.parseKeyword(glyph.text);
@@ -77,7 +98,10 @@ export class KeywordCheckerVisitor extends BaseObject implements IVisitor {
 
     if (className) {
       this.doAddClassName(glyph, className);
+      return true;
     }
+
+    return false;
   }
 
   private doAddClassName(glyph: GlyphWordNode, className: string): void {

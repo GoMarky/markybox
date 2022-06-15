@@ -79,7 +79,9 @@ module.exports = ({ mode } = { mode: 'production' }) => {
     'process.env.BUILD_DATE': JSON.stringify(new Date().toString()),
     'process.env.APP_VERSION': JSON.stringify(EnvironmentVariable.appVersion),
     'process.env.PUBLIC_PATH': JSON.stringify(EnvironmentVariable.publicPath),
-    'process.env.API_VERSION': JSON.stringify('v1')
+    'process.env.API_VERSION': JSON.stringify('v1'),
+    '__VUE_OPTIONS_API__': JSON.stringify(false),
+    '__VUE_PROD_DEVTOOLS__': JSON.stringify(true),
   }
 
   plugins.push(
