@@ -248,8 +248,6 @@ export class GlyphRowElement extends GlyphDOMNode<HTMLDivElement> {
 
     this._text = text;
 
-    console.log(text);
-
     this.doRender(children);
   }
 

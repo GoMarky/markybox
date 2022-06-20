@@ -6,6 +6,7 @@ import { IRendererDisplay } from '@/core/app/renderer';
 import { debounce } from '@/base/async';
 import { EditorGutterContainer } from '@/core/renderer/html/editor/EditorGutterContainer';
 import { EditorStorage } from '@/core/renderer/html/system/EditorStorage';
+import { toDisposable } from '@/platform/lifecycle/common/lifecycle';
 
 const EDITOR_OFFSET_POSITION: IDOMPosition = {
   top: 52,
@@ -61,10 +62,12 @@ export class EditorDisplayController extends BaseObject implements IRendererDisp
     const { storage, root } = this;
     const resizeBodyDelayMilliseconds = 250;
 
-    window.addEventListener('resize', () => {
+    const onResize = () => {
       const { innerWidth } = window;
       root.style.width = toPixel(innerWidth);
-    })
+    };
+
+    window.addEventListener('resize', onResize)
 
     const debounced = debounce(() => {
       const { count } = storage;
@@ -76,6 +79,7 @@ export class EditorDisplayController extends BaseObject implements IRendererDisp
       root.style.height = toPixel(rootHeight);
     }, resizeBodyDelayMilliseconds);
 
-    storage.onDidUpdate(debounced)
+    this.disposables.add(toDisposable(() => window.removeEventListener('resize', onResize)))
+    this.disposables.add(storage.onDidUpdate(debounced));
   }
 }

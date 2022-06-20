@@ -1,6 +1,7 @@
 import { GlyphDOMNode } from '@/core/renderer/html/common/GlyphDOMNode';
 import { toPixel } from '@/base/dom';
 import { HTMLRenderer } from '@/core';
+import { toDisposable } from '@/platform/lifecycle/common/lifecycle';
 
 export class GlyphRowGutterElement extends GlyphDOMNode<HTMLSpanElement> {
   private _expandable: boolean = false;
@@ -45,6 +46,8 @@ export class GlyphRowGutterElement extends GlyphDOMNode<HTMLSpanElement> {
     this._widgetElement = widgetElement;
 
     this._el.addEventListener('click', this.onClick);
+
+    this.disposables.add(toDisposable(() => this._el.removeEventListener('click', this.onClick)));
   }
 
   private onClick = (): void => {

@@ -55,8 +55,7 @@ export class KeywordCheckerVisitor extends BaseObject implements IVisitor {
     }
   }
 
-  private isTypeStatement(current: GlyphWordNode, previous?: GlyphWordNode): boolean {
-    console.log(current, previous);
+  private isTypeStatement(_: GlyphWordNode, __?: GlyphWordNode): boolean {
     return false;
   }
 

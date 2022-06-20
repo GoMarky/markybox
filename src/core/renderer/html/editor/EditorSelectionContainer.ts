@@ -4,6 +4,7 @@ import { UserSelectionLayer } from '@/core/renderer/html/layers/UserSelectionLay
 import { HTMLRenderer } from '@/core';
 import { EditorDisplayController } from '@/core/renderer/html/system/EditorDisplayController';
 import { EditorStorage } from '@/core/renderer/html/system/EditorStorage';
+import { toDisposable } from '@/platform/lifecycle/common/lifecycle';
 
 export interface ISelectionPosition {
   row: number;
@@ -89,9 +90,20 @@ export class EditorSelectionContainer extends BaseObject {
 
   public mount(body: HTMLElement): void {
     this.layer.mount(body);
-    body.addEventListener('contextmenu', (event) => event.preventDefault());
-    window.addEventListener('mousedown', (event) => this.renderer.currentState.onSelectionStart(event));
-    window.addEventListener('mousemove', (event) => this.renderer.currentState.onSelectionMove(event));
-    window.addEventListener('mouseup', (event) => this.renderer.currentState.onSelectionEnd(event));
+
+    const onContextmenu = (event: Event) => event.preventDefault();
+    const onMousedown = (event: MouseEvent) => this.renderer.currentState.onSelectionStart(event);
+    const onMousemove = (event: MouseEvent) => this.renderer.currentState.onSelectionMove(event);
+    const onMouseup = (event: MouseEvent) => this.renderer.currentState.onSelectionEnd(event);
+
+    body.addEventListener('contextmenu', onContextmenu);
+    window.addEventListener('mousedown', onMousedown);
+    window.addEventListener('mousemove', onMousemove);
+    window.addEventListener('mouseup', onMouseup);
+
+    this.disposables.add(toDisposable(() => body.removeEventListener('contextmenu', onContextmenu)));
+    this.disposables.add(toDisposable(() => window.removeEventListener('mousedown', onMousedown)));
+    this.disposables.add(toDisposable(() => window.removeEventListener('mousemove', onMousemove)));
+    this.disposables.add(toDisposable(() => window.removeEventListener('mouseup', onMouseup)));
   }
 }

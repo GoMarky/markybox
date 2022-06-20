@@ -15,6 +15,7 @@ import { UserTextHintVisitor } from '@/core/renderer/html/visitors/UserTextHintV
 import { KeywordCheckerVisitor } from '@/core/renderer/html/visitors/KeywordCheckerVisitor';
 import { EditorSimpleNavigator } from '@/core/renderer/html/editor/EditorSimpleNavigator';
 import { IAbstractRenderer } from '@/core/app/renderer';
+import { toDisposable } from '@/platform/lifecycle/common/lifecycle';
 
 export class HTMLRenderer extends BaseObject implements IAbstractRenderer {
   public readonly storage: EditorStorage;
@@ -170,7 +171,13 @@ export class HTMLRenderer extends BaseObject implements IAbstractRenderer {
       })
     );
 
-    window.addEventListener('mousedown', (event) => this.currentState.onClick(event));
-    window.addEventListener('keydown', (event) => this.currentState.onKeyDown(event));
+    const onMousedown = (event: MouseEvent) => this.currentState.onClick(event);
+    const onKeydown = (event: KeyboardEvent) => this.currentState.onKeyDown(event);
+
+    window.addEventListener('mousedown', onMousedown);
+    window.addEventListener('keydown', onKeydown);
+
+    this.disposables.add(toDisposable(() => window.removeEventListener('mousedown', onMousedown)));
+    this.disposables.add(toDisposable(() => window.removeEventListener('keydown', onKeydown)));
   }
 }

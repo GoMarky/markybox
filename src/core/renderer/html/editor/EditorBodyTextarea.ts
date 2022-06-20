@@ -3,6 +3,7 @@ import { toPixel } from '@/base/dom';
 import { Char } from '@/base/char';
 import { GlyphDOMNode } from '@/core/renderer/html/common/GlyphDOMNode';
 import { isSystemChar } from '@/core/app/common';
+import { toDisposable } from '@/platform/lifecycle/common/lifecycle';
 
 export type MChar = string;
 
@@ -37,7 +38,7 @@ export class EditorBodyTextarea extends GlyphDOMNode<HTMLTextAreaElement> {
     const { _el } = this;
     _el.style.left = toPixel(42);
 
-    window.addEventListener('keydown', (event) => {
+    const onKeydown = (event: KeyboardEvent) => {
       if (event.defaultPrevented) {
         return;
       }
@@ -54,6 +55,12 @@ export class EditorBodyTextarea extends GlyphDOMNode<HTMLTextAreaElement> {
       }
 
       this._onDidUpdate.fire(key);
-    })
+    }
+
+    window.addEventListener('keydown', onKeydown);
+
+    this.disposables.add(toDisposable(() => {
+      window.removeEventListener('keydown', onKeydown);
+    }))
   }
 }
