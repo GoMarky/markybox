@@ -180,4 +180,8 @@ export class HTMLRenderer extends BaseObject implements IAbstractRenderer {
     this.disposables.add(toDisposable(() => window.removeEventListener('mousedown', onMousedown)));
     this.disposables.add(toDisposable(() => window.removeEventListener('keydown', onKeydown)));
   }
+
+  public dispose(): void {
+    super.dispose();
+  }
 }

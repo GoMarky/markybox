@@ -34,6 +34,10 @@ export class EditorService extends Disposable implements IEditorService {
     this._editor = new markybox.MEditor({ renderer });
   }
 
+  public destroy(): void {
+    this._renderer.dispose();
+  }
+
   public async create(noteId: Note.NoteId): Promise<void> {
     const { name: userName, isAuth } = this.sessionService.profile;
 

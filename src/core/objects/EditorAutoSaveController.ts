@@ -34,8 +34,6 @@ export class EditorAutoSaveController extends BaseObject {
   private doSave = debounce(() => {
     const text = this.renderer.getText();
 
-    this.renderer.logger?.info(`Document saved.`);
-
     if (this.type === AutoSave.Always) {
       this._onDidSave.fire(text);
     }
