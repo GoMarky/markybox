@@ -7,20 +7,6 @@ export const ILayoutService = createDecorator<ILayoutService>('layoutService');
 
 type ModalName = 'UserLoginModal' | 'UserProfileModal';
 
-interface INotificationItem {
-  title: string;
-  text?: string;
-  hideAfter?: number;
-}
-
-export class NotificationController extends Disposable {
-  public readonly notifications: Ref<INotificationItem[]> = ref([]);
-
-  public info(notification: INotificationItem): void {
-    this.notifications.value.push(notification);
-  }
-}
-
 export class ModalController extends Disposable {
   public readonly isOpen: Ref<boolean> = ref(false);
   public readonly currentModal: Ref<string | null> = ref(null);
@@ -46,5 +32,4 @@ export class ModalController extends Disposable {
 
 export interface ILayoutService {
   readonly modal: ModalController;
-  readonly notification: NotificationController;
 }
