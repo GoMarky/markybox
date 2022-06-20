@@ -61,6 +61,11 @@ export class EditorDisplayController extends BaseObject implements IRendererDisp
     const { storage, root } = this;
     const resizeBodyDelayMilliseconds = 250;
 
+    window.addEventListener('resize', () => {
+      const { innerWidth } = window;
+      root.style.width = toPixel(innerWidth);
+    })
+
     const debounced = debounce(() => {
       const { count } = storage;
       const { innerHeight } = window;

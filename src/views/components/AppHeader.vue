@@ -64,6 +64,7 @@ import { Mime } from '@/base/string';
 import UISelect from '@/views/components/ui/UISelect.vue';
 import * as markybox from '@/core';
 import { IEditorService } from '@/code/editor/common/editor-service';
+import { useNotifications } from '@/views/components/notification/use-notifications';
 
 export default window.workbench.createComponent((accessor) => {
   const sessionService = accessor.get(ISessionService);
@@ -80,6 +81,7 @@ export default window.workbench.createComponent((accessor) => {
       const router = useRouter();
       const { name, isAuth } = sessionService.profile;
       const currentEditorLang = ref<markybox.EditorLang>('plain');
+      const { addNotification } = useNotifications();
 
       const editorLanguages: markybox.EditorLang[] = markybox.getSupportedSyntaxes();
 
@@ -122,7 +124,7 @@ export default window.workbench.createComponent((accessor) => {
 
         await window.navigator.clipboard.write(data);
 
-        layoutService.notification.info({
+        addNotification({
           title: 'Link copied',
           hideAfter: 1500,
         })

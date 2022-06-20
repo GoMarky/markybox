@@ -3,20 +3,21 @@
     <notification-item
       v-for="(notification, index) in notifications"
       :index="index"
+      :level="notification.level"
       :key="`${notification.title}-${notification.text}`"
       :text="notification.text"
       :title="notification.title" />
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import NotificationItem from './NotificationItem';
 import { useNotifications } from '@/views/components/notification/use-notifications';
 
 const { notifications } = useNotifications()
 </script>
 
-<script>
+<script lang="ts">
 export default {
   name: 'NotificationContainer'
 }

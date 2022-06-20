@@ -46,7 +46,8 @@ export default window.workbench.createComponent((accessor) => {
 </script>
 
 <style lang="sass">
-@import "./src/views/styles/global/_base.sass"
+@import './src/views/styles/global/_base.sass'
+@import './src/views/styles/global/_theme.sass'
 
 .modal
   -webkit-overflow-scrolling: touch
@@ -58,7 +59,7 @@ export default window.workbench.createComponent((accessor) => {
   right: 0
   padding-top: 50px
   padding-bottom: 50px
-  z-index: 6
+  z-index: $z-index-modal
   display: none
 
   &--is-visible
