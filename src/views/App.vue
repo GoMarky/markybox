@@ -1,5 +1,12 @@
 <template>
-  <div class="app">
+  <div
+    class="app"
+    :class="{
+      'app_has-drawer': isDrawerShown,
+      'app_has-bottom-nav': isBottomNavShown,
+      'app_has-header': isHeaderShown,
+    }"
+  >
     <template>
       <app-modal />
       <div
@@ -13,7 +20,9 @@
       <notification-container />
     </template>
 
-    <router-view />
+    <div class="app__main-content">
+      <router-view />
+    </div>
   </div>
 </template>
 
@@ -24,6 +33,9 @@ import UserLoginModal from '@/views/modals/UserLoginModal.vue';
 import UserProfileModal from '@/views/modals/UserProfileModal.vue';
 import NotificationContainer from '@/views/components/notification/NotificationContainer.vue';
 import { ILayoutService } from '@/platform/layout/common/layout';
+import useDrawer from '@/views/composables/use-drawer';
+import useBottomNav from '@/views/composables/use-bottom-navigation';
+import useHeader from '@/views/composables/use-header';
 
 export default window.workbench.createComponent((accessor) => {
   const layoutService = accessor.get(ILayoutService);
@@ -39,7 +51,11 @@ export default window.workbench.createComponent((accessor) => {
     setup() {
       const { isOpen: isOpenModal, currentModal } = layoutService.modal;
 
-      return { isOpenModal, currentModal }
+      const { isDrawerShown } = useDrawer();
+      const { isBottomNavShown } = useBottomNav();
+      const { isHeaderShown } = useHeader();
+
+      return { isOpenModal, currentModal, isDrawerShown, isBottomNavShown, isHeaderShown }
     },
   });
 })
@@ -48,4 +64,15 @@ export default window.workbench.createComponent((accessor) => {
 <style lang="sass">
 @import "./src/views/styles/global/_base.sass"
 @import "./src/views/styles/global/_helpers.sass"
+
+.app
+  &__main-content
+    display: flex
+    width: 100%
+    max-height: 100%
+    position: relative
+    flex-grow: 1
+    flex-direction: column
+    overflow: hidden
+
 </style>

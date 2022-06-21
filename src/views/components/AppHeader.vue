@@ -5,7 +5,7 @@
     </div>
     <router-link :to="{ name: 'HomePage' }" class="page-header__logo">
       <div class="page-header__logo-wrapper">
-        LOGO HERE
+        <img class="page-header__logo-image" :src="require('@/assets/gomarky-logo.png').default">
       </div>
       <div class="page-header__logo-title">
         markybox
@@ -14,33 +14,35 @@
     <nav class="page-header__navigation">
       <ul class="page-header__nav-list">
         <li class="page-header__nav-item">
-          <UISelect
-            label="Lang"
-            :value="currentEditorLang"
-            @update:value="currentEditorLang = $event"
-            v-model="currentEditorLang"
-            :options="editorLanguages"
-          ></UISelect>
+          <button type="button" class="btn btn_primary page-header__nav-link">
+            <icon-settings />
+          </button>
+<!--          <UISelect-->
+<!--            label="Lang"-->
+<!--            :value="currentEditorLang"-->
+<!--            @update:value="currentEditorLang = $event"-->
+<!--            v-model="currentEditorLang"-->
+<!--            :options="editorLanguages"-->
+<!--          ></UISelect>-->
         </li>
         <li class="page-header__nav-item">
-          <button type="button" @click.prevent="copyNoteLink()"
-                  class="btn btn_primary page-header__nav-link">
-            Share link
+          <button
+            type="button"
+            @click.prevent="copyNoteLink()"
+            class="btn btn_primary page-header__nav-link">
+            <icon-share />
           </button>
         </li>
         <li class="page-header__nav-item">
-          <button type="button" @click.prevent="clearNote()"
-                  class="btn btn_primary page-header__nav-link">
-            Clear
+          <button
+            v-if="isAuth"
+            @click.prevent="openUserProfileModal()"
+            type="button"
+            class="btn btn_primary page-header__nav-link">
+            <icon-profile />
           </button>
-        </li>
-        <li class="page-header__nav-item">
-          <button type="button" v-if="isAuth" @click.prevent="openUserProfileModal()"
-                  class="btn btn_primary page-header__nav-link">
-            Profile
-          </button>
-          <button v-else type="button" @click.prevent="openLoginModal()" class="btn btn_primary page-header__nav-link">
-            Login
+          <button v-else @click.prevent="openLoginModal()" type="button" class="btn btn_primary page-header__nav-link">
+            {{ $t('header.login.title') }}
           </button>
         </li>
         <li v-if="!isAuth" class="page-header__nav-item">
@@ -48,7 +50,7 @@
             :to="{ name: $RouteName.RegistrationPage }"
             type="button"
             class="btn btn_primary page-header__nav-link">
-            Sign up
+            {{ $t('header.registration.title') }}
           </router-link>
         </li>
       </ul>
@@ -73,6 +75,9 @@ import useDrawer from '@/views/composables/use-drawer';
 
 import UISelect from '@/views/components/ui/UISelect.vue';
 import IconBurgerMenu from '@/views/components/icons/IconBurgerMenu.vue';
+import IconProfile from '@/views/components/icons/IconProfile.vue';
+import IconShare from '@/views/components/icons/IconShare.vue';
+import IconSettings from '@/views/components/icons/IconSettings.vue';
 
 export default window.workbench.createComponent((accessor) => {
   const sessionService = accessor.get(ISessionService);
@@ -84,6 +89,9 @@ export default window.workbench.createComponent((accessor) => {
     name: Component.AppHeader,
     components: {
       UISelect,
+      IconProfile,
+      IconSettings,
+      IconShare,
       IconBurgerMenu,
     },
     setup() {
@@ -161,60 +169,64 @@ export default window.workbench.createComponent((accessor) => {
 
 .page-header
   display: flex
-  flex-direction: column
-  padding: 9.5px 0
+  flex-direction: row
+  overflow: hidden
+  height: 40px
+  padding: 10px
+  flex-shrink: 0
   background-color: $base-background
   align-items: center
   position: sticky
-  top: 0
   z-index: $z-index-page-header
   min-height: 40px
   box-sizing: border-box
 
-.page-header__logo
-  @include offset
-  display: flex
-  flex-direction: row
-  margin-right: auto
-  padding-left: 1.25rem
-  font-size: 0
-  outline-color: $yellow-color
+  &__logo
+    @include offset
+    display: flex
+    flex-direction: row
+    align-items: center
+    margin-right: auto
+    font-size: 0
+    outline-color: $yellow-color
 
-.page-header__logo-wrapper
-  margin-right: 7px
-  margin-top: 3px
+  &__logo-wrapper
+    margin-right: 7px
 
-.page-header__logo-title
-  @include offset
-  font-size: 1.125rem
-  color: $white-color
-  font-weight: bold
-  line-height: 1
-  text-align: left
+  &__logo-image
+    width: 32px
+    height: 32px
+
+  &__logo-title
+    @include offset
+    font-size: 1.125rem
+    color: $white-color
+    font-weight: bold
+    line-height: 1
+    text-align: left
 
 .page-header__menu
-  font-size: 24px
+  display: flex
+  font-size: 28px
 
 .page-header__navigation
-  width: 100%
   text-align: center
-  padding-top: 15px
   z-index: 10
-  display: none
-  position: absolute
-  top: 50px
-  left: 0
-  background-color: $header-background
-
-  &--is-visible
-    display: block
-
-  &--no-js
-    position: static
-    display: block
+  display: block
+  top: 0
+  position: static
+  background-color: inherit
+  padding-top: 0
+  flex-basis: 66%
+  padding-right: 0.25rem
+  width: auto
+  margin-left: 35px
 
 .page-header__nav-list
   @include offset
+  display: flex
+  flex-direction: row
+  justify-content: flex-end
   margin-left: 3.125%
   margin-right: 3.125%
 
@@ -234,13 +246,6 @@ export default window.workbench.createComponent((accessor) => {
   outline-color: $yellow-color
   border-bottom: 2px solid $black-color
 
-  &--is-active
-    border-bottom-color: $yellow-color
-
-  &--tel
-    color: $white-color
-    font-size: 1.125rem
-
 @media (min-width: $tablet-width)
   .page-header
     flex-direction: row
@@ -252,21 +257,8 @@ export default window.workbench.createComponent((accessor) => {
     flex-grow: 0
 
   .page-header__navigation
-    top: 0
-    position: static
-    background-color: inherit
-    display: block
-    padding-top: 0
-    flex-basis: 66%
-    padding-right: 0.25rem
-    width: auto
-    margin-left: 35px
 
   .page-header__nav-list
-    display: flex
-    flex-direction: row
-    justify-content: flex-end
-    margin: 0
 
   .page-header__nav-item
     border-bottom: none
@@ -279,18 +271,14 @@ export default window.workbench.createComponent((accessor) => {
 
 @media (min-width: 900px)
   .page-header__navigation
-    flex-basis: 61%
 
 @media (min-width: $desktop-width)
   .page-header__nav-item
-    margin-right: 1.5rem
 
   .page-header__nav-link
-    font-size: 0.9rem
 
 @media (min-width: $full-desktop-width)
   .page-header__navigation
-    flex-basis: 58%
 
 </style>
 

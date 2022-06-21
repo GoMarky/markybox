@@ -1,11 +1,13 @@
 <template>
-  <div class="m-app">
+  <div
+    class="m-app"
+  >
     <div v-if="isHeaderShown" class="m-app__header">
       <app-header />
     </div>
 
-    <div v-if="isDrawerShown" class="m-app__aside">
-      <app-drawer />
+    <div class="m-app__aside">
+      <app-drawer v-if="isDrawerShown" />
     </div>
 
     <div v-if="isBottomNavShown" class="m-app__bottom-nav">
@@ -35,6 +37,26 @@ const { isHeaderShown } = useHeader();
 
 <style lang="sass">
 .m-app
+  display: flex
+  flex-direction: column
+  position: fixed
+  flex-grow: 1
+  max-height: 100%
+  top: 0
+  left: env(safe-area-inset-left,0)
+  right: env(safe-area-inset-right,0)
+  bottom: 0
+  overflow: hidden
+
+  &__header
+    top: 0
+
+  &__body
+    display: flex
+    flex-direction: column
+    flex-grow: 1
+    overflow-x: hidden
+    overflow-y: scroll
 
   &__bottom-nav
     position: fixed
@@ -48,12 +70,20 @@ const { isHeaderShown } = useHeader();
     transition: transform .3s ease
     border-top: 1px solid var(--c-nav-divider)
 
-    &__aside
-      position: absolute
-      top: 0
-      bottom: 0
-      left: 0
-      right: 0
+  &__aside
+    transform: translateX(-100%)
+    will-change: transform
+    transition: transform .3s
+    z-index: 20
+    position: absolute
+    top: 0
+    bottom: 0
+    left: 0
+    right: 0
+
+
+.app_has-drawer .m-app__aside
+  transform: translateX(0)
 </style>
 
 <script lang="ts">
