@@ -1,25 +1,20 @@
 <template>
-  <div class="c-drawer">
-    <div class="c-drawer__content" ref="contentRef">
-      <div class="c-drawer__top-container">
+  <div class="m-drawer">
+    <div class="m-drawer__content" ref="contentRef">
+      <div class="m-drawer__top-container">
 
       </div>
 
-      <div class="c-drawer__logout">
+      <div class="m-drawer__logout">
         <UIButton is-outline>{{ $t('profile.settings.logout') }}</UIButton>
       </div>
 
-      <div
-        class="ui-ident-status ui-ident-status_no-offset"
-        style="padding: 10px 16px"
-      >
-        <div>
-          <div class="ui-ident-status__title">Built on</div>
-          <div style="font-size: 13px; font-weight: 500">{{ 123123123 }}</div>
-        </div>
+      <div>
+        <div class="m-drawer__build-date">Built on</div>
+        <div style="font-size: 13px; font-weight: 500">{{ 123123123 }}</div>
       </div>
     </div>
-    <button class="c-drawer__button" type="button" @click="closeDrawer()">
+    <button class="m-drawer__button" type="button" @click="closeDrawer()">
       <IconClose />
     </button>
   </div>
@@ -39,12 +34,15 @@ export default { name: 'AppDrawer' };
 </script>
 
 <style lang="sass">
-.c-drawer
+.m-drawer
   width: 100%
   height: 100%
   display: flex
   align-items: flex-start
   overflow: hidden
+
+  &__build-date
+
 
   &__content
     position: relative
@@ -53,7 +51,6 @@ export default { name: 'AppDrawer' };
     background-color: #ffffff
     overflow-y: auto
     padding-bottom: 50px
-
 
   &__button
     font-size: 12px

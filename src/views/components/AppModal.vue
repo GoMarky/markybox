@@ -46,8 +46,6 @@ export default window.workbench.createComponent((accessor) => {
 </script>
 
 <style lang="sass">
-@import './src/views/styles/global/_base.sass'
-@import './src/views/styles/global/_theme.sass'
 
 .modal
   -webkit-overflow-scrolling: touch
@@ -59,7 +57,7 @@ export default window.workbench.createComponent((accessor) => {
   right: 0
   padding-top: 50px
   padding-bottom: 50px
-  z-index: $z-index-modal
+  z-index: var(--z-index-modal-layer)
   display: none
 
   &--is-visible
@@ -67,18 +65,18 @@ export default window.workbench.createComponent((accessor) => {
 
 .modal__header
   min-height: 40px
-
   display: flex
   flex-direction: row
   align-items: center
   justify-content: space-between
-  background-color: $yellow-color
+  background-color: var(--foreground-default)
 
 .modal__title
-  @include offset
+  margin: 0
+  padding: 0
   font-size: 1.35rem
   font-weight: lighter
-  color: $black-color
+  color: var(--accent-blurple-dimmer)
   line-height: 2.1
   text-align: left
   padding-left: 12px
@@ -90,9 +88,10 @@ export default window.workbench.createComponent((accessor) => {
   font-size: 0
   width: 18px
   height: 18px
-  @include offset
+  margin: 0
+  padding: 0
   right: 8px
-  outline-color: $yellow-color
+  outline-color: var(--foreground-default)
   top: 11px
   position: absolute
   cursor: pointer
@@ -103,7 +102,7 @@ export default window.workbench.createComponent((accessor) => {
     position: absolute
     width: 18px
     height: 7px
-    background-color: $black-color
+    background-color: var(--accent-blurple-dimmer)
     top: 6px
     left: 0
     transform: rotate(45deg)
@@ -113,7 +112,7 @@ export default window.workbench.createComponent((accessor) => {
     position: absolute
     width: 18px
     height: 7px
-    background-color: $black-color
+    background-color: var(--accent-blurple-dimmer)
     bottom: 5px
     left: 0
     transform: rotate(135deg)
@@ -124,13 +123,13 @@ export default window.workbench.createComponent((accessor) => {
   width: 100%
   margin: 0 auto
   padding-bottom: 50px
-  color: $black-color
+  color: var(--accent-blurple-dimmer)
 
 .modal__content
   height: 100%
   margin: 0 auto
 
 .modal__main
-  background: $white-color
+  background: var(--root-color)
   padding: 20px
 </style>

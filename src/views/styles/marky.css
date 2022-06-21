@@ -1,5 +1,15 @@
 @import 'marky-keyword-style.css';
 
+:root {
+    --marky-text-color: #222;
+    --marky-background-color: #fff;
+    --marky-background-color-secondary: #e8e8e8;
+    --marky-selection-color: #b5d5ff;
+    --marky-active-line-color: rgba(0, 0, 0, 0.071);
+
+    --marky-selection-z-index: 10;
+}
+
 .marky__indent-node {
     background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAACCAYAAACZgbYnAAAAE0lEQVQImWP4////f4bLly//BwAmVgd1/w11/gAAAABJRU5ErkJggg==) right repeat-y;
 }
@@ -21,15 +31,15 @@
 .m-editor__gutter {
     user-select: none;
     display: flex;
-    color: #222;
-    background-color: #e8e8e8;
+    color: var(--marky-text-color);
+    background-color: var(--marky-background-color-secondary);
     flex-direction: column;
     height: 100%;
 }
 
 .m-editor__body {
-    background-color: #fff;
-    color: #222;
+    background-color: var(--marky-background-color);
+    color: var(--marky-text-color);
     user-select: none;
     position: relative;
     height: 100%;
@@ -78,7 +88,7 @@
     height: 16px;
     left: 0;
     right: 0;
-    background: rgba(0, 0, 0, 0.071);
+    background: var(--marky-active-line-color);
 }
 
 .m-editor__layer-caret {
@@ -99,7 +109,7 @@
 .m-editor__layer-partition {
     width: 1px;
     height: 100%;
-    background-color: #e8e8e8;;
+    background-color: var(--marky-background-color-secondary);
 }
 
 .m-editor__layer-caret-label {
@@ -118,8 +128,8 @@
 .m-editor__selection-row {
     position: absolute;
     opacity: 0.5;
-    background-color: #b5d5ff;
-    z-index: var(--z-index-selection);
+    background-color: var(--marky-selection-color);
+    z-index: var(--marky-selection-z-index);
 }
 
 .m-editor__gutter-cell-widget {

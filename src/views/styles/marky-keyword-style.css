@@ -1,27 +1,38 @@
+:root {
+    --marky-keyword-class-color: #c800a4;
+    --marky-keyword-class-name-color: #c79229;
+    --marky-keyword-function-color: #c800a4;
+    --marky-keyword-function-name-color: #2858b3;
+    --marky-keyword-identifier-color: #c800a4;
+    --marky-keyword-identifier-name-color: #2858b3;
+    --marky-keyword-identifier-string-color: #4bad4d;
+}
+
 .m-editor__keyword-class {
-    color: #c800a4;
+    color: var(--marky-keyword-class-color);
 }
 
 .m-editor__keyword-class-name {
-    color: #c79229;
-}
-
-.m-editor__keyword-function-name {
-    color: #2858b3;
+    color: var(--marky-keyword-class-name-color);
 }
 
 .m-editor__keyword-function {
-    color: #c800a4;
+    color: var(--marky-keyword-function-color);
 }
 
-.m-editor__keyword-identifier-name {
-    color: #2858b3;
-}
-
-.m-editor__keyword-identifier-string {
-    color: #4bad4d;
+.m-editor__keyword-function-name {
+    color: var(--marky-keyword-function-name-color);
 }
 
 .m-editor__keyword-identifier {
-    color: #c800a4;
+    color: var(--marky-keyword-identifier-color);
 }
+
+.m-editor__keyword-identifier-name {
+    color: var(--marky-keyword-identifier-name-color);
+}
+
+.m-editor__keyword-identifier-string {
+    color: var(--marky-keyword-identifier-string-color);
+}
+

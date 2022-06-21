@@ -1,14 +1,14 @@
 <template>
-  <div class="f-bottom-nav" :class="{ 'is-hidden': !isBottomNavShown }">
+  <div class="m-bottom-nav" :class="{ 'is-hidden': !isBottomNavShown }">
     <div
       v-for="item in bottomMenuItems"
       :key="item.id"
-      class="f-bottom-nav__item"
+      class="m-bottom-nav__item"
       :class="{ 'is-active': activeMenuItem === item }"
       @click="onNavItemClick(item)"
     >
-      <component :is="item.icon" class="f-bottom-nav__icon" />
-      <div class="f-bottom-nav__item-title">
+      <component :is="item.icon" class="m-bottom-nav__icon" />
+      <div class="m-bottom-nav__item-title">
         {{ item.name }}
       </div>
     </div>
@@ -108,11 +108,10 @@ function onTap(): void {
 }
 
 onMounted(() => {
-  container = document.querySelector('body');
+  container = document.querySelector('#scroll-container');
 
   if (!container) {
-    console.warn('Could not find scroll container');
-    return;
+    return console.warn('Could not find scroll container');
   }
 
   container.addEventListener('scroll', onScroll, { passive: true });
@@ -136,7 +135,7 @@ export default { name: 'AppBottomNavigation' };
 </script>
 
 <style lang="sass">
-.f-bottom-nav
+.m-bottom-nav
   position: fixed
   bottom: 0
   left: 0
@@ -172,7 +171,6 @@ export default { name: 'AppBottomNavigation' };
 
     &.is-active
       color: var(--c-nav-primary-accent-tabbar)
-
 
   &__icon
     width: 24px

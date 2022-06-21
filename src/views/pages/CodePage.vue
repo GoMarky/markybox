@@ -59,9 +59,6 @@ export default window.workbench.createComponent((accessor) => {
 </script>
 
 <style lang="sass">
-\:root
-  --z-index-selection: 10
-
 .marky
   display: flex
   position: relative
@@ -69,7 +66,6 @@ export default window.workbench.createComponent((accessor) => {
   direction: ltr
   text-align: left
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0)
-
 
 @keyframes blinker
   50%

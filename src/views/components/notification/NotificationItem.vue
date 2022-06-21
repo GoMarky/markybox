@@ -44,20 +44,18 @@ export default {
 </script>
 
 <style lang="sass">
-@import './src/views/styles/global/_theme.sass'
-@import './src/views/styles/global/mixins.sass'
-
 .notification
   display: flex
   flex-direction: column
-  background-color: $base-background
+  background-color: var(--background-default)
   width: 260px
   padding: 10px
   border-radius: 5px
 
 .notification__title
   font-size: 16px
-  @include offset()
+  margin: 0
+  padding: 0
 
 .notification__close
   align-self: flex-end

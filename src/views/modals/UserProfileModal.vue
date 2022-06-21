@@ -156,8 +156,7 @@ export default window.workbench.createComponent((accessor) => {
 </script>
 
 <style lang="sass">
-@import "./src/views/styles/global/_base.sass"
-@import "./src/views/styles/global/_helpers.sass"
+@import '../styles/base'
 
 .user-profile
   color: inherit
@@ -180,11 +179,12 @@ export default window.workbench.createComponent((accessor) => {
     border: 1px dashed #222
 
 .user-profile__notes-list
-  @include offset
+  margin: 0
   padding: 5px
 
 .user-profile__note-item
-  @include offset
+  margin: 0
+  padding: 0
   cursor: pointer
   list-style: none
   margin-bottom: 10px

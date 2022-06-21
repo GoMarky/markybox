@@ -164,9 +164,6 @@ export default window.workbench.createComponent((accessor) => {
 </script>
 
 <style lang="sass" scoped>
-@import "./src/views/styles/global/_mixins.sass"
-@import "./src/views/styles/global/_theme.sass"
-
 .page-header
   display: flex
   flex-direction: row
@@ -174,21 +171,22 @@ export default window.workbench.createComponent((accessor) => {
   height: 40px
   padding: 10px
   flex-shrink: 0
-  background-color: $base-background
+  background-color: var(--background-default)
   align-items: center
   position: sticky
-  z-index: $z-index-page-header
+  z-index: var(--z-index-app-header)
   min-height: 40px
   box-sizing: border-box
 
   &__logo
-    @include offset
+    margin: 0
+    padding: 0
     display: flex
     flex-direction: row
     align-items: center
     margin-right: auto
     font-size: 0
-    outline-color: $yellow-color
+    outline-color: var(--foreground-default)
 
   &__logo-wrapper
     margin-right: 7px
@@ -198,9 +196,10 @@ export default window.workbench.createComponent((accessor) => {
     height: 32px
 
   &__logo-title
-    @include offset
+    margin: 0
+    padding: 0
     font-size: 1.125rem
-    color: $white-color
+    color: var(--root-color)
     font-weight: bold
     line-height: 1
     text-align: left
@@ -223,7 +222,8 @@ export default window.workbench.createComponent((accessor) => {
   margin-left: 35px
 
 .page-header__nav-list
-  @include offset
+  margin: 0
+  padding: 0
   display: flex
   flex-direction: row
   justify-content: flex-end
@@ -231,7 +231,8 @@ export default window.workbench.createComponent((accessor) => {
   margin-right: 3.125%
 
 .page-header__nav-item
-  @include offset
+  margin: 0
+  padding: 0
   list-style: none
 
   &:last-child
@@ -240,13 +241,13 @@ export default window.workbench.createComponent((accessor) => {
 .page-header__nav-link
   display: block
   font-size: 1.5rem
-  color: $white-color
+  color: var(--root-color)
   line-height: 1
   text-align: center
-  outline-color: $yellow-color
-  border-bottom: 2px solid $black-color
+  outline-color: var(--foreground-default)
+  border-bottom: 2px solid var(--accent-blurple-dimmer)
 
-@media (min-width: $tablet-width)
+@media (min-width: var(--endpoint-tablet-width))
   .page-header
     flex-direction: row
     justify-content: space-between
@@ -256,10 +257,6 @@ export default window.workbench.createComponent((accessor) => {
     flex-basis: 20.5%
     flex-grow: 0
 
-  .page-header__navigation
-
-  .page-header__nav-list
-
   .page-header__nav-item
     border-bottom: none
     margin-right: 1.5rem
@@ -268,17 +265,6 @@ export default window.workbench.createComponent((accessor) => {
   .page-header__nav-link
     font-size: 0.79rem
     line-height: 1
-
-@media (min-width: 900px)
-  .page-header__navigation
-
-@media (min-width: $desktop-width)
-  .page-header__nav-item
-
-  .page-header__nav-link
-
-@media (min-width: $full-desktop-width)
-  .page-header__navigation
 
 </style>
 

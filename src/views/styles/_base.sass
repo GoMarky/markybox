@@ -1,6 +1,22 @@
-@import ../global/mixins
-@import ../global/theme
-@import "../ui-controls/btn"
+@import 'btn'
+
+\:root
+  --endpoint-mobile-width: 320px
+  --endpoint-tablet-width: 700px
+  --endpoint-desktop-width: 1000px
+
+\:root
+  --z-index-modal-layer: 10
+  --z-index-overlay-layer: 10
+  --z-index-notifications-layer: 10
+  --z-index-main-content-layer: 10
+  --z-index-popup-layer: 10
+
+  --z-index-app-aside: 10
+  --z-index-app-header: 10
+  --z-index-app-body: 10
+  --z-index-m-drawer: 10
+  --z-index-app-bottom-nav: 10
 
 \:root
   --background-root: #0E1525
@@ -123,8 +139,20 @@ body
   -webkit-text-size-adjust: none
   -moz-text-size-adjust: none
 
-main
-  @include offset
+.overlay
+  position: fixed
+  left: 0
+  top: 0
+  right: 0
+  bottom: 0
+  background: #000000
+  z-index: var(--z-index-overlay-layer)
+  opacity: 0.8
+  display: none
+
+  &--is-visible
+    display: block
+
 a
   text-decoration: none
 

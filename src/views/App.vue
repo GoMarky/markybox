@@ -7,18 +7,14 @@
       'app_has-header': isHeaderShown,
     }"
   >
-    <template>
-      <app-modal />
-      <div
-        class="overlay"
-        :class="{ 'overlay--is-visible': isOpenModal }"
-      />
-      <component :is="currentModal"></component>
-    </template>
+    <app-modal />
+    <div
+      class="overlay"
+      :class="{ 'overlay--is-visible': isDrawerShown || isOpenModal }"
+    />
+    <component :is="currentModal"></component>
 
-    <template>
-      <notification-container />
-    </template>
+    <notification-container />
 
     <div class="app__main-content">
       <router-view />
@@ -62,8 +58,7 @@ export default window.workbench.createComponent((accessor) => {
 </script>
 
 <style lang="sass">
-@import "./src/views/styles/global/_base.sass"
-@import "./src/views/styles/global/_helpers.sass"
+@import 'styles/base'
 
 .app
   &__main-content
