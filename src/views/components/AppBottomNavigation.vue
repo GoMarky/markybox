@@ -17,14 +17,15 @@
 
 <script setup lang="ts">
 import {
-  computed,
   ref,
   onMounted,
   watch,
   onUnmounted,
 } from 'vue';
-import { useRouter } from 'vue-router';
+import { useRoute, useRouter, RouteLocationNormalizedLoaded } from 'vue-router';
 import { IBottomNavItem, useBottomNavigationItems } from '@/views/composables/use-bottom-navigation-items';
+import useBottomNav from '@/views/composables/use-bottom-navigation';
+import useCodeSectionNavigation, { CodeSection } from '@/views/composables/useCodeSectionNavigation';
 
 enum ScrollDirection {
   None,
@@ -33,16 +34,23 @@ enum ScrollDirection {
 }
 
 const router = useRouter();
-const route = router.currentRoute;
+const route = useRoute();
+
 const bottomMenuItems = useBottomNavigationItems();
+const { isBottomNavShown, openBottomNav, closeBottomNav } = useBottomNav();
+const { setSection } = useCodeSectionNavigation();
 const activeMenuItem = ref<IBottomNavItem>(bottomMenuItems.value[0]);
 
 function onNavItemClick(item: IBottomNavItem) {
+  activeMenuItem.value = item;
+
+  if (['Code, Files, Commands, Console'].includes(item.id)) {
+    return setSection(item.id as CodeSection);
+  }
+
   if (item === activeMenuItem.value || item.routes.length === 0) {
     return;
   }
-
-  activeMenuItem.value = item;
 
   void router.push({ name: item.routes?.[0] });
 }
@@ -50,16 +58,28 @@ function onNavItemClick(item: IBottomNavItem) {
 let container: HTMLElement | null;
 let lastScrollTop = 0;
 
+function onRouteChange(newRoute: RouteLocationNormalizedLoaded) {
+  const item = bottomMenuItems.value.find(item =>
+    item.routes.includes(newRoute.name as string)
+  );
+
+  if (item) {
+    openBottomNav()
+    activeMenuItem.value = item;
+  } else {
+    closeBottomNav();
+  }
+}
+
+watch(route, onRouteChange, { immediate: true });
+
 const scrollDirection = ref<ScrollDirection>(ScrollDirection.None);
-const isBottomNavShown = ref(false);
 
 function onScroll() {
   if (!container) {
     return;
   }
 
-  // убираем всякий оверскролл сафари. в смысле убираем из логики вычисления скролла
-  // убрать его из системы может лишь Стив Джобс
   if (
     container.scrollTop < 0 ||
     container.scrollTop + container.offsetHeight > container.scrollHeight
@@ -78,33 +98,29 @@ function onScroll() {
 
 function onScrollDirectionChange(newScrollDirection: ScrollDirection) {
   if (newScrollDirection === ScrollDirection.Up) {
-    isBottomNavShown.value = true;
+    openBottomNav();
   }
   if (newScrollDirection === ScrollDirection.Down) {
-    isBottomNavShown.value = false;
+    closeBottomNav();
   }
 }
 
 watch(scrollDirection, onScrollDirectionChange);
 
-// следим за тапами, чтобы не случилось такого, что контент на странице поменялся,
-// и больше не поскроллишь, чтобы вернуть меню
 function onTap(): void {
   if (!container) {
     return;
   }
 
-  // если навигация показана, то и хорошо, цель достигнута
   if (isBottomNavShown.value) {
     return;
   }
 
-  // если есть скролл, то этим уже управляет функция onScroll
   if (container.scrollHeight > container.clientHeight) {
     return;
   }
 
-  isBottomNavShown.value = true;
+  openBottomNav();
 }
 
 onMounted(() => {
@@ -131,7 +147,12 @@ onUnmounted(() => {
 </script>
 
 <script lang="ts">
-export default { name: 'AppBottomNavigation' };
+import IconProfile from '@/views/components/icons/IconProfile.vue';
+import IconSettings from '@/views/components/icons/IconSettings.vue';
+
+export default {
+  name: 'AppBottomNavigation', components: { IconProfile, IconSettings },
+};
 </script>
 
 <style lang="sass">
@@ -143,11 +164,11 @@ export default { name: 'AppBottomNavigation' };
   display: flex
   justify-content: space-between
   height: 50px
-  background-color: var(--c-nav-bg-tabbar)
+  background-color: var(--accent-blue-dimmest)
   overflow: hidden
-  z-index: var(--z-index-bottom-nav)
+  z-index: var(--z-index-app-bottom-nav)
   transition: transform 0.3s ease
-  border-top: 1px solid var(--c-nav-divider)
+  border-top: 1px solid var(--accent-primary-dimmest)
 
   &__item
     flex-grow: 1
@@ -156,10 +177,9 @@ export default { name: 'AppBottomNavigation' };
     flex-direction: column
     align-items: center
     justify-content: space-between
-    height: 100%
     padding: 5px 0
     font-size: 24px
-    color: var(--c-nav-secondary)
+    color: var(--foreground-dimmest)
 
     &-title
       font-weight: 500
@@ -168,14 +188,12 @@ export default { name: 'AppBottomNavigation' };
       text-align: center
       margin-top: 4px
 
-
     &.is-active
-      color: var(--c-nav-primary-accent-tabbar)
+      color: var(--accent-blurple-dimmer)
 
   &__icon
     width: 24px
     height: 24px
-
 
   &.is-hidden
     transform: translateY(100%)

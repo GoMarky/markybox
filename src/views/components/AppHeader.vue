@@ -75,8 +75,8 @@ import useDrawer from '@/views/composables/use-drawer';
 
 import UISelect from '@/views/components/ui/UISelect.vue';
 import IconBurgerMenu from '@/views/components/icons/IconBurgerMenu.vue';
-import IconProfile from '@/views/components/icons/IconProfile.vue';
 import IconShare from '@/views/components/icons/IconShare.vue';
+import IconProfile from '@/views/components/icons/IconProfile.vue';
 import IconSettings from '@/views/components/icons/IconSettings.vue';
 
 export default window.workbench.createComponent((accessor) => {

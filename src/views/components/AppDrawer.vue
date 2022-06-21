@@ -6,12 +6,12 @@
       </div>
 
       <div class="m-drawer__logout">
-        <UIButton is-outline>{{ $t('profile.settings.logout') }}</UIButton>
+        <UIButton is-outline>{{ $t('drawer.note.create') }}</UIButton>
       </div>
 
       <div>
         <div class="m-drawer__build-date">Built on</div>
-        <div style="font-size: 13px; font-weight: 500">{{ 123123123 }}</div>
+        <div>{{ 123123123 }}</div>
       </div>
     </div>
     <button class="m-drawer__button" type="button" @click="closeDrawer()">
@@ -45,7 +45,7 @@ export default { name: 'AppDrawer' };
     position: relative
     width: calc(100% - 36px)
     height: 100%
-    background-color: #ffffff
+    background-color: var(--accent-blurple-dimmest)
     overflow-y: auto
     padding-bottom: 50px
 

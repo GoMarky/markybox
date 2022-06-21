@@ -1,6 +1,6 @@
 import { ref } from 'vue';
 
-const isBottomNavShown = ref(false);
+const isBottomNavShown = ref(true);
 const openBottomNav = () => {
   isBottomNavShown.value = true;
 };

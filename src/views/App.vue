@@ -17,10 +17,14 @@
 import useDrawer from '@/views/composables/use-drawer';
 import useBottomNav from '@/views/composables/use-bottom-navigation';
 import useHeader from '@/views/composables/use-header';
+import { provide } from 'vue';
+import { isMobileDevice } from '@/base/platform';
 
 const { isDrawerShown } = useDrawer();
 const { isBottomNavShown } = useBottomNav();
 const { isHeaderShown } = useHeader();
+
+provide('isMobile', isMobileDevice);
 
 </script>
 
@@ -28,17 +32,4 @@ const { isHeaderShown } = useHeader();
 export default { name: 'App' };
 </script>
 
-<style lang="sass">
-@import 'styles/base'
-
-.app
-  &__main-content
-    display: flex
-    width: 100%
-    max-height: 100%
-    position: relative
-    flex-grow: 1
-    flex-direction: column
-    overflow: hidden
-
-</style>
+<style lang="sass" src="./styles/base.sass"></style>

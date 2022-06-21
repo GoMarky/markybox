@@ -10,10 +10,7 @@
       <app-drawer v-if="isDrawerShown" />
     </div>
 
-    <div v-if="isBottomNavShown" class="m-app__bottom-nav">
-      <app-bottom-navigation />
-    </div>
-
+    <app-bottom-navigation v-if="isMobile" />
 
     <div class="m-app__modal">
       <app-modal />
@@ -56,10 +53,12 @@ import NotificationContainer from '@/views/components/notification/NotificationC
 import useDrawer from '@/views/composables/use-drawer';
 import useBottomNav from '@/views/composables/use-bottom-navigation';
 import useHeader from '@/views/composables/use-header';
+import { inject } from 'vue';
 
 const { isDrawerShown } = useDrawer();
-const { isBottomNavShown } = useBottomNav();
 const { isHeaderShown } = useHeader();
+
+const isMobile = inject<boolean>('isMobile');
 
 </script>
 
@@ -85,18 +84,6 @@ const { isHeaderShown } = useHeader();
     flex-grow: 1
     overflow-x: hidden
     overflow-y: scroll
-
-  &__bottom-nav
-    position: fixed
-    bottom: 0
-    left: 0
-    right: 0
-    height: 50px
-    background-color: var(--c-nav-bg-tabbar)
-    overflow: hidden
-    z-index: var(--z-index-bottom-nav)
-    transition: transform .3s ease
-    border-top: 1px solid var(--c-nav-divider)
 
   &__aside
     transform: translateX(-100%)

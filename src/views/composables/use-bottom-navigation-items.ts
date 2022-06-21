@@ -1,4 +1,3 @@
-import { AppRoute } from '@/views/router/router';
 import { ref } from 'vue';
 
 export interface IBottomNavItem {
@@ -8,13 +7,31 @@ export interface IBottomNavItem {
   routes: string[];
 }
 
-const homePageItem: IBottomNavItem = {
-  id: 'home',
-  icon: 'IconNavTop',
-  name: 'Home',
-  routes: ['HomePage'],
-};
-
-const items = ref<IBottomNavItem[]>([homePageItem])
+const items = ref<IBottomNavItem[]>([
+  {
+    id: 'Code',
+    icon: 'IconSettings',
+    name: 'Code',
+    routes: ['CodePage'],
+  },
+  {
+    id: 'Files',
+    icon: 'IconSettings',
+    name: 'Files',
+    routes: ['CodePage'],
+  },
+  {
+    id: 'Console',
+    icon: 'IconSettings',
+    name: 'Console',
+    routes: ['CodePage'],
+  },
+  {
+    id: 'Commands',
+    icon: 'IconProfile',
+    name: 'Commands',
+    routes: ['CodePage'],
+  },
+]);
 
 export const useBottomNavigationItems = () => items;

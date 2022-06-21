@@ -1,4 +1,3 @@
-import * as markybox from '@/core'
 import { IServiceIdentifier, IServicesAccessor } from '@/platform/instantiation/common/instantiation';
 
 declare global {
@@ -21,9 +20,6 @@ export interface ICreateComponentFactory {
 declare global {
   interface Window {
     workbench: ICreateComponentFactory;
-
-    $editor?: markybox.MEditor;
-    $renderer?: markybox.HTMLRenderer
   }
 }
 
