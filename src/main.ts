@@ -1,6 +1,6 @@
 import { App, createApp } from 'vue';
 import appServices from '@/constructors';
-import { IInstantiationService } from '@/platform/instantiation/common/instantiation';
+import { IInstantiationService, IServiceIdentifier } from '@/platform/instantiation/common/instantiation';
 import { ILogService, now } from '@/platform/log/common/log';
 import { APP_VERSION, ICreateComponentFactory } from '@/base/platform';
 import { ServiceCollection } from '@/platform/instantiation/browser/collection';
@@ -71,6 +71,9 @@ function main() {
     createComponent(fn, ...args) {
       return instantiationService.invokeFunction(fn, ...args);
     },
+    getService<T>(id: IServiceIdentifier<T>): T {
+      return instantiationService.invokeFunction((accessor => accessor.get(id)));
+    }
   };
 
   window.workbench = workbench;

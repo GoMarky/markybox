@@ -8,6 +8,9 @@
     --marky-active-line-color: rgba(0, 0, 0, 0.071);
 
     --marky-selection-z-index: 10;
+    --marky-layer-caret-label-z-index: 20;
+    --marky-textarea-z-index: 0;
+    --marky-layer-z-index: 1;
 }
 
 .marky__indent-node {
@@ -20,7 +23,7 @@
     outline: none;
     padding: 0 1px;
     margin: 0 -1px;
-    z-index: 0;
+    z-index: var(--marky-textarea-z-index);
     position: absolute;
     overflow: hidden;
     opacity: 0;
@@ -60,7 +63,7 @@
 }
 
 .m-editor__layer {
-    z-index: 1;
+    z-index: var(--marky-layer-z-index);
     position: absolute;
     overflow: hidden;
     word-wrap: normal;
@@ -115,7 +118,7 @@
 .m-editor__layer-caret-label {
     background: rgba(137, 184, 117, .3);
     position: absolute;
-    z-index: 20;
+    z-index: var(--marky-layer-caret-label-z-index);
     padding: 0 2px;
     font-size: 50%;
     white-space: nowrap;

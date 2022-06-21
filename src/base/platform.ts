@@ -1,5 +1,5 @@
 import * as markybox from '@/core'
-import { IServicesAccessor } from '@/platform/instantiation/common/instantiation';
+import { IServiceIdentifier, IServicesAccessor } from '@/platform/instantiation/common/instantiation';
 
 declare global {
   namespace NodeJS {
@@ -15,6 +15,7 @@ export interface ICreateComponentFactory {
     fn: (accessor: IServicesAccessor, ...args: TS) => R,
     ...args: TS
   ): R;
+  getService<T>(id: IServiceIdentifier<T>): T;
 }
 
 declare global {

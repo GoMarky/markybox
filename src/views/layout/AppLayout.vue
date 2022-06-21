@@ -14,16 +14,44 @@
       <app-bottom-navigation />
     </div>
 
+
+    <div class="m-app__modal">
+      <app-modal />
+      <component :is="currentModal"></component>
+    </div>
+
+    <div class="m-app__notifications">
+      <notification-container />
+    </div>
+
+    <div
+      class="overlay"
+      :class="{ 'overlay--is-visible': isDrawerShown || isOpenModal }"
+    />
+
     <div class="m-app__body" id="scroll-container">
       <router-view />
     </div>
   </div>
 </template>
 
+<script lang="ts">
+import UserLoginModal from '@/views/modals/UserLoginModal.vue';
+import UserProfileModal from '@/views/modals/UserProfileModal.vue';
+import { ILayoutService } from '@/platform/layout/common/layout';
+
+const layoutService = window.workbench.getService(ILayoutService);
+const { isOpen: isOpenModal, currentModal } = layoutService.modal;
+
+export default { name: 'AppLayout', components: { UserLoginModal, UserProfileModal } };
+</script>
+
 <script lang="ts" setup>
 import AppHeader from '@/views/components/AppHeader.vue';
 import AppDrawer from '@/views/components/AppDrawer.vue';
 import AppBottomNavigation from '@/views/components/AppBottomNavigation.vue';
+import AppModal from '@/views/components/AppModal.vue';
+import NotificationContainer from '@/views/components/notification/NotificationContainer.vue';
 
 import useDrawer from '@/views/composables/use-drawer';
 import useBottomNav from '@/views/composables/use-bottom-navigation';
@@ -43,8 +71,8 @@ const { isHeaderShown } = useHeader();
   flex-grow: 1
   max-height: 100%
   top: 0
-  left: env(safe-area-inset-left,0)
-  right: env(safe-area-inset-right,0)
+  left: env(safe-area-inset-left, 0)
+  right: env(safe-area-inset-right, 0)
   bottom: 0
   overflow: hidden
 
@@ -74,7 +102,7 @@ const { isHeaderShown } = useHeader();
     transform: translateX(-100%)
     will-change: transform
     transition: transform .3s
-    z-index: 20
+    z-index: var(--z-index-app-aside)
     position: absolute
     top: 0
     bottom: 0
@@ -85,8 +113,3 @@ const { isHeaderShown } = useHeader();
 .app_has-drawer .m-app__aside
   transform: translateX(0)
 </style>
-
-<script lang="ts">
-export default { name: 'AppLayout' };
-</script>
-

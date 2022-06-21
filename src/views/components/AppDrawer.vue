@@ -41,9 +41,6 @@ export default { name: 'AppDrawer' };
   align-items: flex-start
   overflow: hidden
 
-  &__build-date
-
-
   &__content
     position: relative
     width: calc(100% - 36px)
@@ -59,16 +56,13 @@ export default { name: 'AppDrawer' };
     margin-top: 25px
     margin-left: 25px
 
-
   &__logout
     margin: 8px 16px 16px
-
 
   &__top-container
     border-bottom: 1px solid #222
     background-color: #fff
     position: sticky
     top: 0
-    z-index: 1
 
 </style>

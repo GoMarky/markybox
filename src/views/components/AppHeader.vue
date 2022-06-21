@@ -210,7 +210,6 @@ export default window.workbench.createComponent((accessor) => {
 
 .page-header__navigation
   text-align: center
-  z-index: 10
   display: block
   top: 0
   position: static
@@ -251,7 +250,6 @@ export default window.workbench.createComponent((accessor) => {
   .page-header
     flex-direction: row
     justify-content: space-between
-    z-index: 3
 
   .page-header__logo
     flex-basis: 20.5%

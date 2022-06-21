@@ -7,54 +7,25 @@
       'app_has-header': isHeaderShown,
     }"
   >
-    <app-modal />
-    <div
-      class="overlay"
-      :class="{ 'overlay--is-visible': isDrawerShown || isOpenModal }"
-    />
-    <component :is="currentModal"></component>
-
-    <notification-container />
-
     <div class="app__main-content">
       <router-view />
     </div>
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue';
-import AppModal from '@/views/components/AppModal.vue';
-import UserLoginModal from '@/views/modals/UserLoginModal.vue';
-import UserProfileModal from '@/views/modals/UserProfileModal.vue';
-import NotificationContainer from '@/views/components/notification/NotificationContainer.vue';
-import { ILayoutService } from '@/platform/layout/common/layout';
+<script lang="ts" setup>
 import useDrawer from '@/views/composables/use-drawer';
 import useBottomNav from '@/views/composables/use-bottom-navigation';
 import useHeader from '@/views/composables/use-header';
 
-export default window.workbench.createComponent((accessor) => {
-  const layoutService = accessor.get(ILayoutService);
+const { isDrawerShown } = useDrawer();
+const { isBottomNavShown } = useBottomNav();
+const { isHeaderShown } = useHeader();
 
-  return defineComponent({
-    components: {
-      UserProfileModal,
-      UserLoginModal,
-      AppModal,
-      NotificationContainer,
-    },
-    name: 'App',
-    setup() {
-      const { isOpen: isOpenModal, currentModal } = layoutService.modal;
+</script>
 
-      const { isDrawerShown } = useDrawer();
-      const { isBottomNavShown } = useBottomNav();
-      const { isHeaderShown } = useHeader();
-
-      return { isOpenModal, currentModal, isDrawerShown, isBottomNavShown, isHeaderShown }
-    },
-  });
-})
+<script lang="ts">
+export default { name: 'App' };
 </script>
 
 <style lang="sass">
