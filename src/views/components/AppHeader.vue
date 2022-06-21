@@ -1,5 +1,8 @@
 <template>
   <header class="page-header">
+    <div class="page-header__menu">
+      <icon-burger-menu />
+    </div>
     <router-link :to="{ name: 'HomePage' }" class="page-header__logo">
       <div class="page-header__logo-wrapper">
         LOGO HERE
@@ -61,10 +64,12 @@ import { ILayoutService } from '@/platform/layout/common/layout';
 import { INoteService } from '@/code/notes/common/notes';
 import { useRouter } from 'vue-router';
 import { Mime } from '@/base/string';
-import UISelect from '@/views/components/ui/UISelect.vue';
 import * as markybox from '@/core';
 import { IEditorService } from '@/code/editor/common/editor-service';
 import { useNotifications } from '@/views/components/notification/use-notifications';
+
+import UISelect from '@/views/components/ui/UISelect.vue';
+import IconBurgerMenu from '@/views/components/icons/IconBurgerMenu.vue';
 
 export default window.workbench.createComponent((accessor) => {
   const sessionService = accessor.get(ISessionService);
@@ -76,6 +81,7 @@ export default window.workbench.createComponent((accessor) => {
     name: Component.AppHeader,
     components: {
       UISelect,
+      IconBurgerMenu,
     },
     setup() {
       const router = useRouter();
@@ -182,64 +188,8 @@ export default window.workbench.createComponent((accessor) => {
   line-height: 1
   text-align: left
 
-.page-header__toggle-menu
-  background: none
-  border: none
-  font-size: 0
-  width: 16px
-  height: 16px
-  @include offset
-  right: 20px
-  top: 17px
-  position: absolute
-  cursor: pointer
-  display: block
-  outline: 0
-
-.main-show-nav .page-header__toggle-menu > span
-  background: 0 0
-
-  &::before
-    transform: rotate(45deg)
-    top: -1px
-    height: 6px
-    transition: top .1s, transform .1s .2s
-    transform-origin: 50% 50%
-
-  &::after
-    transform: rotate(135deg)
-    bottom: -1px
-    height: 6px
-    transition: top .1s, transform .1s .2s
-    transform-origin: 50% 50%
-
-.page-header__toggle-menu > span
-  position: relative
-  width: 16px
-  height: 4px
-  background-color: $black-color
-  display: inline-block
-  transition: background .1s .1s
-
-  &::before
-    content: ""
-    position: absolute
-    width: 16px
-    height: 4px
-    background-color: $black-color
-    top: 6px
-    left: 0
-    transition: top .3s .3s, transform .3s
-
-  &::after
-    content: ""
-    position: absolute
-    width: 16px
-    height: 4px
-    background-color: $black-color
-    bottom: 6px
-    left: 0
-    transition: top .3s .3s, transform .3s
+.page-header__menu
+  font-size: 24px
 
 .page-header__navigation
   width: 100%
@@ -322,9 +272,6 @@ export default window.workbench.createComponent((accessor) => {
   .page-header__nav-link
     font-size: 0.79rem
     line-height: 1
-
-  .page-header__toggle-menu
-    display: none
 
 @media (min-width: 900px)
   .page-header__navigation

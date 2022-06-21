@@ -1,21 +1,16 @@
 <template>
   <div>
     <app-header />
+    <app-drawer />
     <router-view />
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue';
+<script lang="ts" setup>
 import AppHeader from '@/views/components/AppHeader.vue';
-import { Component } from '@/code/vue/common/component-names';
+import AppDrawer from '@/views/components/AppDrawer.vue';
+</script>
 
-export default window.workbench.createComponent(() => {
-  return defineComponent({
-    name: Component.AppLayout,
-    components: {
-      AppHeader,
-    }
-  })
-})
+<script lang="ts">
+export default { name: 'AppLayout' };
 </script>

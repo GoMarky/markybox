@@ -1,6 +1,5 @@
 <template>
   <div class="app">
-    <router-view />
     <app-modal />
     <notification-container />
     <div
@@ -10,11 +9,12 @@
       }"
     ></div>
     <component :is="currentModal"></component>
+    <router-view />
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, nextTick, onMounted, watch } from 'vue';
+import { defineComponent } from 'vue';
 import AppModal from '@/views/components/AppModal.vue';
 import UserLoginModal from '@/views/modals/UserLoginModal.vue';
 import UserProfileModal from '@/views/modals/UserProfileModal.vue';
