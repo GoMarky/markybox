@@ -1,6 +1,6 @@
 <template>
   <header class="page-header">
-    <div class="page-header__menu">
+    <div class="page-header__menu" @click="openDrawer()">
       <icon-burger-menu />
     </div>
     <router-link :to="{ name: 'HomePage' }" class="page-header__logo">
@@ -58,15 +58,18 @@
 
 <script lang="ts">
 import { defineComponent, ref, watch } from 'vue';
+import * as markybox from '@/core';
+import { useRouter } from 'vue-router';
+
 import { ISessionService } from '@/code/session/common/session';
 import { Component } from '@/code/vue/common/component-names';
 import { ILayoutService } from '@/platform/layout/common/layout';
 import { INoteService } from '@/code/notes/common/notes';
-import { useRouter } from 'vue-router';
 import { Mime } from '@/base/string';
-import * as markybox from '@/core';
 import { IEditorService } from '@/code/editor/common/editor-service';
+
 import { useNotifications } from '@/views/components/notification/use-notifications';
+import useDrawer from '@/views/composables/use-drawer';
 
 import UISelect from '@/views/components/ui/UISelect.vue';
 import IconBurgerMenu from '@/views/components/icons/IconBurgerMenu.vue';
@@ -88,9 +91,9 @@ export default window.workbench.createComponent((accessor) => {
       const { name, isAuth } = sessionService.profile;
       const currentEditorLang = ref<markybox.EditorLang>('plain');
       const { addNotification } = useNotifications();
+      const { openDrawer } = useDrawer();
 
       const editorLanguages: markybox.EditorLang[] = markybox.getSupportedSyntaxes();
-
 
       function openUserProfileModal(): void {
         layoutService.modal.open('UserProfileModal');
@@ -141,6 +144,7 @@ export default window.workbench.createComponent((accessor) => {
         editorLanguages,
         isAuth,
         name,
+        openDrawer,
         openUserProfileModal,
         openLoginModal,
         clearNote,

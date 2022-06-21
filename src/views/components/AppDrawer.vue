@@ -19,7 +19,7 @@
         </div>
       </div>
     </div>
-    <button class="c-drawer__button" type="button">
+    <button class="c-drawer__button" type="button" @click="closeDrawer()">
       <IconClose />
     </button>
   </div>
@@ -28,6 +28,10 @@
 <script lang="ts" setup>
 import UIButton from '@/views/components/ui/UIButton.vue';
 import IconClose from '@/views/components/icons/IconClose.vue';
+import useDrawer from '@/views/composables/use-drawer';
+
+const { closeDrawer } = useDrawer();
+
 </script>
 
 <script lang="ts">

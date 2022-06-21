@@ -1,14 +1,18 @@
 <template>
   <div class="app">
-    <app-modal />
-    <notification-container />
-    <div
-      class="overlay"
-      :class="{
-        'overlay--is-visible': isOpenModal,
-      }"
-    ></div>
-    <component :is="currentModal"></component>
+    <template>
+      <app-modal />
+      <div
+        class="overlay"
+        :class="{ 'overlay--is-visible': isOpenModal }"
+      />
+      <component :is="currentModal"></component>
+    </template>
+
+    <template>
+      <notification-container />
+    </template>
+
     <router-view />
   </div>
 </template>

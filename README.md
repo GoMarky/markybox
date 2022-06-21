@@ -7,7 +7,7 @@
 
 Prod
 
-[box.gomarky.tech](box.gomarky.tech)
+[code.gomarky.tech](code.gomarky.tech)
 
 ### Development environment
 
