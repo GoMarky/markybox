@@ -52,6 +52,7 @@ export class EditorService extends Disposable implements IEditorService {
       this._renderer.clear();
     } else {
       this._renderer.mount('#root');
+      this._renderer.display.setFullScreen();
     }
 
     this._editor.setText(initialText);

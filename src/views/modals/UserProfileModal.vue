@@ -41,7 +41,7 @@
         <router-link
           custom
           v-slot="{ navigate }"
-          :to="{ name: $RouteName.CodePage, params: { id: note.id } }"
+          :to="{ name: $RouteName.NotePage, params: { id: note.id } }"
           v-for="note in notes" :key="note.id"
         >
           <li class="user-profile__note-item" @click="navigate(); closeModal()">
@@ -68,12 +68,11 @@
 import { defineComponent, ref } from 'vue';
 import { ISessionService } from '@/code/session/common/session';
 import { ILayoutService } from '@/platform/layout/common/layout';
-import { Component } from '@/code/vue/common/component-names';
 import { INoteService } from '@/code/notes/common/notes';
 import UISelect from '@/views/components/ui/UISelect.vue';
 import UIButton from '@/views/components/ui/UIButton.vue';
 import * as markybox from '@/core/index';
-import { AppRoute } from '@/views/router/router';
+import { RouteName } from '@/code/vue/route-names';
 import { useRouter } from 'vue-router';
 
 export default window.workbench.createComponent((accessor) => {
@@ -86,7 +85,7 @@ export default window.workbench.createComponent((accessor) => {
       UIButton,
       UISelect,
     },
-    name: Component.UserProfileModal,
+    name: 'UserProfileModal',
     setup() {
       const { notes, name: userName } = sessionService.profile;
       const router = useRouter();
@@ -121,7 +120,7 @@ export default window.workbench.createComponent((accessor) => {
       async function createNote(): Promise<void> {
         const noteId = await noteService.createNote(`Title - #${notes.value?.length || 1}`);
 
-        await router.push({ name: AppRoute.CodePage, params: { id: noteId } })
+        await router.push({ name: RouteName.NotePage, params: { id: noteId } })
 
         closeModal();
       }

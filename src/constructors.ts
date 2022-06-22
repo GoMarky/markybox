@@ -40,22 +40,28 @@ const environmentOptions: IEnvironmentConfig = {
 const environmentService = new EnvironmentService(environmentOptions);
 services.set(IEnvironmentService, environmentService);
 
+// layout
+const layoutService = new LayoutService();
+services.set(ILayoutService, layoutService);
+
+// request
 const requestService = new RequestService(logService, lifecycleService, instantiationService);
 services.set(IRequestService, requestService);
 
+// session
 const sessionService = new SessionService(requestService)
 services.set(ISessionService, sessionService);
 
+// socket
 const socketService = new SocketService(sessionService);
 services.set(ISocketService, socketService);
 
+// note
 const noteService = new NoteService(requestService, sessionService);
 services.set(INoteService, noteService);
 
+// editor
 const editorService = new EditorService(logService, sessionService, noteService, socketService);
 services.set(IEditorService, editorService);
-
-const layoutService = new LayoutService(editorService);
-services.set(ILayoutService, layoutService);
 
 export default services;

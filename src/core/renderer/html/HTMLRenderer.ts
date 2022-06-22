@@ -73,8 +73,6 @@ export class HTMLRenderer extends BaseObject implements IAbstractRenderer {
     this.navigator.mount(bodyElement);
     this.selection.mount(bodyElement);
 
-    this.display.setFullScreen();
-
     this.unlock();
 
     this.body.addVisitor(new UserTextHintVisitor(navigator));

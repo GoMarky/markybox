@@ -23,11 +23,10 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { RouteName } from '@/code/vue/common/route-names';
+import { RouteName } from '@/code/vue/route-names';
 import { INoteService } from '@/code/notes/common/notes';
 import { ILayoutService } from '@/platform/layout/common/layout';
 import { ISessionService } from '@/code/session/common/session';
-import { AppRoute } from '@/views/router/router';
 import { useRouter } from 'vue-router';
 
 export default window.workbench.createComponent((accessor) => {
@@ -48,9 +47,9 @@ export default window.workbench.createComponent((accessor) => {
       }
 
       async function createNote(): Promise<void> {
-        const noteId = await noteService.createNote('');
+        const noteId = await noteService.createNote();
 
-        await router.push({ name: AppRoute.CodePage, params: { id: noteId } })
+        await router.push({ name: RouteName.HomePage, params: { id: noteId } })
       }
 
       return {

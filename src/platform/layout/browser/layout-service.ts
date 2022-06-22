@@ -5,11 +5,9 @@ import { IEditorService } from '@/code/editor/common/editor-service';
 export class LayoutService extends Disposable implements ILayoutService {
   public readonly modal: ModalController;
 
-  constructor(
-    @IEditorService private readonly editorService: IEditorService,
-  ) {
+  constructor() {
     super();
 
-    this.modal = new ModalController(editorService);
+    this.modal = new ModalController();
   }
 }

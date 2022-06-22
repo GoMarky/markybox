@@ -9,7 +9,7 @@ import { IRequestService } from '@/platform/request/common/requestService';
 import requests from '@/code/request/requests';
 import { ISessionService } from '@/code/session/common/session';
 import { translate } from '@/code/locales/translate';
-import { RouteName } from '@/code/vue/common/route-names';
+import { RouteName } from '@/code/vue/route-names';
 import { timestamp } from '@/base/string';
 
 import '@/views/styles/marky.css';

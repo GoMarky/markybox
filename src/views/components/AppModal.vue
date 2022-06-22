@@ -15,15 +15,14 @@
 </template>
 
 <script lang="ts">
-import { Component } from '@/code/vue/common/component-names';
-import { defineComponent, onMounted, onUnmounted } from 'vue';
+import { defineComponent } from 'vue';
 import { ILayoutService } from '@/platform/layout/common/layout';
 
 export default window.workbench.createComponent((accessor) => {
   const layoutService = accessor.get(ILayoutService);
 
   return defineComponent({
-    name: Component.AppModal,
+    name: 'AppModal',
     setup() {
       const { isOpen: isOpenModal } = layoutService.modal
 

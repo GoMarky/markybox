@@ -1,6 +1,7 @@
 export enum RouteName {
-  CodePage = 'CodePage',
   HomePage = 'HomePage',
   RegistrationPage = 'RegistrationPage',
   LoginPage = 'LoginPage',
+  NotePage = 'NotePage',
+  WorkspacePage = 'WorkspacePage',
 }

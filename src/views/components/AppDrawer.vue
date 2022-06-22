@@ -43,7 +43,7 @@ export default { name: 'AppDrawer' };
 
   &__content
     position: relative
-    width: calc(100% - 36px)
+    width: 240px
     height: 100%
     background-color: var(--accent-blurple-dimmest)
     overflow-y: auto
@@ -51,10 +51,12 @@ export default { name: 'AppDrawer' };
 
   &__button
     font-size: 12px
+    background: none
+    border: 0
     line-height: 0
-    color: var(--g-color-secondary)
-    margin-top: 25px
-    margin-left: 25px
+    margin-top: 10px
+    margin-left: 5px
+    color: var(--foreground-default)
 
   &__logout
     margin: 8px 16px 16px

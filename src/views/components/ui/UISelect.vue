@@ -15,10 +15,9 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { Component } from '@/code/vue/common/component-names';
 
 export default defineComponent({
-  name: Component.UISelect,
+  name: 'UISelect',
   props: {
     label: {
       type: String,

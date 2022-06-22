@@ -45,13 +45,12 @@
 </template>
 
 <script lang="ts">
-import { RouteName } from '@/code/vue/common/route-names';
+import { RouteName } from '@/code/vue/route-names';
 import { computed, defineComponent, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import UIInput from '@/views/components/ui/UIInput.vue';
 import UIButton from '@/views/components/ui/UIButton.vue';
 import { ISessionService } from '@/code/session/common/session';
-import { AppRoute } from '@/views/router/router';
 
 export default window.workbench.createComponent((accessor) => {
   const sessionService = accessor.get(ISessionService);
@@ -78,7 +77,7 @@ export default window.workbench.createComponent((accessor) => {
 
         await sessionService.registerUser({ email: email.value, password: password.value, userName: username.value })
 
-        await router.push({ name: AppRoute.HomePage })
+        await router.push({ name: RouteName.HomePage })
       }
 
       return {

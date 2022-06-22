@@ -5,7 +5,7 @@
 </template>
 
 <script lang="ts">
-import { RouteName } from '@/code/vue/common/route-names';
+import { RouteName } from '@/code/vue/route-names';
 import { defineComponent } from 'vue';
 import { useRouter } from 'vue-router';
 

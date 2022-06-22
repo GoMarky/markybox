@@ -35,7 +35,6 @@
 
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
-import { Component } from '@/code/vue/common/component-names';
 import UIInput from '@/views/components/ui/UIInput.vue';
 import UIButton from '@/views/components/ui/UIButton.vue';
 import { ISessionService } from '@/code/session/common/session';
@@ -50,7 +49,7 @@ export default window.workbench.createComponent((accessor) => {
       UIInput,
       UIButton,
     },
-    name: Component.UserLoginModal,
+    name: 'UserLoginModal',
     setup() {
       const email = ref('');
       const password = ref('');
