@@ -47,7 +47,3 @@ function loadNote(): Promise<void> {
 
 await loadNote();
 </script>
-
-<style lang="sass">
-
-</style>

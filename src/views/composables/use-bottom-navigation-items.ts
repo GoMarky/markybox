@@ -13,25 +13,25 @@ const items = ref<IBottomNavItem[]>([
     id: 'Code',
     icon: 'IconSettings',
     name: 'Code',
-    routes: [RouteName.WorkspacePage],
+    routes: [RouteName.WorkspacePage, RouteName.NotePage],
   },
   {
     id: 'Files',
     icon: 'IconSettings',
     name: 'Files',
-    routes: [RouteName.WorkspacePage],
+    routes: [RouteName.WorkspacePage, RouteName.NotePage],
   },
   {
     id: 'Console',
     icon: 'IconSettings',
     name: 'Console',
-    routes: [RouteName.WorkspacePage],
+    routes: [RouteName.WorkspacePage, RouteName.NotePage],
   },
   {
     id: 'Commands',
     icon: 'IconProfile',
     name: 'Commands',
-    routes: [RouteName.WorkspacePage],
+    routes: [RouteName.WorkspacePage, RouteName.NotePage],
   },
 ]);
 
