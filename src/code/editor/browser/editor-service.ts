@@ -3,7 +3,7 @@ import { IEditorService } from '@/code/editor/common/editor-service';
 import * as markybox from '@/core';
 import { ILogService } from '@/platform/log/common/log';
 import { ISessionService } from '@/code/session/common/session';
-import { INoteService } from '@/code/notes/common/notes';
+import { INoteInfo, INoteService } from '@/code/notes/common/notes';
 import { ISocketService, SocketCommandType } from '@/code/socket/common/socket-service';
 import { Note } from '@/code/notes/common/notes';
 
@@ -38,10 +38,16 @@ export class EditorService extends Disposable implements IEditorService {
     this._renderer.dispose();
   }
 
-  public async create(noteId: Note.NoteId): Promise<void> {
-    const { name: userName, isAuth } = this.sessionService.profile;
-
+  public async loadNote(noteId: Note.NoteId): Promise<INoteInfo> {
     const note = await this.noteService.getNoteById(noteId);
+
+    return note;
+  }
+
+  public async create(note: INoteInfo): Promise<void> {
+    const { name: userName, isAuth } = this.sessionService.profile;
+    const { id: noteId } = note;
+
     const initialText = note?.data || '';
     const name = isAuth.value ? userName.value : 'anonymous';
 

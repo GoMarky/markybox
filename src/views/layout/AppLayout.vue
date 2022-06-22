@@ -59,7 +59,6 @@ const { isDrawerShown } = useDrawer();
 const { isHeaderShown } = useHeader();
 
 const isMobile = inject<boolean>('isMobile');
-
 </script>
 
 <style lang="sass">

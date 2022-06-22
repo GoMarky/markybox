@@ -18,6 +18,8 @@ import { NoteService } from '@/code/notes/browser/note-service';
 import { INoteService } from '@/code/notes/common/notes';
 import { EditorService } from '@/code/editor/browser/editor-service';
 import { IEditorService } from '@/code/editor/common/editor-service';
+import { WorkspaceService } from '@/code/workspace/browser/workspace-service';
+import { IWorkspaceService } from '@/code/workspace/common/workspace-service';
 
 const services = new ServiceCollection();
 
@@ -63,5 +65,9 @@ services.set(INoteService, noteService);
 // editor
 const editorService = new EditorService(logService, sessionService, noteService, socketService);
 services.set(IEditorService, editorService);
+
+// workspace
+const workspaceService = new WorkspaceService();
+services.set(IWorkspaceService, workspaceService);
 
 export default services;

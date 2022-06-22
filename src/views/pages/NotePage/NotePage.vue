@@ -1,6 +1,12 @@
 <template>
   <main class="page-code">
-    <component :is="currentSection" />
+    <Suspense>
+      <component :is="currentSection" />
+
+      <template #fallback>
+        Loading...
+      </template>
+    </Suspense>
   </main>
 </template>
 

@@ -11,42 +11,41 @@
 <script lang="ts" setup>
 import { IEditorService } from '@/code/editor/common/editor-service';
 import { onBeforeRouteUpdate, useRouter } from 'vue-router';
-import { nextTick, onMounted, ref } from 'vue';
+import { nextTick, ref } from 'vue';
 import { APIError, ApiError } from '@/platform/request/common/request';
 import { RouteName } from '@/code/vue/route-names';
+import { timeout } from '@/base/async';
 
 const editorService = window.workbench.getService(IEditorService);
 
 const { currentRoute, push } = useRouter();
 const errorMessage = ref('');
 
-onBeforeRouteUpdate(async (_, to, next) => {
-  const { id } = to.params;
-  const noteId = id.toString();
-
-  await editorService.create(noteId);
+onBeforeRouteUpdate(async (_, __, next) => {
+  await loadNote();
   next();
 })
 
-onMounted(async () => {
-  await nextTick();
+function loadNote(): Promise<void> {
+  return new Promise(async (resolve) => {
+    try {
+      const noteId = currentRoute.value.params.id as string;
+      const note = await editorService.loadNote(noteId);
 
-  try {
-    const noteId = currentRoute.value.params.id as string;
+      resolve();
+      await timeout(100);
+      await editorService.create(note);
+    } catch (error) {
+      if (error instanceof ApiError && error.is(APIError.NotFoundError)) {
+        await push({ name: RouteName.HomePage })
+      }
 
-    await editorService.create(noteId);
-  } catch (error) {
-    if (error instanceof ApiError && error.is(APIError.NotFoundError)) {
-      return push({ name: RouteName.HomePage })
+      throw error;
     }
+  })
+}
 
-    throw error;
-  }
-})
-</script>
-
-<script lang="ts">
-export default { name: 'Code' };
+await loadNote();
 </script>
 
 <style lang="sass">
