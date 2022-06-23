@@ -1,5 +1,5 @@
 <template>
-  <div class="m-bottom-nav" :class="{ 'is-hidden': !isBottomNavShown }">
+  <div v-if="bottomMenuItems" class="m-bottom-nav" :class="{ 'is-hidden': !isBottomNavShown }">
     <div
       v-for="item in bottomMenuItems"
       :key="item.id"
@@ -20,12 +20,13 @@ import {
   ref,
   onMounted,
   watch,
-  onUnmounted,
+  onUnmounted, computed,
 } from 'vue';
 import { useRoute, useRouter, RouteLocationNormalizedLoaded } from 'vue-router';
-import { IBottomNavItem, useBottomNavigationItems } from '@/views/composables/use-bottom-navigation-items';
+import { IBottomNavItem, noteBottomItems, workspaceBottomItems } from '@/views/composables/use-bottom-navigation-items';
 import useBottomNav from '@/views/composables/use-bottom-navigation';
 import useCodeSectionNavigation, { CodeSection } from '@/views/composables/useCodeSectionNavigation';
+import { RouteName } from '@/code/vue/route-names';
 
 enum ScrollDirection {
   None,
@@ -36,7 +37,18 @@ enum ScrollDirection {
 const router = useRouter();
 const route = useRoute();
 
-const bottomMenuItems = useBottomNavigationItems();
+const bottomMenuItems = computed(() => {
+  if (route.name === RouteName.NotePage) {
+    return noteBottomItems;
+  }
+
+  if (route.name === RouteName.WorkspacePage) {
+    return workspaceBottomItems;
+  }
+
+  return [];
+});
+
 const { isBottomNavShown, openBottomNav, closeBottomNav } = useBottomNav();
 const { setSection } = useCodeSectionNavigation();
 const activeMenuItem = ref<IBottomNavItem>(bottomMenuItems.value[0]);
