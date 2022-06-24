@@ -10,7 +10,7 @@ export class PythonFactory extends BaseFormatterFactory implements IAbstractForm
   }
 
   public createGlyphRow(): GlyphRowElement {
-    return new PythonGlyphRow();
+    return super.createGlyphRow();
   }
 
   public createNodeFragment(): GlyphNodeFragment {

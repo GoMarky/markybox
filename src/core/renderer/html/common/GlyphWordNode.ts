@@ -6,6 +6,7 @@ export class GlyphWordNode extends GlyphDOMNode<HTMLSpanElement> {
 
     this._el = document.createElement('span');
     this._el.textContent = this.rawText;
+    this._el.classList.add('m-editor__word-node')
   }
 
   public dispose(): void {

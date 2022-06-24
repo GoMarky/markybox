@@ -7,6 +7,7 @@ export class GlyphSpecialCharNode extends GlyphDOMNode<HTMLSpanElement> {
 
     this._el = document.createElement('span');
     this._el.textContent = this.char;
+    this._el.classList.add('m-editor__special-char');
   }
 
   public dispose(): void {

@@ -43,8 +43,8 @@ export class GlyphParenNode extends GlyphDOMNode<HTMLSpanElement> {
     this.type = getParenType(char)
 
     this._el = document.createElement('span');
-    this._el.classList.add(`m-editor__paren-${this.type}`)
     this._el.textContent = this.char;
+    this._el.classList.add(`m-editor__paren-node`)
   }
 
   public dispose(): void {

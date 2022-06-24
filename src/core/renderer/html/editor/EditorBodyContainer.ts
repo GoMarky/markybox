@@ -56,6 +56,13 @@ export class MHTMLEditorBody extends GlyphDOMNode<HTMLDivElement> {
   }
 
   public setFormat(type: EditorLang = 'plain'): void {
+    this._formatter = new JavascriptCodeFormatter();
+    this.renderer.currentState.setContext(this.renderer);
+
+    if (true) {
+      return;
+    }
+
     switch (type) {
       case 'cpp':
         this._formatter = new CPPCodeFormatter();

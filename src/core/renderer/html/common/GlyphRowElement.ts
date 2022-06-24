@@ -12,11 +12,21 @@ import { GlyphParenNode, ParenType } from '@/core/renderer/html/common/GlyphPare
 import { CriticalError } from '@/base/errors';
 import { GlyphRowGutterElement } from '@/core/renderer/html/common/GlyphRowGutterElement';
 import { getLastElement } from '@/base/array';
+import { containsSpecialSymbol } from '@/core/renderer/html/common/characters';
+import { GlyphSpecialCharNode } from '@/core/renderer/html/common/GlyphSpecialCharNode';
+import { isParen } from '@/base/string';
+
+export enum NodeType {
+  Whitespace,
+  Text,
+  SpecialChar,
+  Paren,
+}
 
 export interface IInputParseResult {
   startColumn?: number;
   endColumn?: number;
-  type: 'whitespace' | 'text' | 'paren';
+  type: NodeType;
   data: string;
 }
 
@@ -25,7 +35,7 @@ export class GlyphRowElement extends GlyphDOMNode<HTMLDivElement> {
   private _renderer: HTMLRenderer;
   private _gutter: GlyphRowGutterElement;
 
-  public fragment: GlyphNodeFragment;
+  public fragment: GlyphNodeFragment | null;
   public index: number;
 
   constructor() {
@@ -62,6 +72,14 @@ export class GlyphRowElement extends GlyphDOMNode<HTMLDivElement> {
     return last instanceof GlyphParenNode && last.type === char;
   }
 
+  public empty(): boolean {
+    return this._text.length === 0;
+  }
+
+  public contains(column: number): boolean {
+    return (this.columnsCount - 1) >= column;
+  }
+
   public containsOnlyWhitespaces(): boolean {
     if (!this.fragment) {
       throw new CriticalError(`this.fragment must be defined`);
@@ -70,17 +88,9 @@ export class GlyphRowElement extends GlyphDOMNode<HTMLDivElement> {
     return this.fragment.children.every(child => child instanceof GlyphTextNode);
   }
 
-  public empty(): boolean {
-    return this._text.length === 0;
-  }
-
   public setIndex(index: number): void {
     this.index = index;
     this._gutter.index = index;
-  }
-
-  public contains(column: number): boolean {
-    return (this.columnsCount - 1) >= column;
   }
 
   public clearLetterByPosition(column: number): void {
@@ -137,6 +147,19 @@ export class GlyphRowElement extends GlyphDOMNode<HTMLDivElement> {
     visitors.forEach((visitor) => visitor.visit(fragment));
   }
 
+  public renderGlyphs(children: GlyphDOMNode[]): void {
+    this.clearNodeFragment();
+
+    const text = children.reduce((acc, glyph) => {
+      acc += glyph.text
+      return acc;
+    }, '');
+
+    this._text = text;
+
+    this.doRender(children);
+  }
+
   public dispose(): void {
     this._gutter.dispose();
     this.fragment?.dispose();
@@ -149,34 +172,34 @@ export class GlyphRowElement extends GlyphDOMNode<HTMLDivElement> {
 
   protected parseWord(word: string): IInputParseResult[] {
     const result: IInputParseResult[] = [];
-    const chars = word.split('');
-
-    let tempString = '';
+    const chars: string[] = word.split('');
+    let tempString: string = '';
 
     while (chars.length) {
-      const currentChar = chars.shift();
-
-      if (!currentChar) {
-        throw new CriticalError(`MHTMLGlyphRow.parseWord - expected currentChar to be defined.`);
-      }
-
-      if (string.isParen(currentChar) || string.isDot(currentChar)) {
+      const char = chars.shift() as string;
+      // Если попали на спец-символ
+      if (containsSpecialSymbol(char)) {
+        // Сохраняем нормальную строку (без спецсимвоволов) в результат парсинга
         if (tempString.length) {
-          result.push({ type: 'text', data: tempString });
+          result.push({ type: NodeType.Text, data: tempString });
           tempString = '';
         }
 
-        result.push({ type: 'paren', data: currentChar })
-      } else {
-        tempString += currentChar;
+        // Спец.символ добавляем в результат парсинга.
+
+        const specialCharType = isParen(char) ? NodeType.Paren : NodeType.SpecialChar;
+
+        result.push({ type: specialCharType, data: char });
+        continue;
       }
+
+      // Если не спец.символ - собираем строку символов дальше.
+      tempString += char;
     }
 
+    // Если что-то там успело остаться в конце, отправляем в результат парсинга
     if (tempString.length) {
-      result.push({
-        type: 'text',
-        data: tempString,
-      })
+      result.push({ type: NodeType.Text, data: tempString });
     }
 
     return result;
@@ -185,8 +208,7 @@ export class GlyphRowElement extends GlyphDOMNode<HTMLDivElement> {
   protected parseText(text: string): IInputParseResult[] {
     const result: IInputParseResult[] = [];
     const words = text.split(/(\s+)/);
-
-    let currentPosition = 0;
+    let currentPosition: number = 0;
 
     for (const word of words) {
       const isWhitespace = word.trim().length === 0;
@@ -195,23 +217,16 @@ export class GlyphRowElement extends GlyphDOMNode<HTMLDivElement> {
       currentPosition += word.length;
       const endColumn = currentPosition;
 
-      let type: IInputParseResult['type'];
+      let type: IInputParseResult['type'] = NodeType.Text;
 
       switch (true) {
         case isWhitespace:
-          type = 'whitespace';
-          break;
-        case string.isParen(word):
-          type = 'paren'
+          type = NodeType.Whitespace;
           break;
         default: {
-          if (string.containsParen(word) || string.containsDot(word)) {
-            result.push(...this.parseWord(word));
-            continue;
-          }
-
-          type = 'text';
-          break;
+          const splitWords = this.parseWord(word);
+          result.push(...splitWords);
+          continue;
         }
       }
 
@@ -236,19 +251,7 @@ export class GlyphRowElement extends GlyphDOMNode<HTMLDivElement> {
 
     this._el.replaceChildren();
     fragment.dispose();
-  }
-
-  public renderGlyphs(children: GlyphDOMNode[]): void {
-    this.clearNodeFragment();
-
-    const text = children.reduce((acc, glyph) => {
-      acc += glyph.text
-      return acc;
-    }, '');
-
-    this._text = text;
-
-    this.doRender(children);
+    this.fragment = null;
   }
 
   private render(): void {
@@ -261,19 +264,23 @@ export class GlyphRowElement extends GlyphDOMNode<HTMLDivElement> {
 
     for (const { data, type, startColumn, endColumn } of words) {
       switch (type) {
-        case 'whitespace': {
+        case NodeType.Whitespace: {
           const textNode = new GlyphTextNode(data);
           children.push(textNode);
           break;
         }
-        case 'text': {
+        case NodeType.Text: {
           const wordNode = new GlyphWordNode(data, startColumn as number, endColumn as number);
           children.push(wordNode);
           break;
         }
-        case 'paren':
+        case NodeType.Paren:
           const parenNode = new GlyphParenNode(data);
           children.push(parenNode);
+          break;
+        case NodeType.SpecialChar:
+          const specialCharNode = new GlyphSpecialCharNode(data);
+          children.push(specialCharNode);
           break;
       }
     }
