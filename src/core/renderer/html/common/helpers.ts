@@ -1,31 +1,15 @@
-import { toPixel } from '@/base/dom';
-import { GlyphRowElement } from '@/core/renderer/html/common/GlyphRowElement';
+export const EditorCSSName = {
+  identifier: 'm-editor__identifier',
+  identifierName: 'm-editor__identifier-name',
+  identifierString: 'm-editor__identifier-string',
+  className: 'm-editor__class-name',
+}
 
 export interface IDOMPosition {
   left: number;
   top: number;
 }
 
-const lineHeight = 16;
+const indentLength = 4;
 
-export const BASE_INDENT_VALUE = Array.from({ length: 4 }, () => ' ').join('');
-export const _endl = '\n';
-
-export function createSelectionRowElement(): HTMLElement {
-  const element = document.createElement('div');
-  element.classList.add('m-editor__selection-row');
-  element.style.height = toPixel(lineHeight);
-
-  return element;
-}
-
-export function mRowToBodyElement(row: GlyphRowElement): HTMLElement {
-  const { index } = row;
-
-  const element = document.createElement('span');
-  element.textContent = `${index}`;
-  element.classList.add('m-editor__body-cell');
-  element.style.height = toPixel(lineHeight);
-
-  return element;
-}
+export const BASE_INDENT_VALUE = Array.from({ length: indentLength }, () => ' ').join('');

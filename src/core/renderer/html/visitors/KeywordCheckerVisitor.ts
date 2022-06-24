@@ -1,21 +1,24 @@
 import { BaseObject } from '@/core/objects/BaseObject';
 import { IVisitor, MHTMLEditorBody } from '@/core/renderer/html/editor/EditorBodyContainer';
 import { GlyphWordNode } from '@/core/renderer/html/common/GlyphWordNode';
-import { StatementClassName } from '@/core/formatters/javascript/javascript-formatter';
 import { GlyphNodeFragment } from '@/core/renderer/html/common/GlyphNodeFragment';
 import { CodeStatement } from '@/core/formatters/formatter/base-formatter';
+import { EditorCSSName } from '@/core/renderer/html/common/helpers';
+import { GlyphParenNode } from '@/core/renderer/html/common/GlyphParenNode';
+import { GlyphSpecialCharNode } from '@/core/renderer/html/common/GlyphSpecialCharNode';
+import { GlyphDOMNode } from '@/core/renderer/html/common/GlyphDOMNode';
 
-function getClassNameByStatement(statement?: CodeStatement): StatementClassName | undefined {
+function getClassNameByStatement(statement?: CodeStatement): string | undefined {
   if (!statement) {
     return undefined;
   }
 
   switch (statement) {
     case CodeStatement.VariableDeclaration:
-      return 'm-editor__keyword-identifier';
+      return EditorCSSName.identifier;
     case CodeStatement.Text:
     default:
-      break;
+      return undefined;
   }
 }
 
@@ -29,7 +32,10 @@ export class KeywordCheckerVisitor extends BaseObject implements IVisitor {
   public visit(fragment: GlyphNodeFragment): void {
     const { children } = fragment;
 
-    const glyphs = children.filter((glyph) => glyph instanceof GlyphWordNode) as GlyphWordNode[];
+    const glyphs = children.filter((glyph) =>
+      glyph instanceof GlyphWordNode
+      || glyph instanceof GlyphParenNode
+      || glyph instanceof GlyphSpecialCharNode);
 
     for (const [index, glyph] of glyphs.entries()) {
       const isStatement = this.checkStatement(glyph);
@@ -55,22 +61,15 @@ export class KeywordCheckerVisitor extends BaseObject implements IVisitor {
     }
   }
 
-  private isTypeStatement(_: GlyphWordNode, __?: GlyphWordNode): boolean {
+  private isTypeStatement(_: GlyphDOMNode, __?: GlyphDOMNode): boolean {
     return false;
   }
 
-  private checkIsString(word: GlyphWordNode): boolean {
-    const { text } = word;
-
-    if (text.startsWith('\'') && text.endsWith('\'')) {
-      this.doAddClassName(word, 'm-editor__keyword-identifier-string');
-      return true;
-    }
-
+  private checkIsString(_: GlyphDOMNode): boolean {
     return false;
   }
 
-  private checkStatementName(current: GlyphWordNode, previous?: GlyphWordNode): boolean {
+  private checkStatementName(current: GlyphDOMNode, previous?: GlyphDOMNode): boolean {
     if (!previous) {
       return false;
     }
@@ -81,7 +80,7 @@ export class KeywordCheckerVisitor extends BaseObject implements IVisitor {
 
     switch (statement) {
       case CodeStatement.VariableDeclaration: {
-        this.doAddClassName(current, 'm-editor__keyword-identifier-name');
+        this.doAddClassName(current, EditorCSSName.identifierName);
         return true;
       }
     }
@@ -89,7 +88,7 @@ export class KeywordCheckerVisitor extends BaseObject implements IVisitor {
     return false;
   }
 
-  private checkStatement(glyph: GlyphWordNode): boolean {
+  private checkStatement(glyph: GlyphDOMNode): boolean {
     const { formatter } = this.body;
 
     const statement = formatter.parseKeyword(glyph.text);
@@ -103,7 +102,8 @@ export class KeywordCheckerVisitor extends BaseObject implements IVisitor {
     return false;
   }
 
-  private doAddClassName(glyph: GlyphWordNode, className: string): void {
+  private doAddClassName(glyph: GlyphDOMNode, className: string): void {
+    // @ts-ignore
     glyph.el.classList.add(className);
   }
 }

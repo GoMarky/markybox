@@ -4,11 +4,6 @@ import { JavascriptKeyApplicator } from '@/core/formatters/javascript/javascript
 import { IAbstractFormatterFactory } from '@/core/formatters/formatter/base-factory';
 import { JavascriptFactory } from '@/core/formatters/javascript/javascript-factory';
 
-export type StatementClassName =
-  'm-editor__plain'
-  | 'm-editor__keyword-identifier'
-  | 'm-editor__keyword-identifier-name';
-
 const Regexp = {
   VariableStatement: /^(readonly|from|import|global|declare|object|class|async|await|return|true|false|any|extends|static|let|package|implements|interface|function|new|try|yeild|const|continue|do|catch|in|this|break|as|switch|case|if|throw|else|var|number|string|get|module|type|instanceof|typeof|public|private|enum|export|finally|for|while|void|null|super$)/,
 };
