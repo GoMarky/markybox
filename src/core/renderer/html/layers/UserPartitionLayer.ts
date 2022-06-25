@@ -1,6 +1,7 @@
 import { BaseLayer } from '@/core/renderer/html/layers/BaseLayer';
 import { HTMLRenderer } from '@/core';
 import { toPixel } from '@/base/dom';
+import { EditorCSSName } from '@/core/renderer/html/common/helpers';
 
 export class MPartitionLayer extends BaseLayer {
   constructor() {
@@ -17,8 +18,8 @@ export class MPartitionLayer extends BaseLayer {
 
   private createPartitionElement(): void {
     const partitionElement = document.createElement('div');
-    partitionElement.classList.add('m-editor__layer');
-    partitionElement.classList.add('m-editor__layer-partition')
+    partitionElement.classList.add(EditorCSSName.Layer);
+    partitionElement.classList.add(EditorCSSName.LayerPartition)
 
     this._el = partitionElement;
   }

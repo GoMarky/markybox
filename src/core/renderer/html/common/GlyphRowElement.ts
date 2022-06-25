@@ -15,6 +15,7 @@ import { getLastElement } from '@/base/array';
 import { containsSpecialSymbol } from '@/core/renderer/html/common/characters';
 import { GlyphSpecialCharNode } from '@/core/renderer/html/common/GlyphSpecialCharNode';
 import { isParen } from '@/base/string';
+import { EditorCSSName } from '@/core/renderer/html/common/helpers';
 
 export enum NodeType {
   Whitespace,
@@ -55,7 +56,7 @@ export class GlyphRowElement extends GlyphDOMNode<HTMLDivElement> {
 
     this.index = index;
     const rowElement = document.createElement('div');
-    rowElement.classList.add('m-editor__row');
+    rowElement.classList.add(EditorCSSName.Row);
     this._gutter = new GlyphRowGutterElement(renderer, index);
     dom.insertChildAtIndex(this._renderer.display.gutter.el, this._gutter.el, index);
 

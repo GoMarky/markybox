@@ -1,6 +1,7 @@
 import { GlyphDOMNode } from '@/core/renderer/html/common/GlyphDOMNode';
 import { MChar } from '@/core/renderer/html/editor/EditorBodyTextarea';
 import * as string from '@/base/string';
+import { EditorCSSName } from '@/core/renderer/html/common/helpers';
 
 export enum ParenType {
   Unknown,
@@ -44,7 +45,7 @@ export class GlyphParenNode extends GlyphDOMNode<HTMLSpanElement> {
 
     this._el = document.createElement('span');
     this._el.textContent = this.char;
-    this._el.classList.add(`m-editor__paren-node`)
+    this._el.classList.add(EditorCSSName.NodeParen)
   }
 
   public dispose(): void {

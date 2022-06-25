@@ -1,6 +1,6 @@
 import { BaseLayer } from '@/core/renderer/html/layers/BaseLayer';
 import { toPixel } from '@/base/dom';
-import { IDOMPosition } from '@/core/renderer/html/common/helpers';
+import { EditorCSSName, IDOMPosition } from '@/core/renderer/html/common/helpers';
 
 const colors: string[] = [
   'rgba(255,87,51,0.4)',
@@ -29,7 +29,7 @@ export class CaretUserLayer extends BaseLayer {
 
   public mount(body: HTMLElement): void {
     const bodyElement = document.createElement('div');
-    bodyElement.classList.add('m-editor__layer-caret-container')
+    bodyElement.classList.add(EditorCSSName.LayerCaretContainer)
     this._el = bodyElement;
     body.appendChild(bodyElement);
 
@@ -39,8 +39,8 @@ export class CaretUserLayer extends BaseLayer {
 
   private createCaretElement(): void {
     const caretElement = document.createElement('div');
-    caretElement.classList.add('m-editor__layer');
-    caretElement.classList.add('m-editor__layer-caret')
+    caretElement.classList.add(EditorCSSName.Layer);
+    caretElement.classList.add(EditorCSSName.LayerCaret)
 
     this._el.appendChild(caretElement);
   }
@@ -49,7 +49,7 @@ export class CaretUserLayer extends BaseLayer {
     const { label } = this;
 
     const labelElement = document.createElement('div');
-    labelElement.classList.add('m-editor__layer-caret-label')
+    labelElement.classList.add(EditorCSSName.LayerCaretLabel)
     labelElement.textContent = label;
     labelElement.style.background = getRandomColor();
     body.appendChild(labelElement);

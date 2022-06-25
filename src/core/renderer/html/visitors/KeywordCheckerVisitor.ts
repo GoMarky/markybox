@@ -15,11 +15,17 @@ function getClassNameByStatement(statement?: CodeStatement): string | undefined 
 
   switch (statement) {
     case CodeStatement.VariableDeclaration:
-      return EditorCSSName.identifier;
+      return EditorCSSName.Identifier;
     case CodeStatement.Text:
     default:
       return undefined;
   }
+}
+
+function addClass(glyph: GlyphDOMNode, className: string): void {
+  const element = glyph.el as HTMLElement;
+
+  element.classList.add(className);
 }
 
 export class KeywordCheckerVisitor extends BaseObject implements IVisitor {
@@ -37,35 +43,54 @@ export class KeywordCheckerVisitor extends BaseObject implements IVisitor {
       || glyph instanceof GlyphParenNode
       || glyph instanceof GlyphSpecialCharNode);
 
-    for (const [index, glyph] of glyphs.entries()) {
-      const isStatement = this.checkStatement(glyph);
+    let allNextNodesIsCommented = false;
+
+    for (const [index, current] of glyphs.entries()) {
+      if (allNextNodesIsCommented) {
+        addClass(current, EditorCSSName.Comment);
+        continue;
+      }
+
+      const isStatement = this.checkStatement(current);
+      const previous = glyphs[index - 1];
 
       if (isStatement) {
         continue;
       }
 
-      const previousGlyph = glyphs[index - 1];
-      const isStatementName = this.checkStatementName(glyph, previousGlyph);
+      const isStatementName = this.checkStatementName(current, previous);
 
       if (isStatementName) {
         continue;
       }
 
-      const isStringStatement = this.checkIsString(glyph);
+      const isTypeStatement = this.isTypeStatement(current, previous);
 
-      if (isStringStatement) {
+      if (isTypeStatement) {
         continue;
       }
 
-      const isTypeStatement = this.isTypeStatement(glyph, previousGlyph);
+      if (current instanceof GlyphSpecialCharNode && previous instanceof GlyphSpecialCharNode) {
+        const isCommentStarted = this.isComment(current, previous);
+
+        if (isCommentStarted) {
+          addClass(current, EditorCSSName.Comment);
+          addClass(previous, EditorCSSName.Comment);
+          allNextNodesIsCommented = true;
+        }
+      }
     }
+  }
+
+  private isComment(current: GlyphSpecialCharNode, previous: GlyphSpecialCharNode): boolean {
+    return current.is('/') && previous.is('/');
   }
 
   private isTypeStatement(_: GlyphDOMNode, __?: GlyphDOMNode): boolean {
     return false;
   }
 
-  private checkIsString(_: GlyphDOMNode): boolean {
+  private isString(_: GlyphDOMNode): boolean {
     return false;
   }
 
@@ -80,7 +105,7 @@ export class KeywordCheckerVisitor extends BaseObject implements IVisitor {
 
     switch (statement) {
       case CodeStatement.VariableDeclaration: {
-        this.doAddClassName(current, EditorCSSName.identifierName);
+        addClass(current, EditorCSSName.IdentifierName);
         return true;
       }
     }
@@ -95,15 +120,10 @@ export class KeywordCheckerVisitor extends BaseObject implements IVisitor {
     const className = getClassNameByStatement(statement);
 
     if (className) {
-      this.doAddClassName(glyph, className);
+      addClass(glyph, className);
       return true;
     }
 
     return false;
-  }
-
-  private doAddClassName(glyph: GlyphDOMNode, className: string): void {
-    // @ts-ignore
-    glyph.el.classList.add(className);
   }
 }

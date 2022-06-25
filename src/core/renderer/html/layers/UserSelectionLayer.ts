@@ -3,12 +3,13 @@ import { IPosition } from '@/core/app/common';
 import { removeChildren, toPixel } from '@/base/dom';
 import { ISelectionPosition } from '@/core/renderer/html/editor/EditorSelectionContainer';
 import { EditorDisplayController } from '@/core/renderer/html/system/EditorDisplayController';
+import { EditorCSSName } from '@/core/renderer/html/common/helpers';
 
 const LINE_HEIGHT = 16;
 
 export function createSelectionRowElement(): HTMLElement {
   const element = document.createElement('div');
-  element.classList.add('m-editor__selection-row');
+  element.classList.add(EditorCSSName.SelectionRow);
   element.style.height = toPixel(LINE_HEIGHT);
 
   return element;
@@ -64,7 +65,7 @@ export class UserSelectionLayer extends BaseLayer {
     const bodyElement = document.createElement('div');
 
     bodyElement.style.width = '100%';
-    bodyElement.classList.add('m-editor__layer-selection')
+    bodyElement.classList.add(EditorCSSName.LayerSelection)
     this._el = bodyElement;
     body.appendChild(bodyElement);
   }

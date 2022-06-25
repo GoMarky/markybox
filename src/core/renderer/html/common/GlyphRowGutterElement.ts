@@ -2,6 +2,7 @@ import { GlyphDOMNode } from '@/core/renderer/html/common/GlyphDOMNode';
 import { toPixel } from '@/base/dom';
 import { HTMLRenderer } from '@/core';
 import { toDisposable } from '@/platform/lifecycle/common/lifecycle';
+import { EditorCSSName } from '@/core/renderer/html/common/helpers';
 
 export class GlyphRowGutterElement extends GlyphDOMNode<HTMLSpanElement> {
   private _expandable: boolean = false;
@@ -11,7 +12,7 @@ export class GlyphRowGutterElement extends GlyphDOMNode<HTMLSpanElement> {
     super();
 
     const element = document.createElement('span');
-    element.classList.add('m-editor__gutter-cell');
+    element.classList.add(EditorCSSName.CellGutter);
     element.style.height = toPixel(16);
 
     this._el = element;
@@ -40,7 +41,7 @@ export class GlyphRowGutterElement extends GlyphDOMNode<HTMLSpanElement> {
     this._widgetElement?.remove();
 
     const widgetElement = document.createElement('span');
-    widgetElement.classList.add('m-editor__gutter-cell-widget');
+    widgetElement.classList.add(EditorCSSName.CellGutterWidget);
     widgetElement.style.height = toPixel(16);
     this._el.appendChild(widgetElement);
     this._widgetElement = widgetElement;

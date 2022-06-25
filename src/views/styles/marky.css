@@ -13,6 +13,22 @@
     --marky-layer-z-index: 1;
 }
 
+.marky {
+    display: flex;
+    position: relative;
+    overflow: scroll;
+    direction: ltr;
+    font-weight: bold;
+    text-align: left;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+}
+
+@keyframes blinker {
+    50% {
+        opacity: 0.0
+    }
+}
+
 .marky__indent-node {
     background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAACCAYAAACZgbYnAAAAE0lEQVQImWP4////f4bLly//BwAmVgd1/w11/gAAAABJRU5ErkJggg==) right repeat-y;
 }
@@ -31,7 +47,7 @@
     width: 8px;
 }
 
-.m-editor__gutter {
+.marky__gutter {
     user-select: none;
     display: flex;
     color: var(--marky-text-color);
@@ -40,7 +56,7 @@
     height: 100%;
 }
 
-.m-editor__body {
+.marky__body {
     background-color: var(--marky-background-color);
     color: var(--marky-text-color);
     user-select: none;
@@ -52,17 +68,17 @@
     flex-direction: column;
 }
 
-.m-editor__gutter-cell {
+.marky__gutter-cell {
     padding-right: 1px;
     padding-left: 10px;
 }
 
-.m-editor__row {
+.marky__row {
     height: 16px;
     display: block;
 }
 
-.m-editor__layer {
+.marky__layer {
     z-index: var(--marky-layer-z-index);
     position: absolute;
     overflow: hidden;
@@ -74,11 +90,11 @@
     pointer-events: none;
 }
 
-.m-editor__layer-text {
+.marky__layer-text {
     font: inherit !important;
 }
 
-.m-editor__layer-caret-container {
+.marky__layer-caret-container {
     width: 50px;
     height: 16px;
     pointer-events: none;
@@ -86,7 +102,7 @@
     overflow: hidden;
 }
 
-.m-editor__layer-marker-active-line {
+.marky__layer-marker-active-line {
     position: absolute;
     height: 16px;
     left: 0;
@@ -94,7 +110,7 @@
     background: var(--marky-active-line-color);
 }
 
-.m-editor__layer-caret {
+.marky__layer-caret {
     font-size: 12px;
     background-color: blue;
     color: blue;
@@ -109,13 +125,13 @@
     animation: blinker 1s linear infinite;
 }
 
-.m-editor__layer-partition {
+.marky__layer-partition {
     width: 1px;
     height: 100%;
     background-color: var(--marky-background-color-secondary);
 }
 
-.m-editor__layer-caret-label {
+.marky__layer-caret-label {
     background: rgba(137, 184, 117, .3);
     position: absolute;
     z-index: var(--marky-layer-caret-label-z-index);
@@ -128,14 +144,14 @@
     border-bottom-right-radius: 2px;
 }
 
-.m-editor__selection-row {
+.marky__selection-row {
     position: absolute;
     opacity: 0.5;
     background-color: var(--marky-selection-color);
     z-index: var(--marky-selection-z-index);
 }
 
-.m-editor__gutter-cell-widget {
+.marky__gutter-cell-widget {
     margin: 0 -12px 0 1px;
     display: inline-block;
     width: 11px;

@@ -7,6 +7,10 @@ export abstract class GlyphDOMNode<T extends Node = Node> extends BaseGlyph {
     return this._el.textContent || '';
   }
 
+  public get length(): number {
+    return this.text.length;
+  }
+
   public get el(): T {
     return this._el;
   }

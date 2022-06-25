@@ -1,4 +1,5 @@
 import { GlyphDOMNode } from '@/core/renderer/html/common/GlyphDOMNode';
+import { EditorCSSName } from '@/core/renderer/html/common/helpers';
 
 export class GlyphWordNode extends GlyphDOMNode<HTMLSpanElement> {
   constructor(private readonly rawText: string, public readonly startColumn: number, public readonly endColumn: number) {
@@ -6,7 +7,7 @@ export class GlyphWordNode extends GlyphDOMNode<HTMLSpanElement> {
 
     this._el = document.createElement('span');
     this._el.textContent = this.rawText;
-    this._el.classList.add('m-editor__word-node')
+    this._el.classList.add(EditorCSSName.NodeWord)
   }
 
   public dispose(): void {
@@ -14,9 +15,5 @@ export class GlyphWordNode extends GlyphDOMNode<HTMLSpanElement> {
 
     this.disposables.clear();
     this._el.remove();
-  }
-
-  public get length(): number {
-    return this.text.length;
   }
 }

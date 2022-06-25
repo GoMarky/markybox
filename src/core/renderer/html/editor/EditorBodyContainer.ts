@@ -15,6 +15,7 @@ import { EditorDisplayController } from '@/core/renderer/html/system/EditorDispl
 import { EditorBodyNavigator } from '@/core/renderer/html/editor/EditorBodyNavigator';
 import { GolangCodeFormatter } from '@/core/formatters/golang/golang-formatter';
 import { EditorStorage } from '@/core/renderer/html/system/EditorStorage';
+import { EditorCSSName } from '@/core/renderer/html/common/helpers';
 
 export type EditorLang = 'cpp' | 'python' | 'js' | 'json' | 'plain' | 'golang';
 
@@ -121,7 +122,7 @@ export class MHTMLEditorBody extends GlyphDOMNode<HTMLDivElement> {
   private createHTMLElement(root: HTMLElement): void {
     const bodyElement = document.createElement('div');
     bodyElement.style.width = '100%';
-    bodyElement.classList.add('m-editor__body')
+    bodyElement.classList.add(EditorCSSName.Body)
     this._el = bodyElement;
     root.appendChild(bodyElement);
   }

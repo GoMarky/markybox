@@ -1,4 +1,5 @@
 import { BaseLayer } from '@/core/renderer/html/layers/BaseLayer';
+import { EditorCSSName } from '@/core/renderer/html/common/helpers';
 
 export class CurrentRowMarkerLayer extends BaseLayer {
   constructor() {
@@ -7,15 +8,15 @@ export class CurrentRowMarkerLayer extends BaseLayer {
 
   private createActiveLine(): void {
     const lineElement = document.createElement('div');
-    lineElement.classList.add('m-editor__layer-marker-active-line');
+    lineElement.classList.add(EditorCSSName.LayerActiveLine);
 
     this._el.appendChild(lineElement);
   }
 
   public mount(body: HTMLElement): void {
     const layerElement = document.createElement('div');
-    layerElement.classList.add('m-editor__layer');
-    layerElement.classList.add('m-editor__layer-marker')
+    layerElement.classList.add(EditorCSSName.Layer);
+    layerElement.classList.add(EditorCSSName.LayerMarker)
     this._el = layerElement;
     body.appendChild(layerElement);
 

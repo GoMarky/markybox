@@ -4,6 +4,7 @@ import { Char } from '@/base/char';
 import { GlyphDOMNode } from '@/core/renderer/html/common/GlyphDOMNode';
 import { isSystemChar } from '@/core/app/common';
 import { toDisposable } from '@/platform/lifecycle/common/lifecycle';
+import { EditorCSSName } from '@/core/renderer/html/common/helpers';
 
 export type MChar = string;
 
@@ -26,7 +27,7 @@ export class EditorBodyTextarea extends GlyphDOMNode<HTMLTextAreaElement> {
     element.setAttribute('autocapitalize', 'off');
     element.setAttribute('autocorrect', 'off');
     element.setAttribute('spellcheck', 'false');
-    element.classList.add('marky__textarea')
+    element.classList.add(EditorCSSName.Textarea)
 
     root.appendChild(element);
     this._el = element;
