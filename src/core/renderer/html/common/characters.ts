@@ -34,7 +34,12 @@ export const SPECIAL_PROGRAM_CHARACTERS = [
 ];
 
 const specialKeyRegExp = new RegExp(`[^A-Za-z0-9]`);
+const numberKeyRegExp = new RegExp(/^\d+$/);
 
 export function containsSpecialSymbol(word: string): boolean {
   return specialKeyRegExp.test(word);
+}
+
+export function isStringContainsOnlyNumbers(word: string): boolean {
+  return numberKeyRegExp.test(word);
 }

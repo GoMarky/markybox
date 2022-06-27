@@ -59,6 +59,20 @@ export class EditorActiveState extends AbstractEditorState {
     controller.editorAutoSave.save();
   }
 
+  public onDoubleClick(event: MouseEvent): void {
+    const { storage, display } = this.context;
+    const { clientX, clientY } = event;
+    const position = display.toEditorPosition({ top: clientY, left: clientX });
+
+    const row = storage.at(position.row);
+
+    if (!row) {
+      return;
+    }
+
+    console.log(row.fragment);
+  }
+
   public onClick(event: MouseEvent): void {
     const { display, storage, navigator } = this.context;
     const isLeftMouseKey = event.button === 0;

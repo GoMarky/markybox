@@ -95,11 +95,13 @@ export class EditorSelectionContainer extends BaseObject {
     const onMousedown = (event: MouseEvent) => this.renderer.currentState.onSelectionStart(event);
     const onMousemove = (event: MouseEvent) => this.renderer.currentState.onSelectionMove(event);
     const onMouseup = (event: MouseEvent) => this.renderer.currentState.onSelectionEnd(event);
+    const onDoubleClick = (event: MouseEvent) => this.renderer.currentState.onDoubleClick(event);
 
     body.addEventListener('contextmenu', onContextmenu);
     window.addEventListener('mousedown', onMousedown);
     window.addEventListener('mousemove', onMousemove);
     window.addEventListener('mouseup', onMouseup);
+    window.addEventListener('dblclick', onDoubleClick);
 
     this.disposables.add(toDisposable(() => body.removeEventListener('contextmenu', onContextmenu)));
     this.disposables.add(toDisposable(() => window.removeEventListener('mousedown', onMousedown)));

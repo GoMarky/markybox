@@ -7,6 +7,7 @@ import { EditorCSSName } from '@/core/renderer/html/common/helpers';
 import { GlyphParenNode } from '@/core/renderer/html/common/GlyphParenNode';
 import { GlyphSpecialCharNode } from '@/core/renderer/html/common/GlyphSpecialCharNode';
 import { GlyphDOMNode } from '@/core/renderer/html/common/GlyphDOMNode';
+import { isStringContainsOnlyNumbers } from '@/core/renderer/html/common/characters';
 
 function getClassNameByStatement(statement?: CodeStatement): string | undefined {
   if (!statement) {
@@ -64,10 +65,14 @@ export class KeywordCheckerVisitor extends BaseObject implements IVisitor {
         continue;
       }
 
-      const isTypeStatement = this.isTypeStatement(current, previous);
+      if (current instanceof GlyphWordNode && previous instanceof GlyphSpecialCharNode) {
+        const isTypeStatement = this.isTypeStatement(current, previous);
 
-      if (isTypeStatement) {
-        continue;
+        if (isTypeStatement) {
+          addClass(current, EditorCSSName.Type);
+
+          continue;
+        }
       }
 
       if (current instanceof GlyphSpecialCharNode && previous instanceof GlyphSpecialCharNode) {
@@ -77,6 +82,15 @@ export class KeywordCheckerVisitor extends BaseObject implements IVisitor {
           addClass(current, EditorCSSName.Comment);
           addClass(previous, EditorCSSName.Comment);
           allNextNodesIsCommented = true;
+          continue;
+        }
+      }
+
+      if (current instanceof GlyphWordNode) {
+        const isNumber = this.isNumber(current);
+
+        if (isNumber) {
+          addClass(current, EditorCSSName.Number);
         }
       }
     }
@@ -86,8 +100,14 @@ export class KeywordCheckerVisitor extends BaseObject implements IVisitor {
     return current.is('/') && previous.is('/');
   }
 
-  private isTypeStatement(_: GlyphDOMNode, __?: GlyphDOMNode): boolean {
-    return false;
+  private isTypeStatement(_: GlyphWordNode, previous: GlyphSpecialCharNode): boolean {
+    return previous.is(':');
+  }
+
+  private isNumber(word: GlyphWordNode): boolean {
+    const { text } = word;
+
+    return isStringContainsOnlyNumbers(text);
   }
 
   private isString(_: GlyphDOMNode): boolean {

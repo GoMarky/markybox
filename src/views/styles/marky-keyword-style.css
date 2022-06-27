@@ -3,7 +3,13 @@
     --marky-identifier-name-color: #2858b3;
     --marky-class-name-color: #c79229;
     --marky-string-color: #4bad4d;
-    --marky-comment-color: #008E00
+    --marky-comment-color: #008E00;
+    --marky-type-color: #689720;
+    --marky-number-color: #3a00dc;
+}
+
+.marky__type {
+    color: var(--marky-type-color);
 }
 
 .marky__comment {
@@ -12,6 +18,10 @@
 
 .marky__identifier {
     color: var(--marky-identifier-color);
+}
+
+.marky__number {
+    color: var(--marky-number-color);
 }
 
 .marky__identifier-name {

@@ -2,7 +2,7 @@ import { GlyphDOMNode } from '@/core/renderer/html/common/GlyphDOMNode';
 import { EditorCSSName } from '@/core/renderer/html/common/helpers';
 
 export class GlyphWordNode extends GlyphDOMNode<HTMLSpanElement> {
-  constructor(private readonly rawText: string, public readonly startColumn: number, public readonly endColumn: number) {
+  constructor(private readonly rawText: string) {
     super();
 
     this._el = document.createElement('span');

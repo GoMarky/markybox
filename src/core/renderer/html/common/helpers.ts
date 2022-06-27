@@ -4,6 +4,8 @@ export const EditorCSSName = {
   IdentifierString: 'marky__identifier-string',
   ClassName: 'marky__class-name',
   Comment: 'marky__comment',
+  Number: 'marky__number',
+  Type: 'marky__type',
 
   CellGutter: 'marky__gutter-cell',
   CellGutterWidget: 'marky__gutter-cell-widget',

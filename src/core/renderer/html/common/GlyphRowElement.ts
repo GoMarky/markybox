@@ -205,14 +205,9 @@ export class GlyphRowElement extends GlyphDOMNode<HTMLDivElement> {
   protected parseText(text: string): IInputParseResult[] {
     const result: IInputParseResult[] = [];
     const words = text.split(/(\s+)/);
-    let currentPosition: number = 0;
 
     for (const word of words) {
       const isWhitespace = word.trim().length === 0;
-
-      const startColumn = currentPosition;
-      currentPosition += word.length;
-      const endColumn = currentPosition;
 
       let type: IInputParseResult['type'] = NodeType.Text;
 
@@ -228,8 +223,6 @@ export class GlyphRowElement extends GlyphDOMNode<HTMLDivElement> {
       }
 
       result.push({
-        startColumn,
-        endColumn,
         type,
         data: word,
       });
@@ -259,7 +252,7 @@ export class GlyphRowElement extends GlyphDOMNode<HTMLDivElement> {
 
     const children: GlyphDOMNode[] = [];
 
-    for (const { data, type, startColumn, endColumn } of words) {
+    for (const { data, type } of words) {
       switch (type) {
         case NodeType.Whitespace: {
           const textNode = new GlyphTextNode(data);
@@ -267,7 +260,7 @@ export class GlyphRowElement extends GlyphDOMNode<HTMLDivElement> {
           break;
         }
         case NodeType.Text: {
-          const wordNode = new GlyphWordNode(data, startColumn as number, endColumn as number);
+          const wordNode = new GlyphWordNode(data);
           children.push(wordNode);
           break;
         }
