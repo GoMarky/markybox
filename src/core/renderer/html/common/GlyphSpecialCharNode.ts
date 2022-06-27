@@ -3,8 +3,8 @@ import { MChar } from '@/core/renderer/html/editor/EditorBodyTextarea';
 import { EditorCSSName } from '@/core/renderer/html/common/helpers';
 
 export class GlyphSpecialCharNode extends GlyphDOMNode<HTMLSpanElement> {
-  constructor(public readonly char: MChar) {
-    super();
+  constructor(private readonly char: MChar, start: number, end: number) {
+    super(start, end);
 
     this._el = document.createElement('span');
     this._el.textContent = this.char;

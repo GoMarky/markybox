@@ -25,8 +25,8 @@ export enum NodeType {
 }
 
 export interface IInputParseResult {
-  startColumn?: number;
-  endColumn?: number;
+  start: number;
+  end: number;
   type: NodeType;
   data: string;
 }
@@ -178,7 +178,7 @@ export class GlyphRowElement extends GlyphDOMNode<HTMLDivElement> {
       if (containsSpecialSymbol(char)) {
         // Сохраняем нормальную строку (без спецсимвоволов) в результат парсинга
         if (tempString.length) {
-          result.push({ type: NodeType.Text, data: tempString });
+          result.push({ type: NodeType.Text, data: tempString, start: 0, end: 0, });
           tempString = '';
         }
 
@@ -186,7 +186,7 @@ export class GlyphRowElement extends GlyphDOMNode<HTMLDivElement> {
 
         const specialCharType = isParen(char) ? NodeType.Paren : NodeType.SpecialChar;
 
-        result.push({ type: specialCharType, data: char });
+        result.push({ type: specialCharType, data: char, start: 0, end: 0 });
         continue;
       }
 
@@ -196,7 +196,7 @@ export class GlyphRowElement extends GlyphDOMNode<HTMLDivElement> {
 
     // Если что-то там успело остаться в конце, отправляем в результат парсинга
     if (tempString.length) {
-      result.push({ type: NodeType.Text, data: tempString });
+      result.push({ type: NodeType.Text, data: tempString, start: 0, end: 0 });
     }
 
     return result;
@@ -206,26 +206,34 @@ export class GlyphRowElement extends GlyphDOMNode<HTMLDivElement> {
     const result: IInputParseResult[] = [];
     const words = text.split(/(\s+)/);
 
-    for (const word of words) {
+    const isAllTextWhiteSpace = text.trim().length === 0;
+
+    if (isAllTextWhiteSpace) {
+      result.push({ type: NodeType.Whitespace, data: text, start: 0, end: text.length });
+      return result;
+    }
+
+    let start = 0;
+    let end = 0;
+
+    for (const [index, word] of words.entries()) {
       const isWhitespace = word.trim().length === 0;
 
-      let type: IInputParseResult['type'] = NodeType.Text;
-
-      switch (true) {
-        case isWhitespace:
-          type = NodeType.Whitespace;
-          break;
-        default: {
-          const splitWords = this.parseWord(word);
-          result.push(...splitWords);
-          continue;
+      if (isWhitespace) {
+        if (index !== 0) {
+          start = word.length;
         }
+
+        end += word.length;
+        result.push({ type: NodeType.Whitespace, data: word, start, end });
+        continue;
       }
 
-      result.push({
-        type,
-        data: word,
-      });
+      const splitWords = this.parseWord(word);
+
+      for (const splitWord of splitWords) {
+        result.push(splitWord);
+      }
     }
 
     return result;
@@ -252,24 +260,24 @@ export class GlyphRowElement extends GlyphDOMNode<HTMLDivElement> {
 
     const children: GlyphDOMNode[] = [];
 
-    for (const { data, type } of words) {
+    for (const { data, type, start, end } of words) {
       switch (type) {
         case NodeType.Whitespace: {
-          const textNode = new GlyphTextNode(data);
+          const textNode = new GlyphTextNode(data, start, end);
           children.push(textNode);
           break;
         }
         case NodeType.Text: {
-          const wordNode = new GlyphWordNode(data);
+          const wordNode = new GlyphWordNode(data, start, end);
           children.push(wordNode);
           break;
         }
         case NodeType.Paren:
-          const parenNode = new GlyphParenNode(data);
+          const parenNode = new GlyphParenNode(data, start, end);
           children.push(parenNode);
           break;
         case NodeType.SpecialChar:
-          const specialCharNode = new GlyphSpecialCharNode(data);
+          const specialCharNode = new GlyphSpecialCharNode(data, start, end);
           children.push(specialCharNode);
           break;
       }

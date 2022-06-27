@@ -38,13 +38,12 @@ function getParenType(char: MChar): ParenType {
 export class GlyphParenNode extends GlyphDOMNode<HTMLSpanElement> {
   public readonly type: ParenType;
 
-  constructor(public readonly char: MChar) {
-    super();
+  constructor(char: string, start: number, end: number) {
+    super(start, end);
 
     this.type = getParenType(char)
-
     this._el = document.createElement('span');
-    this._el.textContent = this.char;
+    this._el.textContent = char;
     this._el.classList.add(EditorCSSName.NodeParen)
   }
 

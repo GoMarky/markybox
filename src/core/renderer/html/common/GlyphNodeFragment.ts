@@ -53,7 +53,7 @@ export class GlyphNodeFragment extends GlyphDOMNode<DocumentFragment> {
   public at(column: number): GlyphWordNode | undefined {
     const glyphs = this._children.filter((glyph) => glyph instanceof GlyphWordNode) as GlyphWordNode[];
 
-    return glyphs.find((glyph) => glyph.startColumn <= column && glyph.endColumn > column);
+    return glyphs.find((glyph) => glyph.start <= column && glyph.end > column);
   }
 
   public get hasOpenBrace(): boolean {
