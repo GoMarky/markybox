@@ -2,10 +2,18 @@ import { GlyphDOMNode } from '@/core/renderer/html/common/GlyphDOMNode';
 import { GlyphParenNode, ParenType } from '@/core/renderer/html/common/GlyphParenNode';
 import { GlyphWordNode } from '@/core/renderer/html/common/GlyphWordNode';
 
+function removeClasses(glyph: GlyphDOMNode): void {
+  const { el } = glyph;
+
+  if (el instanceof HTMLElement) {
+    el.removeAttribute('class');
+  }
+}
+
 export class GlyphNodeFragment extends GlyphDOMNode<DocumentFragment> {
   protected _hasOpenBrace: boolean = false;
   protected _hasCloseBrace: boolean = false;
-  protected _children: GlyphDOMNode[];
+  protected _children: GlyphDOMNode[] = [];
   public parenDepthLevel: number = 0;
 
   constructor() {
@@ -14,6 +22,12 @@ export class GlyphNodeFragment extends GlyphDOMNode<DocumentFragment> {
 
   public setParentDepthLevel(level: number): void {
     this.parenDepthLevel = level;
+  }
+
+  public clearSyntaxClasses(): void {
+    for (const glyph of this._children) {
+      removeClasses(glyph);
+    }
   }
 
   public setChildren(children: GlyphDOMNode[]): void {

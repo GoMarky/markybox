@@ -13,10 +13,15 @@ function getSupportedSyntaxes(): EditorLang[] {
   ];
 }
 
+function getDefaultSyntax(): EditorLang {
+  return 'plain';
+}
+
 export {
   EditorLang,
   EditorTheme,
   MEditor,
   HTMLRenderer,
+  getDefaultSyntax,
   getSupportedSyntaxes,
 }

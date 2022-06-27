@@ -16,6 +16,8 @@ import { EditorBodyNavigator } from '@/core/renderer/html/editor/EditorBodyNavig
 import { GolangCodeFormatter } from '@/core/formatters/golang/golang-formatter';
 import { EditorStorage } from '@/core/renderer/html/system/EditorStorage';
 import { EditorCSSName } from '@/core/renderer/html/common/helpers';
+import { CriticalError } from '@/base/errors';
+import { isUndefinedOrNull } from '@/base/types';
 
 export type EditorLang = 'cpp' | 'python' | 'js' | 'json' | 'plain' | 'golang';
 
@@ -29,8 +31,7 @@ export class MHTMLEditorBody extends GlyphDOMNode<HTMLDivElement> {
   public readonly textLayer: TextContainerLayer;
   private readonly markerLayer: CurrentRowMarkerLayer;
   private readonly partitionLayer: MPartitionLayer;
-
-  public visitors: IVisitor[] = [];
+  private readonly visitorMap: Map<string, IVisitor> = new Map();
 
   constructor(
     private readonly display: EditorDisplayController,
@@ -56,14 +57,11 @@ export class MHTMLEditorBody extends GlyphDOMNode<HTMLDivElement> {
     return this._formatter;
   }
 
+  public get visitors(): IVisitor[] {
+    return Array.from(this.visitorMap.values());
+  }
+
   public setFormat(type: EditorLang = 'plain'): void {
-    this._formatter = new JavascriptCodeFormatter();
-    this.renderer.currentState.setContext(this.renderer);
-
-    if (true) {
-      return;
-    }
-
     switch (type) {
       case 'cpp':
         this._formatter = new CPPCodeFormatter();
@@ -97,13 +95,27 @@ export class MHTMLEditorBody extends GlyphDOMNode<HTMLDivElement> {
   }
 
   public reRenderExistNodes(): void {
-    const text = this.renderer.getText();
-    this.storage.clear();
-    this.renderer.setText(text);
+    const { storage: { rows } } = this;
+    const keywordChecker = this.visitorMap.get('keyword');
+
+    if (isUndefinedOrNull(keywordChecker)) {
+      throw new CriticalError(`Keyword checker is undefined`);
+    }
+
+    for (const row of rows) {
+      const { fragment } = row;
+
+      if (isUndefinedOrNull(fragment)) {
+        throw new CriticalError(`Expect fragment to be defined.`);
+      }
+
+      fragment.clearSyntaxClasses();
+      keywordChecker.visit(fragment);
+    }
   }
 
-  public addVisitor(visitor: IVisitor): void {
-    this.visitors.push(visitor);
+  public addVisitor(id: string, visitor: IVisitor): void {
+    this.visitorMap.set(id, visitor);
   }
 
   public mount(root: HTMLElement): void {

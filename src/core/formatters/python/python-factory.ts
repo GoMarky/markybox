@@ -2,7 +2,6 @@ import { BaseFormatterFactory, IAbstractFormatterFactory } from '@/core/formatte
 import { GlyphNodeFragment } from '@/core/renderer/html/common/GlyphNodeFragment';
 import { MHTMLPythonNodeFragment } from '@/core/formatters/python/python-node-fragment';
 import { GlyphRowElement } from '@/core/renderer/html/common/GlyphRowElement';
-import { PythonGlyphRow } from '@/core/formatters/python/python-glyph-row';
 
 export class PythonFactory extends BaseFormatterFactory implements IAbstractFormatterFactory {
   constructor() {

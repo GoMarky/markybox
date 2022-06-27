@@ -75,8 +75,8 @@ export class HTMLRenderer extends BaseObject implements IAbstractRenderer {
 
     this.unlock();
 
-    this.body.addVisitor(new UserTextHintVisitor(navigator));
-    this.body.addVisitor(new KeywordCheckerVisitor(body));
+    this.body.addVisitor('hint', new UserTextHintVisitor(navigator));
+    this.body.addVisitor('keyword', new KeywordCheckerVisitor(body));
 
     this.registerListeners();
 

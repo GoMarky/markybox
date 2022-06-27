@@ -43,10 +43,6 @@ export class GlyphRowElement extends GlyphDOMNode<HTMLDivElement> {
     super();
   }
 
-  public get columnsCount(): number {
-    return this._text.length;
-  }
-
   public get text(): string {
     return this._text;
   }
@@ -78,7 +74,7 @@ export class GlyphRowElement extends GlyphDOMNode<HTMLDivElement> {
   }
 
   public contains(column: number): boolean {
-    return (this.columnsCount - 1) >= column;
+    return (this.length - 1) >= column;
   }
 
   public containsOnlyWhitespaces(): boolean {

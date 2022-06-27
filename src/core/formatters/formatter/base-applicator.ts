@@ -41,7 +41,7 @@ export class AbstractKeyApplicator extends BaseObject implements IAbstractKeyApp
     let column = 0;
 
     if (prevRow) {
-      column = prevRow.columnsCount;
+      column = prevRow.length;
     }
 
     navigator.setPosition({ row: index - 1, column })
@@ -112,7 +112,7 @@ export class AbstractKeyApplicator extends BaseObject implements IAbstractKeyApp
       const prevRow = controller.prevRow;
       prevRow.append(currentRowText);
       controller.removeRow(controller.currentRow);
-      navigator.setPosition({ row: prevRow.index, column: prevRow.columnsCount - currentRowText.length })
+      navigator.setPosition({ row: prevRow.index, column: prevRow.length - currentRowText.length })
       return;
     }
 

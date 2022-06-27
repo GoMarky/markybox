@@ -59,7 +59,7 @@ export class PythonKeyApplicator extends AbstractKeyApplicator implements IAbstr
     const { position } = navigator;
     const isCurrentRowEmpty = currentRow.empty();
 
-    const isChosenLastLetter = position.column >= currentRow.columnsCount;
+    const isChosenLastLetter = position.column >= currentRow.length;
 
     /**
      * Если текущая строка пустая - просто добавляем еще пустую строку

@@ -84,8 +84,8 @@ export class MHTMLEditorNavigator extends BaseObject {
 
     if (matchedRow.empty()) {
       column = 0;
-    } else if (column >= matchedRow.columnsCount) {
-      column = matchedRow.columnsCount;
+    } else if (column >= matchedRow.length) {
+      column = matchedRow.length;
     }
 
     const normalizedPosition: IPosition = { row, column };

@@ -74,14 +74,14 @@ export class EditorActiveState extends AbstractEditorState {
 
     // Если попали в существующую строку, переводим курсор в нее
     if (row) {
-      const column = position.column > row.columnsCount ? row.columnsCount : position.column;
+      const column = position.column > row.length ? row.length : position.column;
 
       return navigator.setPosition({ row: position.row, column });
     }
 
     // Если попали "вникуда", переводим курсор на последнюю строку, последней колонки.
     const lastRow = storage.last();
-    navigator.setPosition({ row: lastRow.index, column: lastRow.columnsCount })
+    navigator.setPosition({ row: lastRow.index, column: lastRow.length })
   }
 
   public onKeyDown(event: KeyboardEvent): void {

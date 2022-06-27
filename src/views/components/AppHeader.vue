@@ -14,16 +14,17 @@
     <nav class="page-header__navigation">
       <ul class="page-header__nav-list">
         <li class="page-header__nav-item">
+          <UISelect
+            label="Lang"
+            :value="currentEditorLang"
+            @update:value="currentEditorLang = $event"
+            :options="editorLanguages"
+          ></UISelect>
+        </li>
+        <li class="page-header__nav-item">
           <button type="button" class="btn btn_primary page-header__nav-link">
             <icon-settings />
           </button>
-<!--          <UISelect-->
-<!--            label="Lang"-->
-<!--            :value="currentEditorLang"-->
-<!--            @update:value="currentEditorLang = $event"-->
-<!--            v-model="currentEditorLang"-->
-<!--            :options="editorLanguages"-->
-<!--          ></UISelect>-->
         </li>
         <li class="page-header__nav-item">
           <button
@@ -96,7 +97,7 @@ export default window.workbench.createComponent((accessor) => {
     setup() {
       const router = useRouter();
       const { name, isAuth } = sessionService.profile;
-      const currentEditorLang = ref<markybox.EditorLang>('plain');
+      const currentEditorLang = ref<markybox.EditorLang>(markybox.getDefaultSyntax());
       const { addNotification } = useNotifications();
       const { openDrawer } = useDrawer();
 
@@ -121,7 +122,7 @@ export default window.workbench.createComponent((accessor) => {
 
       watch(noteService.store.currentNote, (note) => {
         currentEditorLang.value = note?.lang as markybox.EditorLang;
-      })
+      });
 
       watch(currentEditorLang, async (lang: markybox.EditorLang) => {
         const noteId = router.currentRoute.value.params.id as string;
@@ -129,7 +130,7 @@ export default window.workbench.createComponent((accessor) => {
 
         await noteService.updateNote(noteId, text, lang);
         editorService.renderer.body.setFormat(lang);
-      })
+      });
 
       async function copyNoteLink(): Promise<void> {
         const link = window.location.href;
