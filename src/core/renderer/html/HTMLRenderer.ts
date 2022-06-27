@@ -16,6 +16,7 @@ import { KeywordCheckerVisitor } from '@/core/renderer/html/visitors/KeywordChec
 import { EditorSimpleNavigator } from '@/core/renderer/html/editor/EditorSimpleNavigator';
 import { IAbstractRenderer } from '@/core/app/renderer';
 import { toDisposable } from '@/platform/lifecycle/common/lifecycle';
+import { isMac } from '@/base/platform';
 
 export class HTMLRenderer extends BaseObject implements IAbstractRenderer {
   public readonly storage: EditorStorage;
@@ -114,9 +115,17 @@ export class HTMLRenderer extends BaseObject implements IAbstractRenderer {
       this.controller.setCurrentRow(row);
     })
 
+    const meta: string = isMac ? 'Meta' : 'Ctrl';
+
+    const SELECT_ALL_KEY = `${meta}+A`;
+    const REDO_KEY = `${meta}+Shift+Z`;
+    const UNDO_KEY = `${meta}+Z`;
+    const COPY_KEY = `${meta}+C`;
+    const PASTE_KEY = `${meta}+V`;
+
     // Select all code
     this.disposables.add(
-      windowShortcut.registerShortcut('Meta+A', () => {
+      windowShortcut.registerShortcut(SELECT_ALL_KEY, () => {
         this.selection.selectAll();
       })
     );
@@ -129,7 +138,7 @@ export class HTMLRenderer extends BaseObject implements IAbstractRenderer {
     );
 
     this.disposables.add(
-      windowShortcut.registerShortcut('Meta+Shift+Z', (event) => {
+      windowShortcut.registerShortcut(REDO_KEY, (event) => {
         event.preventDefault();
 
         console.log('Redo')
@@ -137,7 +146,7 @@ export class HTMLRenderer extends BaseObject implements IAbstractRenderer {
     );
 
     this.disposables.add(
-      windowShortcut.registerShortcut('Meta+Z', (event) => {
+      windowShortcut.registerShortcut(UNDO_KEY, (event) => {
         event.preventDefault();
 
         console.log('Undo')
@@ -153,7 +162,7 @@ export class HTMLRenderer extends BaseObject implements IAbstractRenderer {
 
     // Copy all code
     this.disposables.add(
-      windowShortcut.registerShortcut('Meta+C', () => {
+      windowShortcut.registerShortcut(COPY_KEY, () => {
         const text = this.selection.getSelectedText();
 
         void this.clipboard.write(text);
@@ -162,7 +171,7 @@ export class HTMLRenderer extends BaseObject implements IAbstractRenderer {
 
     // Paste all code from clipboard
     this.disposables.add(
-      windowShortcut.registerShortcut('Meta+V', async () => {
+      windowShortcut.registerShortcut(PASTE_KEY, async () => {
         const text = await this.clipboard.read();
 
         this.controller.setWholeText(text);
