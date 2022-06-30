@@ -5,6 +5,12 @@ export class EditorLockedState extends AbstractEditorState {
     super();
   }
 
+  public onDoubleClick(_: MouseEvent) {
+  }
+
+  public onKeyUp(_: KeyboardEvent) {
+  }
+
   public onInput(_: string): void {
     //
   }

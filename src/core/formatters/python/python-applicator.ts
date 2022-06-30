@@ -28,7 +28,7 @@ export class PythonKeyApplicator extends AbstractKeyApplicator implements IAbstr
     while (_amountLeftParen) {
       --_amountLeftParen;
 
-      const glyph = new GlyphIndentNode(BASE_INDENT_VALUE);
+      const glyph = new GlyphIndentNode(BASE_INDENT_VALUE, 0, 0);
       indentGlyphs.push(glyph);
     }
 

@@ -31,6 +31,8 @@ export abstract class AbstractEditorState extends BaseObject {
 
   public abstract onDoubleClick(event: MouseEvent): void;
 
+  public abstract onKeyUp(event: KeyboardEvent): void;
+
   public abstract onKeyDown(event: KeyboardEvent): void;
 
   public abstract onSelectionStart(event: MouseEvent): void;

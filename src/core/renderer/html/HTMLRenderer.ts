@@ -180,12 +180,15 @@ export class HTMLRenderer extends BaseObject implements IAbstractRenderer {
 
     const onMousedown = (event: MouseEvent) => this.currentState.onClick(event);
     const onKeydown = (event: KeyboardEvent) => this.currentState.onKeyDown(event);
+    const onKeyUp = (event: KeyboardEvent) => this.currentState.onKeyUp(event);
 
     window.addEventListener('mousedown', onMousedown);
     window.addEventListener('keydown', onKeydown);
+    window.addEventListener('keyup', onKeyUp);
 
     this.disposables.add(toDisposable(() => window.removeEventListener('mousedown', onMousedown)));
     this.disposables.add(toDisposable(() => window.removeEventListener('keydown', onKeydown)));
+    this.disposables.add(toDisposable(() => window.removeEventListener('keyup', onKeyUp)));
   }
 
   public dispose(): void {
