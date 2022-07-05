@@ -90,7 +90,7 @@ export class AbstractKeyApplicator extends BaseObject implements IAbstractKeyApp
     const { fragment } = currentRow;
 
     if (!fragment) {
-      throw new CriticalError('Expect fragment to be defined');
+      throw new CriticalError('BaseApplicator#Expect fragment to be defined');
     }
 
     const glyph = fragment.at(column);

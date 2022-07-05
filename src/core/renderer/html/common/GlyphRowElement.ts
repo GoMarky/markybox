@@ -36,7 +36,7 @@ export class GlyphRowElement extends GlyphDOMNode<HTMLDivElement> {
   private _renderer: HTMLRenderer;
   private _gutter: GlyphRowGutterElement;
 
-  public fragment: GlyphNodeFragment | null;
+  public fragment: GlyphNodeFragment = new GlyphNodeFragment();
   public index: number;
 
   constructor() {
@@ -241,14 +241,9 @@ export class GlyphRowElement extends GlyphDOMNode<HTMLDivElement> {
   private clearNodeFragment(): void {
     const { fragment } = this;
 
-    // Очищаем старые
-    if (!fragment) {
-      return;
-    }
-
     this._el.replaceChildren();
     fragment.dispose();
-    this.fragment = null;
+    this.fragment = null!;
   }
 
   private render(): void {

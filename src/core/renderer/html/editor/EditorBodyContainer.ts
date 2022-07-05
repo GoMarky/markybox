@@ -106,7 +106,7 @@ export class MHTMLEditorBody extends GlyphDOMNode<HTMLDivElement> {
       const { fragment } = row;
 
       if (isUndefinedOrNull(fragment)) {
-        throw new CriticalError(`Expect fragment to be defined.`);
+        throw new CriticalError(`EditorBodyContainer#Expect fragment to be defined.`);
       }
 
       fragment.clearSyntaxClasses();
