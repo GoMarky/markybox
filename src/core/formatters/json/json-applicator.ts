@@ -5,8 +5,8 @@ export class JSONKeyApplicator extends AbstractKeyApplicator implements IAbstrac
     super();
   }
 
-  public backspace() {
-    super.backspace();
+  public backspace(options: { isRepeat: boolean }) {
+    super.backspace(options);
   }
 
   public enter() {

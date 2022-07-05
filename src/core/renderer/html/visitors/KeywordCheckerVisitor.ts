@@ -59,10 +59,13 @@ export class KeywordCheckerVisitor extends BaseObject implements IVisitor {
         continue;
       }
 
-      const isStatementName = this.checkStatementName(current, previous);
+      if (current instanceof GlyphWordNode && previous instanceof GlyphWordNode) {
+        const isStatementName = this.checkStatementName(previous);
 
-      if (isStatementName) {
-        continue;
+        if (isStatementName) {
+          addClass(current, EditorCSSName.IdentifierName);
+          continue;
+        }
       }
 
       if (current instanceof GlyphWordNode && previous instanceof GlyphSpecialCharNode) {
@@ -114,7 +117,7 @@ export class KeywordCheckerVisitor extends BaseObject implements IVisitor {
     return false;
   }
 
-  private checkStatementName(current: GlyphDOMNode, previous?: GlyphDOMNode): boolean {
+  private checkStatementName(previous?: GlyphDOMNode): boolean {
     if (!previous) {
       return false;
     }
@@ -123,14 +126,7 @@ export class KeywordCheckerVisitor extends BaseObject implements IVisitor {
 
     const statement = formatter.parseKeyword(previous.text);
 
-    switch (statement) {
-      case CodeStatement.VariableDeclaration: {
-        addClass(current, EditorCSSName.IdentifierName);
-        return true;
-      }
-    }
-
-    return false;
+    return statement === CodeStatement.VariableDeclaration;
   }
 
   private checkStatement(glyph: GlyphDOMNode): boolean {

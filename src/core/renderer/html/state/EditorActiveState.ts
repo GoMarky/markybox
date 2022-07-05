@@ -59,17 +59,8 @@ export class EditorActiveState extends AbstractEditorState {
     controller.editorAutoSave.save();
   }
 
-  public onKeyUp(event: KeyboardEvent) {
-    const { applicator } = this.context.body.formatter;
-    const code = event.code as Char;
-
-    console.log('keyup');
-
-    switch (code) {
-      case Char.Backspace:
-        applicator.stopBackspaceAction();
-        return;
-    }
+  public onKeyUp(_: KeyboardEvent) {
+    //
   }
 
   public onDoubleClick(event: MouseEvent): void {
@@ -94,8 +85,8 @@ export class EditorActiveState extends AbstractEditorState {
       return;
     }
 
-    const { clientX, clientY } = event;
-    const position = display.toEditorPosition({ top: clientY, left: clientX });
+    const { clientX, offsetY } = event;
+    const position = display.toEditorPosition({ top: offsetY + 52, left: clientX });
 
     const row = storage.at(position.row);
 
@@ -138,10 +129,7 @@ export class EditorActiveState extends AbstractEditorState {
         break;
       }
       case Char.Backspace: {
-        if (!isRepeat) {
-          return this.backspace();
-        }
-        break;
+        return this.backspace({ isRepeat });
       }
       case Char.Enter: {
         return this.enter();
@@ -157,8 +145,8 @@ export class EditorActiveState extends AbstractEditorState {
     return applicator.enter();
   }
 
-  private backspace(): void {
+  private backspace(options: { isRepeat: boolean }): void {
     const { applicator } = this.context.body.formatter;
-    return applicator.backspace();
+    return applicator.backspace(options);
   }
 }

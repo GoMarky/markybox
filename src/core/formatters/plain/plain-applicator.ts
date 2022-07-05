@@ -5,8 +5,8 @@ export class PlainKeyApplicator extends AbstractKeyApplicator implements IAbstra
     super();
   }
 
-  public backspace(): void {
-    return super.backspace();
+  public backspace(options: { isRepeat: boolean }): void {
+    return super.backspace(options);
   }
 
   public enter(): void {

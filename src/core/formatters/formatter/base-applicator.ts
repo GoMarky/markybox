@@ -2,22 +2,21 @@ import { EditorBodyNavigator } from '@/core/renderer/html/editor/EditorBodyNavig
 import { EditorRowsController } from '@/core/renderer/html/editor/EditorRowsController';
 import { BaseObject } from '@/core/objects/BaseObject';
 import { CriticalError } from '@/base/errors';
+import { debounce, throttle } from '@/base/async';
+import { GlyphRowElement } from '@/core/renderer/html/common/GlyphRowElement';
 
 export interface IAbstractKeyApplicator {
   setContext(navigator: EditorBodyNavigator, controller: EditorRowsController): void;
 
-  backspace(): void;
+  backspace(options: { isRepeat: boolean }): void;
 
   enter(): void;
-
-  stopBackspaceAction(): void;
 }
 
 export class AbstractKeyApplicator extends BaseObject implements IAbstractKeyApplicator {
   protected navigator: EditorBodyNavigator;
   protected controller: EditorRowsController;
 
-  protected backspaceKeyIntervalPressed: number = 0;
   protected currentBackspaceTimePressed: number = 0;
 
   constructor() {
@@ -73,15 +72,19 @@ export class AbstractKeyApplicator extends BaseObject implements IAbstractKeyApp
 
     const { currentBackspaceTimePressed } = this;
 
-    if (currentBackspaceTimePressed >= 1000) {
+    if (currentBackspaceTimePressed >= 5) {
       return this.removeGlyphByPosition(column);
     }
 
     return this.removeLetterByPosition(column);
   }
 
+  protected throttleSlice = throttle((row: GlyphRowElement, start: number, end: number) => {
+    row.slice(start, end);
+  }, 250)
+
   protected removeGlyphByPosition(column: number): void {
-    const { navigator, controller } = this;
+    const { controller } = this;
     const { currentRow } = controller;
 
     const { fragment } = currentRow;
@@ -90,7 +93,15 @@ export class AbstractKeyApplicator extends BaseObject implements IAbstractKeyApp
       throw new CriticalError('Expect fragment to be defined');
     }
 
-    console.log(column);
+    const glyph = fragment.at(column);
+
+    if (!glyph) {
+      throw new CriticalError('Expect glyph to be defined');
+    }
+
+    const { start, end } = glyph;
+
+    this.throttleSlice(currentRow, start, end);
   }
 
   protected removeLetterByPosition(column: number): void {
@@ -143,16 +154,16 @@ export class AbstractKeyApplicator extends BaseObject implements IAbstractKeyApp
     this.controller = controller;
   }
 
-  public stopBackspaceAction(): void {
-    window.clearInterval(this.backspaceKeyIntervalPressed);
-    this.currentBackspaceTimePressed = 0;
-  }
+  public backspace(options: { isRepeat: boolean }): void {
+    const { isRepeat } = options;
 
-  public backspace(): void {
-    this.backspaceKeyIntervalPressed = window.setInterval(() => {
-      this.doBackspaceAction();
-      this.currentBackspaceTimePressed += 100;
-    }, 100);
+    if (isRepeat) {
+      this.currentBackspaceTimePressed += 1;
+    } else {
+      this.currentBackspaceTimePressed = 0;
+    }
+
+    this.doBackspaceAction();
   }
 
   public enter(): void {

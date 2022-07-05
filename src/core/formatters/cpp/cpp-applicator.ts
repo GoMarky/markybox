@@ -5,8 +5,8 @@ export class CPPKeyApplicator extends AbstractKeyApplicator implements IAbstract
     super();
   }
 
-  public backspace() {
-    super.backspace();
+  public backspace(options: { isRepeat: boolean }) {
+    super.backspace(options);
   }
 
   public enter() {

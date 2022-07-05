@@ -49,8 +49,8 @@ export class PythonKeyApplicator extends AbstractKeyApplicator implements IAbstr
     navigator.setPosition({ row: indentRowIndex, column: indentWhitespace.length });
   }
 
-  public backspace(): void {
-    super.backspace();
+  public backspace(options: { isRepeat: boolean }): void {
+    super.backspace(options);
   }
 
   public enter(): void {

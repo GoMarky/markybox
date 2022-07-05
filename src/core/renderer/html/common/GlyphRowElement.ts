@@ -104,7 +104,7 @@ export class GlyphRowElement extends GlyphDOMNode<HTMLDivElement> {
     return this.setText('');
   }
 
-  public slice(start: number, _: number): void {
+  public slice(start: number, end: number): void {
     if (this.containsOnlyWhitespaces()) {
       const slicedText = this._text.slice(0, start);
 
@@ -112,8 +112,10 @@ export class GlyphRowElement extends GlyphDOMNode<HTMLDivElement> {
       this.render();
     }
 
-    // TODO:
-    // Write logic for non-empty rows.
+    const slicedText = this._text.slice(start, end);
+    const restText = this._text.slice(0, -Math.abs(slicedText.length));
+
+    this._text = restText;
   }
 
   public append(text: string): void {
@@ -172,6 +174,13 @@ export class GlyphRowElement extends GlyphDOMNode<HTMLDivElement> {
     const chars: string[] = word.split('');
     let tempString: string = '';
 
+    const isWhitespace = word.trim().length === 0;
+
+    if (isWhitespace) {
+      result.push({ type: NodeType.Whitespace, data: word, start: 0, end: 0 });
+      return result;
+    }
+
     while (chars.length) {
       const char = chars.shift() as string;
       // Если попали на спец-символ
@@ -183,9 +192,7 @@ export class GlyphRowElement extends GlyphDOMNode<HTMLDivElement> {
         }
 
         // Спец.символ добавляем в результат парсинга.
-
         const specialCharType = isParen(char) ? NodeType.Paren : NodeType.SpecialChar;
-
         result.push({ type: specialCharType, data: char, start: 0, end: 0 });
         continue;
       }
@@ -207,7 +214,6 @@ export class GlyphRowElement extends GlyphDOMNode<HTMLDivElement> {
     const words = text.split(/(\s+)/);
 
     const isAllTextWhiteSpace = text.trim().length === 0;
-
     if (isAllTextWhiteSpace) {
       result.push({ type: NodeType.Whitespace, data: text, start: 0, end: text.length });
       return result;
@@ -216,25 +222,18 @@ export class GlyphRowElement extends GlyphDOMNode<HTMLDivElement> {
     let start = 0;
     let end = 0;
 
-    for (const [index, word] of words.entries()) {
-      const isWhitespace = word.trim().length === 0;
+    words.forEach((word) => {
+      const parsedWords = this.parseWord(word);
 
-      if (isWhitespace) {
-        if (index !== 0) {
-          start = word.length;
-        }
+      for (const parsedWord of parsedWords) {
+        const { type, data } = parsedWord;
+        const length = data.length;
 
-        end += word.length;
-        result.push({ type: NodeType.Whitespace, data: word, start, end });
-        continue;
+        end += length;
+        result.push({ type, data, start, end });
+        start += length;
       }
-
-      const splitWords = this.parseWord(word);
-
-      for (const splitWord of splitWords) {
-        result.push(splitWord);
-      }
-    }
+    });
 
     return result;
   }
