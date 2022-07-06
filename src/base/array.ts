@@ -1,3 +1,38 @@
+export function createArrayWithProxy<T = unknown>(array: T[], trap?: (...values: T[]) => void) {
+  return new Proxy(array, {
+    get(target, prop: string) {
+      // @ts-ignore
+      const val = target[prop];
+      if (typeof val === 'function') {
+        if (['push', 'unshift'].includes(prop)) {
+          return function() {
+            if (trap) {
+              trap(...arguments);
+            }
+            // @ts-ignore
+            return Array.prototype[prop].apply(target, arguments);
+          };
+        }
+
+        if (['pop'].includes(prop)) {
+          return function() {
+            // @ts-ignore
+            const el = Array.prototype[prop].apply(target, arguments);
+            if (trap) {
+              trap(...arguments);
+            }
+            return el;
+          };
+        }
+
+        return val.bind(target);
+      }
+
+      return val;
+    },
+  });
+}
+
 /**
  * @param {string[]} array
  */

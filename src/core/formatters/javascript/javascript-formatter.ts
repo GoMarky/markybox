@@ -5,7 +5,7 @@ import { IAbstractFormatterFactory } from '@/core/formatters/formatter/base-fact
 import { JavascriptFactory } from '@/core/formatters/javascript/javascript-factory';
 
 const Regexp = {
-  VariableStatement: /^(readonly|from|import|global|declare|object|class|async|await|return|true|false|any|extends|static|let|package|implements|interface|function|new|try|yeild|const|continue|do|catch|in|this|break|as|switch|case|if|throw|else|var|number|string|get|module|type|instanceof|typeof|public|private|enum|export|finally|for|while|void|null|super$)/,
+  VariableStatement: /^(set|readonly|from|import|global|declare|object|class|async|await|return|true|false|any|extends|static|let|package|implements|interface|function|new|try|yeild|const|continue|do|catch|in|this|break|as|switch|case|if|throw|else|var|number|string|get|module|type|instanceof|typeof|public|private|enum|export|finally|for|while|void|null|super$)/,
 };
 
 export class JavascriptCodeFormatter extends BaseFormatter {

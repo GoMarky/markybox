@@ -72,7 +72,7 @@ export class AbstractKeyApplicator extends BaseObject implements IAbstractKeyApp
 
     const { currentBackspaceTimePressed } = this;
 
-    if (currentBackspaceTimePressed >= 5) {
+    if (currentBackspaceTimePressed >= 50) {
       return this.removeGlyphByPosition(column);
     }
 
