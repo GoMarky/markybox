@@ -2,16 +2,16 @@ import { AbstractKeyApplicator, IAbstractKeyApplicator } from '@/core/formatters
 import { copyStringNumberOfTimes } from '@/base/string';
 import { BASE_INDENT_VALUE } from '@/core/renderer/html/common/helpers';
 import { ParenType } from '@/core/renderer/html/common/GlyphParenNode';
-import { GlyphTextNode } from '@/core/renderer/html/common/GlyphTextNode';
 import { GlyphIndentNode } from '@/core/renderer/html/common/GlyphIndentNode';
+import { EditorGlobalContext } from '@/core/renderer/html/system/EditorGlobalContext';
 
 export class PythonKeyApplicator extends AbstractKeyApplicator implements IAbstractKeyApplicator {
-  constructor() {
-    super();
+  constructor(context: EditorGlobalContext) {
+    super(context);
   }
 
   private addRowAtPositionWithIndent(index: number): void {
-    const { navigator, controller } = this;
+    const { navigator, controller } = this.context;
     const { currentRow } = controller;
     // Индекс строчки с пробелами
     const indentRowIndex = index + 1;
@@ -49,12 +49,8 @@ export class PythonKeyApplicator extends AbstractKeyApplicator implements IAbstr
     navigator.setPosition({ row: indentRowIndex, column: indentWhitespace.length });
   }
 
-  public backspace(options: { isRepeat: boolean }): void {
-    super.backspace(options);
-  }
-
   public enter(): void {
-    const { navigator, controller } = this;
+    const { navigator, controller } = this.context;
     const { currentRow } = controller;
     const { position } = navigator;
     const isCurrentRowEmpty = currentRow.empty();

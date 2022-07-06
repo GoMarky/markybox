@@ -101,8 +101,8 @@ export class EditorBodyNavigator extends MHTMLEditorNavigator {
   public readonly onDidUpdatePosition: IEvent<IPosition> = this._onDidUpdatePosition.event;
 
   constructor(
-    display: EditorDisplayController,
     storage: EditorStorage,
+    display: EditorDisplayController,
     name: string
   ) {
     super(display, storage, name);

@@ -17,6 +17,10 @@ import { EditorSimpleNavigator } from '@/core/renderer/html/editor/EditorSimpleN
 import { IAbstractRenderer } from '@/core/app/renderer';
 import { toDisposable } from '@/platform/lifecycle/common/lifecycle';
 import { isMac } from '@/base/platform';
+import { CommandsRegistry, EditorCommandCenter, NoHistoryCommandImpl } from '@/core/renderer/html/system/EditorCommandService';
+import { EditorGlobalContext } from '@/core/renderer/html/system/EditorGlobalContext';
+
+import './actions/editor-actions';
 
 export class HTMLRenderer extends BaseObject implements IAbstractRenderer {
   public readonly storage: EditorStorage;
@@ -27,7 +31,10 @@ export class HTMLRenderer extends BaseObject implements IAbstractRenderer {
   public readonly navigator: EditorBodyNavigator;
   public readonly controller: EditorRowsController;
   public readonly body: MHTMLEditorBody;
-  public currentState: AbstractEditorState = new EditorLockedState();
+  public readonly context: EditorGlobalContext;
+  public readonly commandCenter: EditorCommandCenter;
+
+  public currentState: AbstractEditorState;
   public $isMount: boolean = false;
 
   constructor() {
@@ -39,23 +46,31 @@ export class HTMLRenderer extends BaseObject implements IAbstractRenderer {
 
     const storage = this.storage = new EditorStorage();
     const display = this.display = new EditorDisplayController(storage);
-    const navigator = this.navigator = new EditorBodyNavigator(display, storage, 'user');
-    const body = this.body = new MHTMLEditorBody(display, navigator, storage, this);
-    const controller = this.controller = new EditorRowsController(this, storage, body);
+    const navigator = this.navigator = new EditorBodyNavigator(storage, display, 'user');
+    const controller = this.controller = new EditorRowsController(this);
+    const selection = this.selection = new EditorSelectionContainer(this, storage, display);
 
-    this.selection = new EditorSelectionContainer(this, storage, display);
+    const context = this.context = new EditorGlobalContext(navigator, controller, storage, display, selection);
+    const body = this.body = new MHTMLEditorBody(storage, this, context);
+    const command = this.commandCenter = new EditorCommandCenter(context);
+
     this.clipboard = new UserClipboardController();
     this.navigatorManager = new EditorSimpleNavigator(controller, display, storage);
+
+    context.setBody(body);
+    context.setCommand(command);
+
+    this.currentState = new EditorLockedState(context);
   }
 
   public unlock(): void {
-    this.currentState = new EditorActiveState();
-    this.currentState.setContext(this);
+    const { context } = this;
+    this.currentState = new EditorActiveState(context);
   }
 
   public lock(): void {
-    this.currentState = new EditorLockedState();
-    this.currentState.setContext(this);
+    const { context } = this;
+    this.currentState = new EditorLockedState(context);
   }
 
   public mount(selector: string): void {
@@ -63,7 +78,7 @@ export class HTMLRenderer extends BaseObject implements IAbstractRenderer {
     const rootElement = document.querySelector<HTMLElement>(selector);
 
     if (!rootElement) {
-      throw new CriticalError(`Element ${selector} not found.`);
+      throw new CriticalError('Element ${selector} not found.');
     }
 
     this.body.mount(rootElement);
@@ -108,12 +123,24 @@ export class HTMLRenderer extends BaseObject implements IAbstractRenderer {
     this.navigator.onDidUpdatePosition((position) => {
       const row = this.storage.at(position.row);
 
+      const { top } = this.display.toDOMPosition(position);
+      this.body.markerLayer.top(top);
+
       if (!row) {
         throw new CriticalError(`Expected row at position: ${position.row}. Got undefined`);
       }
 
       this.controller.setCurrentRow(row);
-    })
+    });
+
+    CommandsRegistry.registerCommand(
+      'editor.redo',
+      () => new NoHistoryCommandImpl(() => this.commandCenter.redoCommand())
+    );
+    CommandsRegistry.registerCommand(
+      'editor.undo',
+      () => new NoHistoryCommandImpl(() => this.commandCenter.undoCommand())
+    );
 
     const meta: string = isMac ? 'Meta' : 'Ctrl';
 
@@ -130,6 +157,7 @@ export class HTMLRenderer extends BaseObject implements IAbstractRenderer {
       })
     );
 
+    // on Tab action
     this.disposables.add(
       windowShortcut.registerShortcut('Tab', (event) => {
         event.preventDefault();
@@ -137,22 +165,25 @@ export class HTMLRenderer extends BaseObject implements IAbstractRenderer {
       })
     );
 
+    /// Redo action
     this.disposables.add(
       windowShortcut.registerShortcut(REDO_KEY, (event) => {
         event.preventDefault();
 
-        console.log('Redo')
+        void this.commandCenter.executeCommand('editor.redo');
       })
     );
 
+    // Undo action
     this.disposables.add(
       windowShortcut.registerShortcut(UNDO_KEY, (event) => {
         event.preventDefault();
 
-        console.log('Undo')
+        void this.commandCenter.executeCommand('editor.undo');
       })
     )
 
+    // Shift+Tab action
     this.disposables.add(
       windowShortcut.registerShortcut('Shift+Tab', (event) => {
         event.preventDefault();

@@ -4,6 +4,7 @@ import { EditorBodyNavigator } from '@/core/renderer/html/editor/EditorBodyNavig
 import { EditorRowsController } from '@/core/renderer/html/editor/EditorRowsController';
 import { IAbstractKeyApplicator } from '@/core/formatters/formatter/base-applicator';
 import { IAbstractFormatterFactory } from '@/core/formatters/formatter/base-factory';
+import { EditorGlobalContext } from '@/core/renderer/html/system/EditorGlobalContext';
 
 export enum CodeStatement {
   Text = 'text',
@@ -14,15 +15,14 @@ export abstract class BaseFormatter extends BaseObject {
   public abstract readonly applicator: IAbstractKeyApplicator;
   public abstract readonly factory: IAbstractFormatterFactory;
 
-  protected constructor(public readonly name: EditorLang) {
+  protected constructor(
+    public readonly name: EditorLang,
+    protected readonly context: EditorGlobalContext,
+  ) {
     super();
   }
 
   public abstract parseKeyword(input: string): CodeStatement | undefined;
-
-  public setContext(navigator: EditorBodyNavigator, controller: EditorRowsController): void {
-    this.applicator.setContext(navigator, controller);
-  }
 
   public toString(): string {
     return this.name;

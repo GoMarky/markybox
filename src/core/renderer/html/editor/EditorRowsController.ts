@@ -5,18 +5,14 @@ import { splitAtIndex } from '@/core/app/common';
 import * as dom from '@/base/dom';
 import { BASE_INDENT_VALUE } from '@/core/renderer/html/common/helpers';
 import { EditorAutoSaveController } from '@/core/objects/EditorAutoSaveController';
-import { EditorStorage } from '@/core/renderer/html/system/EditorStorage';
-import { MHTMLEditorBody } from '@/core/renderer/html/editor/EditorBodyContainer';
+import { removeLastLetter } from '@/base/string';
 
 export class EditorRowsController extends BaseObject {
   public readonly editorAutoSave: EditorAutoSaveController
-
   private _currentRow: GlyphRowElement;
 
   constructor(
-    private readonly renderer: HTMLRenderer,
-    private readonly storage: EditorStorage,
-    private readonly body: MHTMLEditorBody) {
+    private readonly renderer: HTMLRenderer) {
     super();
 
     this.editorAutoSave = new EditorAutoSaveController(this.renderer)
@@ -28,14 +24,14 @@ export class EditorRowsController extends BaseObject {
 
   public get prevRow(): GlyphRowElement | null {
     const { index } = this.currentRow;
-    const { storage } = this;
+    const { storage } = this.renderer;
 
     return storage.at(index - 1);
   }
 
   public get nextRow(): GlyphRowElement | null {
     const { index } = this.currentRow;
-    const { storage } = this;
+    const { storage } = this.renderer;
 
     return storage.at(index + 1);
   }
@@ -47,13 +43,12 @@ export class EditorRowsController extends BaseObject {
     const [first, last] = splitAtIndex(column)(text);
 
     currentRow.setText(first);
-
     const nextRow = this.addRowAt(currentRow.index + 1);
     nextRow.setText(last);
   }
 
   public expandOrShrinkRow(index: number): void {
-    const { storage } = this;
+    const { storage } = this.renderer;
 
     const leftParenRow = storage.at(index);
     const rightParenRow = this.findClosestRightParenRowDown(index);
@@ -68,7 +63,8 @@ export class EditorRowsController extends BaseObject {
   }
 
   public addRowAt(index: number): GlyphRowElement {
-    const { storage, body, renderer } = this;
+    const { storage, body } = this.renderer;
+    const { renderer } = this;
     const { textLayer } = body;
 
     const factory = renderer.body.formatter.factory;
@@ -82,7 +78,8 @@ export class EditorRowsController extends BaseObject {
   }
 
   public addRow(text: string): GlyphRowElement {
-    const { storage, body, renderer } = this;
+    const { storage, body } = this.renderer;
+    const { renderer } = this;
     const { textLayer } = body;
     const factory = renderer.body.formatter.factory;
 
@@ -99,7 +96,8 @@ export class EditorRowsController extends BaseObject {
   }
 
   public addEmptyRow(): GlyphRowElement {
-    const { storage, body, renderer } = this;
+    const { storage, body } = this.renderer;
+    const { renderer } = this;
     const { textLayer } = body;
     const factory = renderer.body.formatter.factory;
 
@@ -115,7 +113,7 @@ export class EditorRowsController extends BaseObject {
   }
 
   public removeLastRow(): void {
-    const { storage } = this;
+    const { storage } = this.renderer;
 
     const lastRow = storage.last();
     storage.removeRow(lastRow);
@@ -123,7 +121,7 @@ export class EditorRowsController extends BaseObject {
   }
 
   public removeRow(row: GlyphRowElement): void {
-    const { storage } = this;
+    const { storage } = this.renderer;
 
     storage.removeRow(row);
   }
@@ -132,6 +130,15 @@ export class EditorRowsController extends BaseObject {
     this._currentRow = row;
 
     return row;
+  }
+
+  public removeLastLetterFromRow(row: GlyphRowElement): void {
+    const { navigator } = this.renderer;
+
+    const slicedText = removeLastLetter(row.text);
+
+    row.setText(slicedText);
+    navigator.setPosition({ row: row.index, column: row.length })
   }
 
   public setWholeText(text: string): void {
@@ -167,7 +174,7 @@ export class EditorRowsController extends BaseObject {
   }
 
   public findClosestLeftParenRowDown(startIndex: number): GlyphRowElement | undefined {
-    const { storage } = this;
+    const { storage } = this.renderer;
 
     for (let i = startIndex + 1; i < storage.count; i++) {
       const row = storage.at(i);
@@ -186,7 +193,7 @@ export class EditorRowsController extends BaseObject {
   }
 
   public findClosestRightParenRowDown(startIndex: number): GlyphRowElement | undefined {
-    const { storage } = this;
+    const { storage } = this.renderer;
 
     for (let i = startIndex + 1; i < storage.count; i++) {
       const row = storage.at(i);
@@ -205,7 +212,7 @@ export class EditorRowsController extends BaseObject {
   }
 
   public getRightParenAmountFromStartByIndex(startIndex: number): number {
-    const { storage } = this;
+    const { storage } = this.renderer;
     let amount = 0;
 
     for (let i = startIndex; i >= 0; i--) {
@@ -224,7 +231,7 @@ export class EditorRowsController extends BaseObject {
   }
 
   public getLeftParenAmountFromStartByIndex(startIndex: number): number {
-    const { storage } = this;
+    const { storage } = this.renderer;
     let amount = 0;
 
     for (let i = startIndex; i >= 0; i--) {
@@ -243,7 +250,9 @@ export class EditorRowsController extends BaseObject {
   }
 
   public clear(): void {
-    this.storage.clear();
+    const { storage } = this.renderer;
+
+    storage.clear();
     this.addEmptyRow();
   }
 }

@@ -2,10 +2,11 @@ import { Char } from '@/base/char';
 import { AbstractEditorState } from '@/core/renderer/html/state/AbstractEditorState';
 import { MChar } from '@/core/renderer/html/editor/EditorBodyTextarea';
 import { IPosition } from '@/core/app/common';
+import { EditorGlobalContext } from '@/core/renderer/html/system/EditorGlobalContext';
 
 export class EditorActiveState extends AbstractEditorState {
-  constructor() {
-    super();
+  constructor(context: EditorGlobalContext) {
+    super(context);
   }
 
   public onSelectionStart(event: MouseEvent): void {
@@ -49,14 +50,7 @@ export class EditorActiveState extends AbstractEditorState {
   }
 
   public onInput(char: MChar): void {
-    const { controller, navigator } = this.context;
-    const { position: { column, row } } = navigator;
-    const { currentRow } = controller;
-
-    currentRow.inputAt(char, column);
-    navigator.setPosition({ row, column: column + 1 });
-
-    controller.editorAutoSave.save();
+    void this.context.command.executeCommand('editor.char.add', char);
   }
 
   public onKeyUp(_: KeyboardEvent) {

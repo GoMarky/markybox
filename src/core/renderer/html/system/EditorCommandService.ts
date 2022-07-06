@@ -1,12 +1,12 @@
 import { Disposable, IDisposable, toDisposable } from '@/platform/lifecycle/common/lifecycle';
-import { createDecorator } from '@/platform/instantiation/common/instantiation';
 import { isString, isUndefined } from '@/base/types';
 import { CriticalError } from '@/base/errors';
 import { createArrayWithProxy } from '@/base/array';
+import { EditorGlobalContext } from '@/core/renderer/html/system/EditorGlobalContext';
 
 export interface ICommandExecuteBody {
-  execute: (...args: any[]) => void;
-  undo?: (...args: any[]) => void;
+  execute: (...args: any[]) => any;
+  undo?: (...args: any[]) => any;
 }
 
 export type ICommandFuncBody = (...args: any[]) => ICommandExecuteBody;
@@ -24,16 +24,6 @@ export interface ICommand {
 }
 
 export type ICommandsMap = Map<string, ICommand>;
-
-export const ICommandService = createDecorator<ICommandService>('commandService');
-
-export interface ICommandService {
-  executeCommand<T>(id: string, ...args: any[]): Promise<T | undefined>;
-
-  redoCommand(): Promise<void>;
-
-  undoCommand(): Promise<void>;
-}
 
 export class CommandImpl<T = any> extends Disposable implements ICommandExecuteBody {
   constructor(
@@ -53,7 +43,7 @@ export class NoHistoryCommandImpl<T = any> extends CommandImpl<T> {
 export interface ICommandRegistry {
   registerCommand(command: ICommand): IDisposable;
 
-  registerCommand(id: string, command: (accessor: IServicesAccessor) => CommandImpl): IDisposable;
+  registerCommand(id: string, command: (ctx: EditorGlobalContext) => CommandImpl): IDisposable;
 
   getCommand(id: string): ICommand | undefined;
 
@@ -111,13 +101,13 @@ export interface ICommandHistoryRecord {
   args: any[];
 }
 
-export class CommandService extends Disposable implements ICommandService {
+export class EditorCommandCenter extends Disposable {
   private readonly executeCommandHistory: ICommandHistoryRecord[] = createArrayWithProxy([]);
   private readonly undoCommandHistory: ICommandHistoryRecord[] = createArrayWithProxy([]);
 
-  public readonly serviceBrand = ICommandService;
-
-  constructor() {
+  constructor(
+    private readonly context: EditorGlobalContext,
+  ) {
     super();
   }
 
@@ -134,6 +124,8 @@ export class CommandService extends Disposable implements ICommandService {
   }
 
   public async undoCommand(): Promise<void> {
+    const { context } = this;
+
     const record: ICommandHistoryRecord | undefined = this.executeCommandHistory.pop();
 
     if (isUndefined(record)) {
@@ -142,9 +134,7 @@ export class CommandService extends Disposable implements ICommandService {
 
     const { command, args } = record;
 
-    const commandImpl = this.instantiationService.invokeFunction((accessor: IServicesAccessor) =>
-      command.method.call(undefined, accessor)
-    );
+    const commandImpl = command.method.call(undefined, context);
 
     if (!commandImpl.undo) {
       return; /* do nothing, because command doesnt have an undo action; */
@@ -166,12 +156,10 @@ export class CommandService extends Disposable implements ICommandService {
       return; // Calling .pop() method on empty array return undefined;
     }
 
+    const { context } = this;
     const { command, args } = record;
 
-    const commandImpl = this.instantiationService.invokeFunction((accessor: IServicesAccessor) =>
-      command.method.call(undefined, accessor)
-    );
-
+    const commandImpl = command.method.call(undefined, context);
     const result = await commandImpl.execute.call(undefined, ...args, true);
 
     if (!(commandImpl instanceof NoHistoryCommandImpl)) {
@@ -188,10 +176,9 @@ export class CommandService extends Disposable implements ICommandService {
       return Promise.reject(new CriticalError(`command ${id} not found`));
     }
 
-    const commandImpl = this.instantiationService.invokeFunction((accessor: IServicesAccessor) =>
-      command.method.call(undefined, accessor)
-    );
+    const { context } = this;
 
+    const commandImpl = command.method.call(undefined, context);
     const result = await commandImpl.execute.call(undefined, ...args);
 
     if (result && !args.includes(result)) {

@@ -3,13 +3,14 @@ import { IAbstractKeyApplicator } from '@/core/formatters/formatter/base-applica
 import { JSONKeyApplicator } from '@/core/formatters/json/json-applicator';
 import { IAbstractFormatterFactory } from '@/core/formatters/formatter/base-factory';
 import { JSONFactory } from '@/core/formatters/json/json-factory';
+import { EditorGlobalContext } from '@/core/renderer/html/system/EditorGlobalContext';
 
 export class JSONCodeFormatter extends BaseFormatter {
   public readonly applicator: IAbstractKeyApplicator;
   public readonly factory: IAbstractFormatterFactory;
 
-  constructor() {
-    super('json');
+  constructor(context: EditorGlobalContext) {
+    super('json', context);
 
     this.applicator = new JSONKeyApplicator();
     this.factory = new JSONFactory();

@@ -11,13 +11,12 @@ import { CPPCodeFormatter } from '@/core/formatters/cpp/cpp-formatter';
 import { TextContainerLayer } from '@/core/renderer/html/layers/TextContainerLayer';
 import { CurrentRowMarkerLayer } from '@/core/renderer/html/layers/CurrentRowMarkerLayer';
 import { MPartitionLayer } from '@/core/renderer/html/layers/UserPartitionLayer';
-import { EditorDisplayController } from '@/core/renderer/html/system/EditorDisplayController';
-import { EditorBodyNavigator } from '@/core/renderer/html/editor/EditorBodyNavigator';
 import { GolangCodeFormatter } from '@/core/formatters/golang/golang-formatter';
 import { EditorStorage } from '@/core/renderer/html/system/EditorStorage';
 import { EditorCSSName } from '@/core/renderer/html/common/helpers';
 import { CriticalError } from '@/base/errors';
 import { isUndefinedOrNull } from '@/base/types';
+import { EditorGlobalContext } from '@/core/renderer/html/system/EditorGlobalContext';
 
 export type EditorLang = 'cpp' | 'python' | 'js' | 'json' | 'plain' | 'golang';
 
@@ -29,15 +28,14 @@ export interface IVisitor {
 
 export class MHTMLEditorBody extends GlyphDOMNode<HTMLDivElement> {
   public readonly textLayer: TextContainerLayer;
-  private readonly markerLayer: CurrentRowMarkerLayer;
+  public readonly markerLayer: CurrentRowMarkerLayer;
   private readonly partitionLayer: MPartitionLayer;
   private readonly visitorMap: Map<string, IVisitor> = new Map();
 
   constructor(
-    private readonly display: EditorDisplayController,
-    private readonly navigator: EditorBodyNavigator,
     private readonly storage: EditorStorage,
     private readonly renderer: HTMLRenderer,
+    private readonly context: EditorGlobalContext,
   ) {
     super();
 
@@ -45,14 +43,10 @@ export class MHTMLEditorBody extends GlyphDOMNode<HTMLDivElement> {
     this.markerLayer = new CurrentRowMarkerLayer();
     this.partitionLayer = new MPartitionLayer();
 
-    this.navigator.onDidUpdatePosition((position) => {
-      const { top } = this.display.toDOMPosition(position);
-
-      this.markerLayer.top(top);
-    })
+    this._formatter = new PlainFormatter(context);
   }
 
-  private _formatter: BaseFormatter = new PlainFormatter();
+  private _formatter: BaseFormatter;
   public get formatter(): BaseFormatter {
     return this._formatter;
   }
@@ -62,27 +56,29 @@ export class MHTMLEditorBody extends GlyphDOMNode<HTMLDivElement> {
   }
 
   public setFormat(type: EditorLang = 'plain'): void {
+    const { context } = this;
+
     switch (type) {
       case 'cpp':
-        this._formatter = new CPPCodeFormatter();
+        this._formatter = new CPPCodeFormatter(context);
         break;
       case 'js':
-        this._formatter = new JavascriptCodeFormatter();
+        this._formatter = new JavascriptCodeFormatter(context);
         break;
       case 'json':
-        this._formatter = new JSONCodeFormatter();
+        this._formatter = new JSONCodeFormatter(context);
         break;
       case 'python':
-        this._formatter = new PythonCodeFormatter();
+        this._formatter = new PythonCodeFormatter(context);
         break;
       case 'plain':
-        this._formatter = new PlainFormatter();
+        this._formatter = new PlainFormatter(context);
         break;
       case 'golang':
-        this._formatter = new GolangCodeFormatter();
+        this._formatter = new GolangCodeFormatter(context);
         break;
       default:
-        this._formatter = new PlainFormatter();
+        this._formatter = new PlainFormatter(context);
         console.warn(`Get unrecognized lang syntax value - ${type}.`)
         break;
     }
@@ -90,8 +86,6 @@ export class MHTMLEditorBody extends GlyphDOMNode<HTMLDivElement> {
     if (this.storage.count) {
       this.reRenderExistNodes();
     }
-
-    this.renderer.currentState.setContext(this.renderer);
   }
 
   public reRenderExistNodes(): void {

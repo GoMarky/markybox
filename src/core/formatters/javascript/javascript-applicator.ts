@@ -2,14 +2,15 @@ import { AbstractKeyApplicator, IAbstractKeyApplicator } from '@/core/formatters
 import { copyStringNumberOfTimes } from '@/base/string';
 import { BASE_INDENT_VALUE } from '@/core/renderer/html/common/helpers';
 import { ParenType } from '@/core/renderer/html/common/GlyphParenNode';
+import { EditorGlobalContext } from '@/core/renderer/html/system/EditorGlobalContext';
 
 export class JavascriptKeyApplicator extends AbstractKeyApplicator implements IAbstractKeyApplicator {
-  constructor() {
-    super();
+  constructor(context: EditorGlobalContext) {
+    super(context);
   }
 
   private addRowAtPositionWithIndent(index: number): void {
-    const { navigator, controller } = this;
+    const { navigator, controller } = this.context;
     // Индекс строчки с пробелами
     const indentRowIndex = index + 1;
     // Индекс строчки с правой скобкой
@@ -37,7 +38,7 @@ export class JavascriptKeyApplicator extends AbstractKeyApplicator implements IA
   }
 
   public enter(): void {
-    const { navigator, controller } = this;
+    const { navigator, controller } = this.context;
     const { currentRow } = controller;
     const { position } = navigator;
     const isCurrentRowEmpty = currentRow.empty();

@@ -1,30 +1,26 @@
-import { EditorBodyNavigator } from '@/core/renderer/html/editor/EditorBodyNavigator';
-import { EditorRowsController } from '@/core/renderer/html/editor/EditorRowsController';
 import { BaseObject } from '@/core/objects/BaseObject';
 import { CriticalError } from '@/base/errors';
-import { debounce, throttle } from '@/base/async';
+import { throttle } from '@/base/async';
 import { GlyphRowElement } from '@/core/renderer/html/common/GlyphRowElement';
+import { EditorGlobalContext } from '@/core/renderer/html/system/EditorGlobalContext';
 
 export interface IAbstractKeyApplicator {
-  setContext(navigator: EditorBodyNavigator, controller: EditorRowsController): void;
-
   backspace(options: { isRepeat: boolean }): void;
 
   enter(): void;
 }
 
 export class AbstractKeyApplicator extends BaseObject implements IAbstractKeyApplicator {
-  protected navigator: EditorBodyNavigator;
-  protected controller: EditorRowsController;
-
   protected currentBackspaceTimePressed: number = 0;
 
-  constructor() {
+  constructor(
+    protected readonly context: EditorGlobalContext
+  ) {
     super();
   }
 
   private doBackspaceAction(): void {
-    const { navigator, controller } = this;
+    const { navigator, controller } = this.context;
     const { currentRow } = controller;
 
     /**
@@ -84,7 +80,7 @@ export class AbstractKeyApplicator extends BaseObject implements IAbstractKeyApp
   }, 250)
 
   protected removeGlyphByPosition(column: number): void {
-    const { controller } = this;
+    const { controller } = this.context;
     const { currentRow } = controller;
 
     const { fragment } = currentRow;
@@ -105,7 +101,7 @@ export class AbstractKeyApplicator extends BaseObject implements IAbstractKeyApp
   }
 
   protected removeLetterByPosition(column: number): void {
-    const { navigator, controller } = this;
+    const { navigator, controller } = this.context;
     const { currentRow } = controller
 
     if (column === 0) {
@@ -117,7 +113,7 @@ export class AbstractKeyApplicator extends BaseObject implements IAbstractKeyApp
   }
 
   protected removeCurrentEmptyRow(): void {
-    const { navigator, controller } = this;
+    const { navigator, controller } = this.context;
     const { currentRow } = controller;
     const { index } = currentRow;
 
@@ -134,24 +130,19 @@ export class AbstractKeyApplicator extends BaseObject implements IAbstractKeyApp
   }
 
   protected addEmptyRowAtPosition(index: number): void {
-    const { navigator, controller } = this;
+    const { navigator, controller } = this.context;
     const newIndex = index + 1;
     controller.addRowAt(newIndex);
     navigator.nextRow();
   }
 
   protected splitCurrentRow(): void {
-    const { navigator, controller } = this;
+    const { navigator, controller } = this.context;
     const { currentRow } = controller;
     const { position: { column } } = navigator;
 
     controller.splitCurrentRow(column);
     return navigator.setPosition({ row: currentRow.index, column: 0 })
-  }
-
-  public setContext(navigator: EditorBodyNavigator, controller: EditorRowsController): void {
-    this.navigator = navigator;
-    this.controller = controller;
   }
 
   public backspace(options: { isRepeat: boolean }): void {

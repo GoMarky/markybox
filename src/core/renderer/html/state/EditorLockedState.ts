@@ -1,8 +1,9 @@
 import { AbstractEditorState } from '@/core/renderer/html/state/AbstractEditorState';
+import { EditorGlobalContext } from '@/core/renderer/html/system/EditorGlobalContext';
 
 export class EditorLockedState extends AbstractEditorState {
-  constructor() {
-    super();
+  constructor(context: EditorGlobalContext) {
+    super(context);
   }
 
   public onDoubleClick(_: MouseEvent) {

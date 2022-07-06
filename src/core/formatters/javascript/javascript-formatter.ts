@@ -3,6 +3,7 @@ import { IAbstractKeyApplicator } from '@/core/formatters/formatter/base-applica
 import { JavascriptKeyApplicator } from '@/core/formatters/javascript/javascript-applicator';
 import { IAbstractFormatterFactory } from '@/core/formatters/formatter/base-factory';
 import { JavascriptFactory } from '@/core/formatters/javascript/javascript-factory';
+import { EditorGlobalContext } from '@/core/renderer/html/system/EditorGlobalContext';
 
 const Regexp = {
   VariableStatement: /^(set|readonly|from|import|global|declare|object|class|async|await|return|true|false|any|extends|static|let|package|implements|interface|function|new|try|yeild|const|continue|do|catch|in|this|break|as|switch|case|if|throw|else|var|number|string|get|module|type|instanceof|typeof|public|private|enum|export|finally|for|while|void|null|super$)/,
@@ -12,10 +13,10 @@ export class JavascriptCodeFormatter extends BaseFormatter {
   public readonly applicator: IAbstractKeyApplicator;
   public readonly factory: IAbstractFormatterFactory;
 
-  constructor() {
-    super('js');
+  constructor(context: EditorGlobalContext) {
+    super('js', context);
 
-    this.applicator = new JavascriptKeyApplicator();
+    this.applicator = new JavascriptKeyApplicator(context);
     this.factory = new JavascriptFactory();
   }
 
