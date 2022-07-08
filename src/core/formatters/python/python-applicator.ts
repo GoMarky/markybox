@@ -1,8 +1,8 @@
 import { AbstractKeyApplicator, IAbstractKeyApplicator } from '@/core/formatters/formatter/base-applicator';
 import { copyStringNumberOfTimes } from '@/base/string';
 import { BASE_INDENT_VALUE } from '@/core/renderer/html/common/helpers';
-import { ParenType } from '@/core/renderer/html/common/GlyphParenNode';
-import { GlyphIndentNode } from '@/core/renderer/html/common/GlyphIndentNode';
+import { ParenType } from '@/core/renderer/html/glyphs/GlyphParenNode';
+import { GlyphIndentNode } from '@/core/renderer/html/glyphs/GlyphIndentNode';
 import { EditorGlobalContext } from '@/core/renderer/html/system/EditorGlobalContext';
 
 export class PythonKeyApplicator extends AbstractKeyApplicator implements IAbstractKeyApplicator {

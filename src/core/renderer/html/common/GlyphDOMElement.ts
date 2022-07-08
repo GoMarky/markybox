@@ -1,9 +1,9 @@
 import { BaseGlyph } from '@/core/objects/BaseGlyph';
 
-export abstract class GlyphDOMNode<T extends Node = Node> extends BaseGlyph {
+export abstract class GlyphDOMElement<T extends Node = HTMLElement> extends BaseGlyph {
   protected _el: T;
 
-  constructor(public readonly start: number = 0, public readonly end: number = 0) {
+  protected constructor() {
     super();
   }
 

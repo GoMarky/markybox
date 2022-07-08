@@ -1,13 +1,13 @@
-import { GlyphDOMNode } from '@/core/renderer/html/common/GlyphDOMNode';
+import { GlyphDOMNode } from '@/core/renderer/html/glyphs/GlyphDOMNode';
 import { EditorCSSName } from '@/core/renderer/html/common/helpers';
 
-export class GlyphIndentNode extends GlyphDOMNode<HTMLSpanElement> {
+export class GlyphWordNode extends GlyphDOMNode<HTMLSpanElement> {
   constructor(rawText: string, start: number, end: number) {
     super(start, end);
 
     this._el = document.createElement('span');
     this._el.textContent = rawText;
-    this._el.classList.add(EditorCSSName.NodeIndent);
+    this._el.classList.add(EditorCSSName.NodeWord)
   }
 
   public dispose(): void {

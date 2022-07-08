@@ -1,7 +1,24 @@
 import { CommandImpl, CommandsRegistry } from '@/core/renderer/html/system/EditorCommandService';
+import { IPosition } from '@/core/app/common';
+
+CommandsRegistry.registerCommand('editor.position.update', (ctx) => {
+  const { navigator } = ctx;
+
+  const execute = (position: IPosition) => {
+    navigator.setPosition(position);
+    return position;
+  };
+
+  const undo = (position: IPosition) => {
+    navigator.setPosition(position);
+    return position;
+  };
+
+  return new CommandImpl(execute, undo);
+})
 
 CommandsRegistry.registerCommand('editor.char.add', (ctx) => {
-  const { controller, navigator} = ctx;
+  const { controller, navigator } = ctx;
 
   const execute = (char: string) => {
     const { position: { column, row } } = navigator;

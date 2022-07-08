@@ -1,4 +1,4 @@
-import { GlyphDOMNode } from '@/core/renderer/html/common/GlyphDOMNode';
+import { GlyphDOMNode } from '@/core/renderer/html/glyphs/GlyphDOMNode';
 import { MChar } from '@/core/renderer/html/editor/EditorBodyTextarea';
 import * as string from '@/base/string';
 import { EditorCSSName } from '@/core/renderer/html/common/helpers';

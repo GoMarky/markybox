@@ -52,6 +52,8 @@ export class EditorRowsController extends BaseObject {
 
     const leftParenRow = storage.at(index);
     const rightParenRow = this.findClosestRightParenRowDown(index);
+
+    console.log(leftParenRow);
   }
 
   public isCurrentColumnInsideGlyph(): boolean {

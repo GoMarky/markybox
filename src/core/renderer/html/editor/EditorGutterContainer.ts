@@ -1,8 +1,9 @@
 import * as dom from '@/base/dom';
-import { GlyphDOMNode } from '@/core/renderer/html/common/GlyphDOMNode';
+import { GlyphDOMNode } from '@/core/renderer/html/glyphs/GlyphDOMNode';
 import { EditorCSSName } from '@/core/renderer/html/common/helpers';
+import { GlyphDOMElement } from '@/core/renderer/html/common/GlyphDOMElement';
 
-export class EditorGutterContainer extends GlyphDOMNode<HTMLDivElement> {
+export class EditorGutterContainer extends GlyphDOMElement<HTMLDivElement> {
   constructor() {
     super();
   }

@@ -12,7 +12,7 @@ export class JSONCodeFormatter extends BaseFormatter {
   constructor(context: EditorGlobalContext) {
     super('json', context);
 
-    this.applicator = new JSONKeyApplicator();
+    this.applicator = new JSONKeyApplicator(context);
     this.factory = new JSONFactory();
   }
 

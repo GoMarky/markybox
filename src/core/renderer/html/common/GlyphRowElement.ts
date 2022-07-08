@@ -1,21 +1,22 @@
-import { GlyphWordNode } from '@/core/renderer/html/common/GlyphWordNode';
+import { GlyphWordNode } from '@/core/renderer/html/glyphs/GlyphWordNode';
 import { MChar } from '@/core/renderer/html/editor/EditorBodyTextarea';
 import * as string from '@/base/string';
 import * as dom from '@/base/dom';
-import { GlyphTextNode } from '@/core/renderer/html/common/GlyphTextNode';
-import { GlyphDOMNode } from '@/core/renderer/html/common/GlyphDOMNode';
+import { GlyphTextNode } from '@/core/renderer/html/glyphs/GlyphTextNode';
+import { GlyphDOMNode } from '@/core/renderer/html/glyphs/GlyphDOMNode';
 import { HTMLRenderer } from '@/core';
 import { splitAtIndex } from '@/core/app/common';
 import { IVisitor } from '@/core/renderer/html/editor/EditorBodyContainer';
 import { GlyphNodeFragment } from '@/core/renderer/html/common/GlyphNodeFragment';
-import { GlyphParenNode, ParenType } from '@/core/renderer/html/common/GlyphParenNode';
+import { GlyphParenNode, ParenType } from '@/core/renderer/html/glyphs/GlyphParenNode';
 import { CriticalError } from '@/base/errors';
 import { GlyphRowGutterElement } from '@/core/renderer/html/common/GlyphRowGutterElement';
 import { getLastElement } from '@/base/array';
 import { containsSpecialSymbol } from '@/core/renderer/html/common/characters';
-import { GlyphSpecialCharNode } from '@/core/renderer/html/common/GlyphSpecialCharNode';
+import { GlyphSpecialCharNode } from '@/core/renderer/html/glyphs/GlyphSpecialCharNode';
 import { isParen } from '@/base/string';
 import { EditorCSSName } from '@/core/renderer/html/common/helpers';
+import { GlyphDOMElement } from '@/core/renderer/html/common/GlyphDOMElement';
 
 export enum NodeType {
   Whitespace,
@@ -31,7 +32,7 @@ export interface IInputParseResult {
   data: string;
 }
 
-export class GlyphRowElement extends GlyphDOMNode<HTMLDivElement> {
+export class GlyphRowElement extends GlyphDOMElement<HTMLDivElement> {
   private _text: string = '';
   private _renderer: HTMLRenderer;
   private _gutter: GlyphRowGutterElement;

@@ -3,6 +3,7 @@ import { AbstractEditorState } from '@/core/renderer/html/state/AbstractEditorSt
 import { MChar } from '@/core/renderer/html/editor/EditorBodyTextarea';
 import { IPosition } from '@/core/app/common';
 import { EditorGlobalContext } from '@/core/renderer/html/system/EditorGlobalContext';
+import { clone } from '@/base/object';
 
 export class EditorActiveState extends AbstractEditorState {
   constructor(context: EditorGlobalContext) {
@@ -72,7 +73,8 @@ export class EditorActiveState extends AbstractEditorState {
   }
 
   public onClick(event: MouseEvent): void {
-    const { display, storage, navigator } = this.context;
+    const { display, storage } = this.context;
+
     const isLeftMouseKey = event.button === 0;
 
     if (!isLeftMouseKey) {
@@ -80,20 +82,27 @@ export class EditorActiveState extends AbstractEditorState {
     }
 
     const { clientX, offsetY } = event;
-    const position = display.toEditorPosition({ top: offsetY + 52, left: clientX });
 
-    const row = storage.at(position.row);
+    const position = display.toEditorPosition({ top: offsetY + 52, left: clientX });
+    const matchedRow = storage.at(position.row);
+
+    let row: number;
+    let column: number;
 
     // Если попали в существующую строку, переводим курсор в нее
-    if (row) {
-      const column = position.column > row.length ? row.length : position.column;
-
-      return navigator.setPosition({ row: position.row, column });
+    if (matchedRow) {
+      row = position.row;
+      column = position.column > matchedRow.length ? matchedRow.length : position.column;
+    } else {
+      // Если попали "вникуда", переводим курсор на последнюю строку, последней колонки.
+      const lastRow = storage.last();
+      row = lastRow.index;
+      column = lastRow.length;
     }
 
-    // Если попали "вникуда", переводим курсор на последнюю строку, последней колонки.
-    const lastRow = storage.last();
-    navigator.setPosition({ row: lastRow.index, column: lastRow.length })
+    const normalizedPosition: IPosition = { row, column };
+
+    void this.context.command.executeCommand('editor.position.update', normalizedPosition);
   }
 
   public onKeyDown(event: KeyboardEvent): void {

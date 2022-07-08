@@ -1,14 +1,15 @@
 import { Emitter, IEvent } from '@/base/event';
 import { toPixel } from '@/base/dom';
 import { Char } from '@/base/char';
-import { GlyphDOMNode } from '@/core/renderer/html/common/GlyphDOMNode';
+import { GlyphDOMNode } from '@/core/renderer/html/glyphs/GlyphDOMNode';
 import { isSystemChar } from '@/core/app/common';
 import { toDisposable } from '@/platform/lifecycle/common/lifecycle';
 import { EditorCSSName } from '@/core/renderer/html/common/helpers';
+import { GlyphDOMElement } from '@/core/renderer/html/common/GlyphDOMElement';
 
 export type MChar = string;
 
-export class EditorBodyTextarea extends GlyphDOMNode<HTMLTextAreaElement> {
+export class EditorBodyTextarea extends GlyphDOMElement<HTMLTextAreaElement> {
   private readonly _onDidUpdate: Emitter<string> = new Emitter<string>();
   public readonly onDidUpdate: IEvent<string> = this._onDidUpdate.event;
 

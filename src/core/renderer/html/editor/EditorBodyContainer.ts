@@ -1,6 +1,5 @@
 import { HTMLRenderer } from '@/core';
 import { EditorBodyTextarea } from '@/core/renderer/html/editor/EditorBodyTextarea';
-import { GlyphDOMNode } from '@/core/renderer/html/common/GlyphDOMNode';
 import { GlyphNodeFragment } from '@/core/renderer/html/common/GlyphNodeFragment';
 import { BaseFormatter } from '@/core/formatters/formatter/base-formatter';
 import { PlainFormatter } from '@/core/formatters/plain/plain-formatter';
@@ -17,6 +16,7 @@ import { EditorCSSName } from '@/core/renderer/html/common/helpers';
 import { CriticalError } from '@/base/errors';
 import { isUndefinedOrNull } from '@/base/types';
 import { EditorGlobalContext } from '@/core/renderer/html/system/EditorGlobalContext';
+import { GlyphDOMElement } from '@/core/renderer/html/common/GlyphDOMElement';
 
 export type EditorLang = 'cpp' | 'python' | 'js' | 'json' | 'plain' | 'golang';
 
@@ -26,7 +26,7 @@ export interface IVisitor {
   visit(fragment: GlyphNodeFragment): void;
 }
 
-export class MHTMLEditorBody extends GlyphDOMNode<HTMLDivElement> {
+export class MHTMLEditorBody extends GlyphDOMElement<HTMLDivElement> {
   public readonly textLayer: TextContainerLayer;
   public readonly markerLayer: CurrentRowMarkerLayer;
   private readonly partitionLayer: MPartitionLayer;

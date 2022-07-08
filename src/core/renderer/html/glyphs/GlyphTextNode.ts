@@ -1,4 +1,4 @@
-import { GlyphDOMNode } from '@/core/renderer/html/common/GlyphDOMNode';
+import { GlyphDOMNode } from '@/core/renderer/html/glyphs/GlyphDOMNode';
 
 export class GlyphTextNode extends GlyphDOMNode<Text> {
   constructor(rawText: string, start: number, end: number) {

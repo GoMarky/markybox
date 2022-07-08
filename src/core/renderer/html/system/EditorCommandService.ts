@@ -142,6 +142,8 @@ export class EditorCommandCenter extends Disposable {
 
     const result = await commandImpl.undo.call(undefined, ...args);
 
+    console.log(result);
+
     if (!(commandImpl instanceof NoHistoryCommandImpl)) {
       this.undoCommandHistory.push({ command, args });
     }

@@ -1,6 +1,6 @@
-import { GlyphDOMNode } from '@/core/renderer/html/common/GlyphDOMNode';
-import { GlyphParenNode, ParenType } from '@/core/renderer/html/common/GlyphParenNode';
-import { GlyphWordNode } from '@/core/renderer/html/common/GlyphWordNode';
+import { GlyphDOMNode } from '@/core/renderer/html/glyphs/GlyphDOMNode';
+import { GlyphParenNode, ParenType } from '@/core/renderer/html/glyphs/GlyphParenNode';
+import { GlyphDOMElement } from '@/core/renderer/html/common/GlyphDOMElement';
 
 function removeClasses(glyph: GlyphDOMNode): void {
   const { el } = glyph;
@@ -10,7 +10,7 @@ function removeClasses(glyph: GlyphDOMNode): void {
   }
 }
 
-export class GlyphNodeFragment extends GlyphDOMNode<DocumentFragment> {
+export class GlyphNodeFragment extends GlyphDOMElement<DocumentFragment> {
   protected _hasOpenBrace: boolean = false;
   protected _hasCloseBrace: boolean = false;
   protected _children: GlyphDOMNode[] = [];
