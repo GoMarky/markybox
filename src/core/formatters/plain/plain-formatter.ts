@@ -12,7 +12,7 @@ export class PlainFormatter extends BaseFormatter {
   constructor(context: EditorGlobalContext) {
     super('plain', context);
 
-    this.applicator = new PlainKeyApplicator();
+    this.applicator = new PlainKeyApplicator(context);
     this.factory = new PlainFactory();
   }
 

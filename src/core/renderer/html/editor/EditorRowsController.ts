@@ -6,6 +6,7 @@ import * as dom from '@/base/dom';
 import { BASE_INDENT_VALUE } from '@/core/renderer/html/common/helpers';
 import { EditorAutoSaveController } from '@/core/objects/EditorAutoSaveController';
 import { removeLastLetter } from '@/base/string';
+import { CriticalError } from '@/base/errors';
 
 export class EditorRowsController extends BaseObject {
   public readonly editorAutoSave: EditorAutoSaveController
@@ -53,7 +54,9 @@ export class EditorRowsController extends BaseObject {
     const leftParenRow = storage.at(index);
     const rightParenRow = this.findClosestRightParenRowDown(index);
 
-    console.log(leftParenRow);
+    if (!leftParenRow) {
+      throw new CriticalError('ExpandOrShrinkRow# - row must exist.');
+    }
   }
 
   public isCurrentColumnInsideGlyph(): boolean {

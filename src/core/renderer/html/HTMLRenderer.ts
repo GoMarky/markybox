@@ -36,6 +36,7 @@ export class HTMLRenderer extends BaseObject implements IAbstractRenderer {
 
   public currentState: AbstractEditorState;
   public $isMount: boolean = false;
+  private _isLock: boolean = true;
 
   constructor() {
     super();
@@ -61,16 +62,33 @@ export class HTMLRenderer extends BaseObject implements IAbstractRenderer {
     context.setCommand(command);
 
     this.currentState = new EditorLockedState(context);
+    this._isLock = true;
   }
 
   public unlock(): void {
+    if (!this._isLock) {
+      return;
+    }
+
+    console.log('editor unlock');
+
     const { context } = this;
     this.currentState = new EditorActiveState(context);
+
+    this._isLock = false;
   }
 
   public lock(): void {
+    if (this._isLock) {
+      return;
+    }
+
+    console.log('editor lock');
+
     const { context } = this;
     this.currentState = new EditorLockedState(context);
+
+    this._isLock = true;
   }
 
   public mount(selector: string): void {
@@ -120,7 +138,7 @@ export class HTMLRenderer extends BaseObject implements IAbstractRenderer {
   }
 
   private registerListeners(): void {
-    this.navigator.onDidUpdatePosition((position) => {
+    this.disposables.add(this.navigator.onDidUpdatePosition((position) => {
       const row = this.storage.at(position.row);
 
       const { top } = this.display.toDOMPosition(position);
@@ -131,7 +149,7 @@ export class HTMLRenderer extends BaseObject implements IAbstractRenderer {
       }
 
       this.controller.setCurrentRow(row);
-    });
+    }));
 
     CommandsRegistry.registerCommand(
       'editor.redo',

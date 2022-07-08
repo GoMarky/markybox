@@ -1,3 +1,15 @@
+export const useOutsideClick = (element: HTMLElement, callback: () => void) => (
+  event: MouseEvent
+): void => {
+  if (!event) {
+    return;
+  }
+
+  if (!element?.contains(event.target as Node)) {
+    Reflect.apply(callback, undefined, []);
+  }
+};
+
 export function toPixel(pixels: number): string {
   return `${pixels}px`;
 }

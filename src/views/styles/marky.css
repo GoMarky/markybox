@@ -38,6 +38,7 @@
     resize: none;
     outline: none;
     padding: 0 1px;
+    user-select: text;
     margin: 0 -1px;
     z-index: var(--marky-textarea-z-index);
     position: absolute;

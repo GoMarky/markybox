@@ -17,6 +17,8 @@ import { CriticalError } from '@/base/errors';
 import { isUndefinedOrNull } from '@/base/types';
 import { EditorGlobalContext } from '@/core/renderer/html/system/EditorGlobalContext';
 import { GlyphDOMElement } from '@/core/renderer/html/common/GlyphDOMElement';
+import { useOutsideClick } from '@/base/dom';
+import { toDisposable } from '@/platform/lifecycle/common/lifecycle';
 
 export type EditorLang = 'cpp' | 'python' | 'js' | 'json' | 'plain' | 'golang';
 
@@ -115,14 +117,29 @@ export class MHTMLEditorBody extends GlyphDOMElement<HTMLDivElement> {
   public mount(root: HTMLElement): void {
     this.createHTMLElement(root);
 
+    const onRootClick = (_: MouseEvent) => {
+      this.renderer.unlock();
+    };
+
+    const onOutsideClick = useOutsideClick(root, () => {
+      this.renderer.lock();
+    });
+
+    window.document.addEventListener('click', onOutsideClick)
+    root.addEventListener('click', onRootClick);
+
+    this.disposables.add(toDisposable(() => root.removeEventListener('click', onRootClick)));
+    this.disposables.add(toDisposable(() => window.document.removeEventListener('click', onOutsideClick)));
+
     const body = this._el;
 
     this.textLayer.mount(body);
     this.markerLayer.mount(body);
-    this.partitionLayer.mount(body)
+    this.partitionLayer.mount(body);
 
     const textarea = new EditorBodyTextarea(root);
     textarea.onDidUpdate((letter) => this.renderer.currentState.onInput(letter));
+
   }
 
   private createHTMLElement(root: HTMLElement): void {
