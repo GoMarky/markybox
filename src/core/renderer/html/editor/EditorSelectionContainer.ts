@@ -8,6 +8,8 @@ import { toDisposable } from '@/platform/lifecycle/common/lifecycle';
 import { debounce } from '@/base/async';
 import { getLastElement } from '@/base/array';
 import { CriticalError } from '@/base/errors';
+import { GlyphDOMNode } from '@/core/renderer/html/glyphs/GlyphDOMNode';
+import { GlyphRowElement } from '@/core/renderer/html/common/GlyphRowElement';
 
 export interface ISelectionPosition {
   row: number;
@@ -39,6 +41,10 @@ export class EditorSelectionContainer extends BaseObject {
     this.layer = new UserSelectionLayer(display);
   }
 
+  private render(): void {
+    this.layer.addSelectionRows(this._positions);
+  }
+
   public getSelectedText(): string {
     const { rows } = this.storage;
 
@@ -47,14 +53,21 @@ export class EditorSelectionContainer extends BaseObject {
       .map((row) => row.toString()).join(endl);
   }
 
+  public selectGlyph(row: GlyphRowElement, glyph: GlyphDOMNode): void {
+    const { start, end } = glyph;
+
+    const position: ISelectionPosition = { row: row.index, startColumn: start, endColumn: end };
+
+    this._positions = [position];
+    this.render();
+  }
+
   public selectAll(): void {
     const { rows } = this.storage;
 
-    for (const row of rows) {
-      this._positions.push({ row: row.index, startColumn: 0, endColumn: 0 })
-    }
+    this._positions = rows.map((row) => ({ row: row.index, startColumn: 0, endColumn: 0 }))
 
-    this.layer.addSelectionRows(this._positions);
+    this.render();
   }
 
   public updateSelection = debounce((position: { start: IPosition, end: IPosition }) => {
@@ -109,7 +122,7 @@ export class EditorSelectionContainer extends BaseObject {
     }
 
     this._positions = positions;
-    this.layer.addSelectionRows(positions);
+    this.render();
   }, 5)
 
   public clearSelect(): void {

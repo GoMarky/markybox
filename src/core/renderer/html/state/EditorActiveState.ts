@@ -4,6 +4,7 @@ import { MChar } from '@/core/renderer/html/editor/EditorBodyTextarea';
 import { IPosition } from '@/core/app/common';
 import { EditorGlobalContext } from '@/core/renderer/html/system/EditorGlobalContext';
 import { clone } from '@/base/object';
+import { CriticalError } from '@/base/errors';
 
 export class EditorActiveState extends AbstractEditorState {
   constructor(context: EditorGlobalContext) {
@@ -17,7 +18,7 @@ export class EditorActiveState extends AbstractEditorState {
     if (!isLeftClick) {
       return;
     }
-    const { clientX, clientY } = event;
+    const { clientX, offsetY } = event;
 
     if (selection.startPosition) {
       selection.lastPosition = null;
@@ -25,7 +26,7 @@ export class EditorActiveState extends AbstractEditorState {
     }
 
     selection.started = true;
-    selection.startPosition = display.toEditorPosition({ left: clientX, top: clientY });
+    selection.startPosition = display.toEditorPosition({ top: offsetY + 52, left: clientX });
   }
 
   public onSelectionMove(event: MouseEvent): void {
@@ -35,8 +36,8 @@ export class EditorActiveState extends AbstractEditorState {
       return;
     }
 
-    const { clientX, clientY } = event;
-    selection.lastPosition = display.toEditorPosition({ left: clientX, top: clientY });
+    const { clientX, offsetY } = event;
+    selection.lastPosition = display.toEditorPosition({ top: offsetY + 52, left: clientX });
 
     const start = selection.startPosition as IPosition;
     const end = selection.lastPosition;
@@ -59,17 +60,24 @@ export class EditorActiveState extends AbstractEditorState {
   }
 
   public onDoubleClick(event: MouseEvent): void {
-    const { storage, display } = this.context;
+    const { storage, display, selection } = this.context;
     const { clientX, clientY } = event;
     const position = display.toEditorPosition({ top: clientY, left: clientX });
 
-    const row = storage.at(position.row);
+    const { row, column } = position;
+    const matchedRow = storage.at(row);
 
-    if (!row) {
-      return;
+    if (!matchedRow) {
+      throw new CriticalError('onDoubleClick - expect row to be defined');
     }
 
-    console.log(row.fragment);
+    const glyph = matchedRow.fragment.at(column);
+
+    if (!glyph) {
+      throw new CriticalError('onDoubleClick - expect glyph to be defined');
+    }
+
+    selection.selectGlyph(matchedRow, glyph);
   }
 
   public onClick(event: MouseEvent): void {
