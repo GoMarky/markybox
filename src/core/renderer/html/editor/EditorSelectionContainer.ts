@@ -5,6 +5,9 @@ import { HTMLRenderer } from '@/core';
 import { EditorDisplayController } from '@/core/renderer/html/system/EditorDisplayController';
 import { EditorStorage } from '@/core/renderer/html/system/EditorStorage';
 import { toDisposable } from '@/platform/lifecycle/common/lifecycle';
+import { debounce } from '@/base/async';
+import { getLastElement } from '@/base/array';
+import { CriticalError } from '@/base/errors';
 
 export interface ISelectionPosition {
   row: number;
@@ -16,11 +19,11 @@ const endl = '\n';
 
 export class EditorSelectionContainer extends BaseObject {
   private readonly layer: UserSelectionLayer;
+  private _positions: ISelectionPosition[] = [];
 
   public started = false;
   public startPosition: IPosition | null;
   public lastPosition: IPosition | null;
-  private _positions: ISelectionPosition[] = [];
 
   public get positions(): ISelectionPosition[] {
     return this._positions;
@@ -54,7 +57,7 @@ export class EditorSelectionContainer extends BaseObject {
     this.layer.addSelectionRows(this._positions);
   }
 
-  public updateSelection(position: { start: IPosition, end: IPosition }): void {
+  public updateSelection = debounce((position: { start: IPosition, end: IPosition }) => {
     const { storage } = this;
     const { start, end } = position;
 
@@ -64,25 +67,50 @@ export class EditorSelectionContainer extends BaseObject {
       return;
     }
 
-    const startRow = start.row <= end.row ? start.row : end.row;
-    let endRow = start.row >= end.row ? start.row : end.row;
+    const startRow = Math.abs(start.row < end.row ? start.row : end.row);
+    let endRow = Math.abs(start.row > end.row ? start.row : end.row);
 
     if (endRow > storage.count) {
       endRow = storage.count;
     }
 
-    const startColumn: number = start.column < end.column ? start.column : end.column;
-    const endColumn: number = end.column > start.column ? end.column : start.column;
+    const startColumn: number = Math.abs(start.column < end.column ? start.column : end.column);
+    const endColumn: number = Math.abs(end.column > start.column ? end.column : start.column);
 
     const positions: ISelectionPosition[] = [];
+    const isSingleRowSelection = startRow === endRow;
 
-    for (let i = startRow; i <= endRow - 1; i++) {
-      positions.push({ row: i, startColumn, endColumn });
+    // Если выделение идет в рамках одной и той же строки.
+    if (isSingleRowSelection) {
+      positions.push({ row: startRow, startColumn, endColumn });
+    } else {
+      // Если идет мультивыделение строк
+      for (let i = startRow; i <= endRow - 1; i++) {
+        positions.push({ row: i, startColumn, endColumn });
+      }
+    }
+
+    const lastRowPosition = getLastElement(positions);
+
+    if (lastRowPosition) {
+      const { endColumn: lastRowEndColumnPosition, row } = lastRowPosition;
+      const matchedRow = storage.at(row);
+
+      if (!matchedRow) {
+        throw new CriticalError('updateSelection# - expect row to be defined');
+      }
+
+      const { length: rowLength } = matchedRow;
+      // Количество выделенных колонок в последней строке, не должно превышать количество
+      // символов в строке
+      if (lastRowEndColumnPosition > rowLength) {
+        lastRowPosition.endColumn = rowLength;
+      }
     }
 
     this._positions = positions;
     this.layer.addSelectionRows(positions);
-  }
+  }, 5)
 
   public clearSelect(): void {
     this.layer.clear();
