@@ -1,7 +1,7 @@
 import { BaseLayer } from '@/core/renderer/html/layers/BaseLayer';
 import { IPosition } from '@/core/app/common';
 import { removeChildren, toPixel } from '@/base/dom';
-import { ISelectionPosition } from '@/core/renderer/html/editor/EditorSelectionContainer';
+import { ISelectionPosition } from '@/core/renderer/html/editor/selection/EditorSelectionContainer';
 import { EditorDisplayController } from '@/core/renderer/html/system/EditorDisplayController';
 import { EditorCSSName } from '@/core/renderer/html/common/helpers';
 

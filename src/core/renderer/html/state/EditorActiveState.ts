@@ -3,8 +3,8 @@ import { AbstractEditorState } from '@/core/renderer/html/state/AbstractEditorSt
 import { MChar } from '@/core/renderer/html/editor/EditorBodyTextarea';
 import { IPosition } from '@/core/app/common';
 import { EditorGlobalContext } from '@/core/renderer/html/system/EditorGlobalContext';
-import { clone } from '@/base/object';
 import { CriticalError } from '@/base/errors';
+import { EditorContextKeys } from '@/core/renderer/html/system/EditorContext';
 
 export class EditorActiveState extends AbstractEditorState {
   constructor(context: EditorGlobalContext) {
@@ -18,6 +18,7 @@ export class EditorActiveState extends AbstractEditorState {
     if (!isLeftClick) {
       return;
     }
+
     const { clientX, offsetY } = event;
 
     if (selection.startPosition) {
@@ -26,7 +27,7 @@ export class EditorActiveState extends AbstractEditorState {
     }
 
     selection.started = true;
-    selection.startPosition = display.toEditorPosition({ top: offsetY + 52, left: clientX });
+    selection.startPosition = display.toEditorPosition({ top: offsetY + 46, left: clientX });
   }
 
   public onSelectionMove(event: MouseEvent): void {
@@ -37,10 +38,17 @@ export class EditorActiveState extends AbstractEditorState {
     }
 
     const { clientX, offsetY } = event;
-    selection.lastPosition = display.toEditorPosition({ top: offsetY + 52, left: clientX });
+    selection.lastPosition = display.toEditorPosition({ top: offsetY + 46, left: clientX });
 
     const start = selection.startPosition as IPosition;
     const end = selection.lastPosition;
+
+    const differenceX = Math.abs(start.column - end.column);
+
+    // Убираем фейковые сдвиги
+    if (differenceX <= 0) {
+      return;
+    }
 
     selection.updateSelection({ start, end });
   }
@@ -61,8 +69,8 @@ export class EditorActiveState extends AbstractEditorState {
 
   public onDoubleClick(event: MouseEvent): void {
     const { storage, display, selection } = this.context;
-    const { clientX, clientY } = event;
-    const position = display.toEditorPosition({ top: clientY, left: clientX });
+    const { clientX, offsetY } = event;
+    const position = display.toEditorPosition({ top: offsetY + 46, left: clientX });
 
     const { row, column } = position;
     const matchedRow = storage.at(row);
@@ -77,11 +85,19 @@ export class EditorActiveState extends AbstractEditorState {
       throw new CriticalError('onDoubleClick - expect glyph to be defined');
     }
 
+    // Включаем режим двойного клика
+    EditorContextKeys.doubleClickMode.set(true);
+
     selection.selectGlyph(matchedRow, glyph);
+
+    // Выключаем режим двойного клика
+    window.setTimeout(() => {
+      EditorContextKeys.doubleClickMode.set(false);
+    }, 1500);
   }
 
   public onClick(event: MouseEvent): void {
-    const { display, storage } = this.context;
+    const { display, storage, selection } = this.context;
 
     const isLeftMouseKey = event.button === 0;
 
@@ -90,8 +106,13 @@ export class EditorActiveState extends AbstractEditorState {
     }
 
     const { clientX, offsetY } = event;
+    const position = display.toEditorPosition({ top: offsetY + 46, left: clientX });
 
-    const position = display.toEditorPosition({ top: offsetY + 52, left: clientX });
+    console.log(position);
+    console.log(offsetY);
+
+    console.log(event);
+
     const matchedRow = storage.at(position.row);
 
     let row: number;
@@ -108,7 +129,14 @@ export class EditorActiveState extends AbstractEditorState {
       column = lastRow.length;
     }
 
+    const isDoubleClickPressed = EditorContextKeys.doubleClickMode.get();
     const normalizedPosition: IPosition = { row, column };
+
+    if (isDoubleClickPressed && matchedRow) {
+      selection.selectRow(matchedRow);
+      // process double click
+      return;
+    }
 
     void this.context.command.executeCommand('editor.position.update', normalizedPosition);
   }

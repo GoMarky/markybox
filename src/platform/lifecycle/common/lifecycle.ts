@@ -1,6 +1,47 @@
 import { CriticalError } from '@/base/errors';
 
 /**
+ *
+ * Enables logging of potentially leaked disposables.
+ *
+ * A disposable is considered leaked if it is not disposed or not registered as the child of
+ * another disposable. This tracking is very simple an only works for classes that either
+ * extend Disposable or use a DisposableStore. This means there are a lot of false positives.
+ */
+const TRACK_DISPOSABLES = false;
+
+const __is_disposable_tracked__ = '__is_disposable_tracked__';
+
+function markTracked<T extends IDisposable>(x: T): void {
+  if (!TRACK_DISPOSABLES) {
+    return;
+  }
+
+  if (x && x !== Disposable.None) {
+    try {
+      (x as any)[__is_disposable_tracked__] = true;
+    } catch {
+      // noop
+    }
+  }
+}
+
+function trackDisposable<T extends IDisposable>(x: T): T {
+  if (!TRACK_DISPOSABLES) {
+    return x;
+  }
+
+  const stack = new Error('Potentially leaked disposable').stack!;
+  window.setTimeout(() => {
+    if (!(x as any)[__is_disposable_tracked__]) {
+      console.info(stack);
+    }
+  }, 3000);
+
+  return x;
+}
+
+/**
  * @author Teodor_Dre <swen295@gmail.com>
  *
  * @description
@@ -11,19 +52,30 @@ export interface IDisposable {
 }
 
 export function toDisposable(func: () => void): IDisposable {
-  return {
+  const self = trackDisposable({
     dispose: () => {
+      markTracked(self);
+
       Reflect.apply(func, undefined, []);
     },
-  };
+  });
+
+  return self;
 }
 
 export abstract class Disposable implements IDisposable {
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
-  protected constructor() {}
+  public static None = Object.freeze<IDisposable>({
+    dispose() {
+      //
+    },
+  });
+
+  protected constructor() {
+    trackDisposable(this);
+  }
 
   public dispose(): void {
-    //
+    markTracked(this);
   }
 }
 
@@ -36,6 +88,7 @@ export class DisposableStore implements IDisposable {
       return;
     }
 
+    markTracked(this);
     this._isDisposed = true;
     this.clear();
   }
@@ -54,6 +107,7 @@ export class DisposableStore implements IDisposable {
       throw new CriticalError('Cannot register a disposable on itself!');
     }
 
+    markTracked(t);
     if (this._isDisposed) {
       console.warn('Registering disposable on object that has already been disposed of');
 

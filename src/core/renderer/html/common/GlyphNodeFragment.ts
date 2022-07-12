@@ -1,6 +1,7 @@
 import { GlyphDOMNode } from '@/core/renderer/html/glyphs/GlyphDOMNode';
 import { GlyphParenNode, ParenType } from '@/core/renderer/html/glyphs/GlyphParenNode';
 import { GlyphDOMElement } from '@/core/renderer/html/common/GlyphDOMElement';
+import { getFirstElement, getLastElement } from '@/base/array';
 
 function removeClasses(glyph: GlyphDOMNode): void {
   const { el } = glyph;
@@ -54,6 +55,14 @@ export class GlyphNodeFragment extends GlyphDOMElement<DocumentFragment> {
     const glyphs = this._children;
 
     return glyphs.find((glyph) => glyph.start <= column && glyph.end >= column);
+  }
+
+  public last(): GlyphDOMNode | undefined {
+    return getLastElement(this._children);
+  }
+
+  public first(): GlyphDOMNode | undefined {
+    return getFirstElement(this._children);
   }
 
   public get hasOpenBrace(): boolean {

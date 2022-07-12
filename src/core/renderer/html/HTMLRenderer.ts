@@ -4,7 +4,7 @@ import { EditorBodyNavigator } from '@/core/renderer/html/editor/EditorBodyNavig
 import { EditorDisplayController } from '@/core/renderer/html/system/EditorDisplayController';
 import { MHTMLEditorBody } from '@/core/renderer/html/editor/EditorBodyContainer';
 import { UserClipboardController } from '@/core/renderer/html/system/UserClipboardController';
-import { EditorSelectionContainer } from '@/core/renderer/html/editor/EditorSelectionContainer';
+import { EditorSelectionContainer } from '@/core/renderer/html/editor/selection/EditorSelectionContainer';
 import { EditorStorage } from '@/core/renderer/html/system/EditorStorage';
 import { EditorActiveState } from '@/core/renderer/html/state/EditorActiveState';
 import { AbstractEditorState } from '@/core/renderer/html/state/AbstractEditorState';
@@ -231,11 +231,11 @@ export class HTMLRenderer extends BaseObject implements IAbstractRenderer {
     const onKeydown = (event: KeyboardEvent) => this.currentState.onKeyDown(event);
     const onKeyUp = (event: KeyboardEvent) => this.currentState.onKeyUp(event);
 
-    window.addEventListener('mousedown', onMousedown);
+    window.addEventListener('click', onMousedown);
     window.addEventListener('keydown', onKeydown);
     window.addEventListener('keyup', onKeyUp);
 
-    this.disposables.add(toDisposable(() => window.removeEventListener('mousedown', onMousedown)));
+    this.disposables.add(toDisposable(() => window.removeEventListener('click', onMousedown)));
     this.disposables.add(toDisposable(() => window.removeEventListener('keydown', onKeydown)));
     this.disposables.add(toDisposable(() => window.removeEventListener('keyup', onKeyUp)));
   }

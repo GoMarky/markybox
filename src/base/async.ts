@@ -95,7 +95,7 @@ export function throttle<T extends (...args: any) => any>(
   let inThrottle: boolean;
   let lastResult: ReturnType<T>;
 
-  return function(this: any): ReturnType<T> {
+  return function (this: any): ReturnType<T> {
     // eslint-disable-next-line prefer-rest-params
     const args = arguments;
     // eslint-disable-next-line @typescript-eslint/no-this-alias

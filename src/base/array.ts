@@ -58,6 +58,14 @@ export function indexOutOfRange(index: number): boolean {
   return index < 0;
 }
 
+export function getFirstElement<T>(array: T[]): T | undefined {
+  if (array.length === 0) {
+    return undefined;
+  }
+
+  return array.at(0);
+}
+
 export function getLastElement<T>(array: T[]): T | undefined {
   if (array.length === 0) {
     return undefined;

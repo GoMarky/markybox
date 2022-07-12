@@ -7,6 +7,7 @@ import { BASE_INDENT_VALUE } from '@/core/renderer/html/common/helpers';
 import { EditorAutoSaveController } from '@/core/objects/EditorAutoSaveController';
 import { removeLastLetter } from '@/base/string';
 import { CriticalError } from '@/base/errors';
+import { Counter } from '@/base/counter';
 
 export class EditorRowsController extends BaseObject {
   public readonly editorAutoSave: EditorAutoSaveController
@@ -218,21 +219,22 @@ export class EditorRowsController extends BaseObject {
 
   public getRightParenAmountFromStartByIndex(startIndex: number): number {
     const { storage } = this.renderer;
-    let amount = 0;
+
+    const counter = new Counter(0, 1);
 
     for (let i = startIndex; i >= 0; i--) {
       const row = storage.at(i);
 
       if (row?.fragment?.hasOpenBrace) {
-        amount -= 1;
+        counter.decrement();
       }
 
       if (row?.fragment?.hasCloseBrace) {
-        amount += 1;
+        counter.increment();
       }
     }
 
-    return amount;
+    return counter.value;
   }
 
   public getLeftParenAmountFromStartByIndex(startIndex: number): number {

@@ -4,7 +4,7 @@ import { EditorRowsController } from '@/core/renderer/html/editor/EditorRowsCont
 import { MHTMLEditorBody } from '@/core/renderer/html/editor/EditorBodyContainer';
 import { EditorStorage } from '@/core/renderer/html/system/EditorStorage';
 import { EditorDisplayController } from '@/core/renderer/html/system/EditorDisplayController';
-import { EditorSelectionContainer } from '@/core/renderer/html/editor/EditorSelectionContainer';
+import { EditorSelectionContainer } from '@/core/renderer/html/editor/selection/EditorSelectionContainer';
 import { EditorCommandCenter } from '@/core/renderer/html/system/EditorCommandService';
 
 export class EditorGlobalContext extends Disposable {

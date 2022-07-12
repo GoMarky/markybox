@@ -53,6 +53,25 @@ export class EditorSelectionContainer extends BaseObject {
       .map((row) => row.toString()).join(endl);
   }
 
+  public selectRow(row: GlyphRowElement): void {
+    const { fragment } = row;
+
+    const first = fragment.first();
+    const last = fragment.last();
+
+    if (!first || !last) {
+      throw new CriticalError('Expect first or last glyph in fragment to be defined');
+    }
+
+    const startColumn = first.start;
+    const endColumn = last.end;
+
+    const position: ISelectionPosition = { row: row.index, startColumn, endColumn };
+
+    this._positions = [position];
+    this.render();
+  }
+
   public selectGlyph(row: GlyphRowElement, glyph: GlyphDOMNode): void {
     const { start, end } = glyph;
 

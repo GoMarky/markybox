@@ -9,7 +9,7 @@ import { EditorStorage } from '@/core/renderer/html/system/EditorStorage';
 import { toDisposable } from '@/platform/lifecycle/common/lifecycle';
 
 const EDITOR_OFFSET_POSITION: IDOMPosition = {
-  top: 52,
+  top: 46,
   left: 42,
 }
 

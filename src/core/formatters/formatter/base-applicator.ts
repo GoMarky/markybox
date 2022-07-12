@@ -3,6 +3,7 @@ import { CriticalError } from '@/base/errors';
 import { throttle } from '@/base/async';
 import { GlyphRowElement } from '@/core/renderer/html/common/GlyphRowElement';
 import { EditorGlobalContext } from '@/core/renderer/html/system/EditorGlobalContext';
+import { Counter } from '@/base/counter';
 
 export interface IAbstractKeyApplicator {
   backspace(options: { isRepeat: boolean }): void;
@@ -11,7 +12,7 @@ export interface IAbstractKeyApplicator {
 }
 
 export class AbstractKeyApplicator extends BaseObject implements IAbstractKeyApplicator {
-  protected currentBackspaceTimePressed: number = 0;
+  protected readonly backspaceKeyCounter: Counter = new Counter(0);
 
   constructor(
     protected readonly context: EditorGlobalContext
@@ -66,9 +67,9 @@ export class AbstractKeyApplicator extends BaseObject implements IAbstractKeyApp
       return;
     }
 
-    const { currentBackspaceTimePressed } = this;
+    const { backspaceKeyCounter } = this;
 
-    if (currentBackspaceTimePressed >= 50) {
+    if (backspaceKeyCounter.value > 50) {
       return this.removeGlyphByPosition(column);
     }
 
@@ -149,9 +150,9 @@ export class AbstractKeyApplicator extends BaseObject implements IAbstractKeyApp
     const { isRepeat } = options;
 
     if (isRepeat) {
-      this.currentBackspaceTimePressed += 1;
+      this.backspaceKeyCounter.increment();
     } else {
-      this.currentBackspaceTimePressed = 0;
+      this.backspaceKeyCounter.reset();
     }
 
     this.doBackspaceAction();
