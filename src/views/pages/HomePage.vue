@@ -49,7 +49,7 @@ export default window.workbench.createComponent((accessor) => {
       async function createNote(): Promise<void> {
         const noteId = await noteService.createNote();
 
-        await router.push({ name: RouteName.HomePage, params: { id: noteId } })
+        await router.push({ name: RouteName.NotePage, params: { id: noteId } })
       }
 
       return {

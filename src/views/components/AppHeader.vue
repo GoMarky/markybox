@@ -36,14 +36,10 @@
         </li>
         <li class="page-header__nav-item">
           <button
-            v-if="isAuth"
-            @click.prevent="openUserProfileModal()"
+            @click.prevent="isAuth ? openUserProfileModal() : openLoginModal()"
             type="button"
             class="btn btn_primary page-header__nav-link">
             <icon-profile />
-          </button>
-          <button v-else @click.prevent="openLoginModal()" type="button" class="btn btn_primary page-header__nav-link">
-            {{ $t('header.login.title') }}
           </button>
         </li>
         <li v-if="!isAuth" class="page-header__nav-item">

@@ -108,6 +108,11 @@ export class EditorService extends Disposable implements IEditorService {
 
     const [row, column] = position.split(',').map((coordinate) => Number(coordinate));
 
+    // Multi-user edit mode doesn't work in anonymous mode.
+    if (!currentUserName.value) {
+      return;
+    }
+
     if (currentUserName.value === userNameFromSocket) {
       return;
     }
