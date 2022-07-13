@@ -6,10 +6,11 @@ import { EditorDisplayController } from '@/core/renderer/html/system/EditorDispl
 import { EditorStorage } from '@/core/renderer/html/system/EditorStorage';
 import { toDisposable } from '@/platform/lifecycle/common/lifecycle';
 import { debounce } from '@/base/async';
-import { getLastElement } from '@/base/array';
+import { getFirstElement, getLastElement } from '@/base/array';
 import { CriticalError } from '@/base/errors';
 import { GlyphDOMNode } from '@/core/renderer/html/glyphs/GlyphDOMNode';
 import { GlyphRowElement } from '@/core/renderer/html/common/GlyphRowElement';
+import { EditorSelectionDetailParser } from '@/core/renderer/html/editor/selection/EditorSelectionDetailParser';
 
 export interface ISelectionPosition {
   row: number;
@@ -53,7 +54,7 @@ export class EditorSelectionContainer extends BaseObject {
       .map((row) => row.toString()).join(endl);
   }
 
-  public selectRow(row: GlyphRowElement): void {
+  public selectRow(row: GlyphRowElement, glyph: GlyphDOMNode): void {
     const { fragment } = row;
 
     const first = fragment.first();
@@ -63,8 +64,23 @@ export class EditorSelectionContainer extends BaseObject {
       throw new CriticalError('Expect first or last glyph in fragment to be defined');
     }
 
-    const startColumn = first.start;
-    const endColumn = last.end;
+    const detailedParser = new EditorSelectionDetailParser(fragment);
+    const { groups } = detailedParser;
+
+    let startColumn = first.start;
+    let endColumn = last.end;
+
+    for (const group of groups) {
+      // Выделяем несколько нод сразу только в том случае, если их больше одной.
+      if (group.includes(glyph) && group.length > 1) {
+        const first = getFirstElement(group) as GlyphDOMNode;
+        const last = getLastElement(group) as GlyphDOMNode;
+        startColumn = first.start;
+        endColumn = last.end;
+
+        break;
+      }
+    }
 
     const position: ISelectionPosition = { row: row.index, startColumn, endColumn };
 

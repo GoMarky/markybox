@@ -15,7 +15,7 @@ export class EditorActiveState extends AbstractEditorState {
     const { selection, display } = this.context;
     const isLeftClick = event.button === 0;
 
-    if (!isLeftClick) {
+    if (!isLeftClick || EditorContextKeys.doubleClickMode.get()) {
       return;
     }
 
@@ -87,13 +87,12 @@ export class EditorActiveState extends AbstractEditorState {
 
     // Включаем режим двойного клика
     EditorContextKeys.doubleClickMode.set(true);
-
     selection.selectGlyph(matchedRow, glyph);
 
     // Выключаем режим двойного клика
     window.setTimeout(() => {
       EditorContextKeys.doubleClickMode.set(false);
-    }, 1500);
+    }, 1000);
   }
 
   public onClick(event: MouseEvent): void {
@@ -107,11 +106,6 @@ export class EditorActiveState extends AbstractEditorState {
 
     const { clientX, offsetY } = event;
     const position = display.toEditorPosition({ top: offsetY + 46, left: clientX });
-
-    console.log(position);
-    console.log(offsetY);
-
-    console.log(event);
 
     const matchedRow = storage.at(position.row);
 
@@ -132,8 +126,17 @@ export class EditorActiveState extends AbstractEditorState {
     const isDoubleClickPressed = EditorContextKeys.doubleClickMode.get();
     const normalizedPosition: IPosition = { row, column };
 
+    console.log(isDoubleClickPressed);
+
+    // Если до этого сделалил двойной клик по слову, переходим в режим выделения всей строки
     if (isDoubleClickPressed && matchedRow) {
-      selection.selectRow(matchedRow);
+      const glyph = matchedRow.fragment.at(column);
+
+      if (!glyph) {
+        throw new CriticalError('onDoubleClick - expect glyph to be defined');
+      }
+
+      selection.selectRow(matchedRow, glyph);
       // process double click
       return;
     }

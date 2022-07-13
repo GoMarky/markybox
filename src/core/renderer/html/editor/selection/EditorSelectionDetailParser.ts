@@ -1,21 +1,43 @@
 import { Disposable } from '@/platform/lifecycle/common/lifecycle';
 import { GlyphNodeFragment } from '@/core/renderer/html/common/GlyphNodeFragment';
 import { GlyphDOMNode } from '@/core/renderer/html/glyphs/GlyphDOMNode';
+import { GlyphTextNode } from '@/core/renderer/html/glyphs/GlyphTextNode';
+import { GlyphIndentNode } from '@/core/renderer/html/glyphs/GlyphIndentNode';
 
 export class EditorSelectionDetailParser extends Disposable {
-  private readonly glyphs: GlyphDOMNode[][];
+  public readonly groups: GlyphDOMNode[][];
 
   constructor(
     fragment: GlyphNodeFragment
   ) {
     super();
 
-    this.glyphs = this.parse(fragment);
+    this.groups = this.parse(fragment);
   }
 
   private parse(fragment: GlyphNodeFragment): GlyphDOMNode[][] {
-    console.log(fragment);
+    const { children } = fragment;
 
-    return [[]];
+    // [ [glyph, glyph], [glyph, glyph]];
+    const result: GlyphDOMNode[][] = [];
+    const tempSet: Set<GlyphDOMNode> = new Set();
+
+    for (const glyph of children) {
+      const isWhitespace = glyph instanceof GlyphTextNode || glyph instanceof GlyphIndentNode;
+
+      if (!isWhitespace) {
+        tempSet.add(glyph);
+      } else {
+        result.push(Array.from(tempSet.values()))
+        tempSet.clear();
+      }
+    }
+
+    // Если что-то осталось в конце
+    if (tempSet.size > 0) {
+      result.push(Array.from(tempSet.values()));
+    }
+
+    return result;
   }
 }
