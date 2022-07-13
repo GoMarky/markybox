@@ -16,7 +16,7 @@ export class GolangCodeFormatter extends BaseFormatter {
   constructor(context: EditorGlobalContext) {
     super('python', context);
 
-    this.applicator = new GolangKeyApplicator();
+    this.applicator = new GolangKeyApplicator(context);
     this.factory = new GolangFactory();
   }
 

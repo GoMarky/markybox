@@ -12,7 +12,7 @@ export class CPPCodeFormatter extends BaseFormatter {
   constructor(context: EditorGlobalContext) {
     super('json', context);
 
-    this.applicator = new CPPKeyApplicator();
+    this.applicator = new CPPKeyApplicator(context);
     this.factory = new CppFactory();
   }
 

@@ -16,7 +16,7 @@ export class PythonCodeFormatter extends BaseFormatter {
   constructor(context: EditorGlobalContext) {
     super('python', context);
 
-    this.applicator = new PythonKeyApplicator();
+    this.applicator = new PythonKeyApplicator(context);
     this.factory = new PythonFactory();
   }
 
