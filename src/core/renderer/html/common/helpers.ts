@@ -30,6 +30,12 @@ export const EditorCSSName = {
   LayerActiveLine: 'marky__layer-marker-active-line',
   LayerSelection: 'marky__layer-selection',
   SelectionRow: 'marky__selection-row',
+
+  LayerContextMenubar: 'marky__context-menubar',
+  LayerContextMenubarList: 'marky__context-menubar-list',
+  ContextMenubarItemContent: 'marky__context-menubar-item-content',
+  ContextMenubarItemTitle: 'marky__context-menubar-item-title',
+  ContextMenuBarItemText: 'marky__context-menubar-item-title-text',
 }
 
 export interface IDOMPosition {

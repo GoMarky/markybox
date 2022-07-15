@@ -11,6 +11,17 @@ export class EditorActiveState extends AbstractEditorState {
     super(context);
   }
 
+  public onContextMenu(event: MouseEvent): void {
+    const { display } = this.context;
+    event.preventDefault();
+
+    console.log(event);
+
+    const position = display.toEditorPosition(event);
+
+    return this.openContextMenu(position);
+  }
+
   public onSelectionStart(event: MouseEvent): void {
     const { selection, display } = this.context;
     const isLeftClick = event.button === 0;
@@ -171,6 +182,25 @@ export class EditorActiveState extends AbstractEditorState {
     }
 
     return controller.editorAutoSave.save();
+  }
+
+  private openContextMenu(position: IPosition): void {
+    const { body } = this.context;
+
+    body.contextMenu.createMenu(position, [
+      {
+        title: 'Copy',
+        action: () => console.log('copy'),
+      },
+      {
+        title: 'Paste',
+        action: () => console.log('paste'),
+      },
+      {
+        title: 'Console',
+        action: () => console.log('console'),
+      }
+    ]);
   }
 
   private enter(): void {

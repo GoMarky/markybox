@@ -6,10 +6,14 @@ export class EditorLockedState extends AbstractEditorState {
     super(context);
   }
 
-  public onDoubleClick(_: MouseEvent) {
+  public onContextMenu(_: MouseEvent): void {
+
   }
 
-  public onKeyUp(_: KeyboardEvent) {
+  public onDoubleClick(_: MouseEvent): void {
+  }
+
+  public onKeyUp(_: KeyboardEvent): void {
   }
 
   public onInput(_: string): void {

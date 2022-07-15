@@ -19,6 +19,7 @@ import { EditorGlobalContext } from '@/core/renderer/html/system/EditorGlobalCon
 import { GlyphDOMElement } from '@/core/renderer/html/common/GlyphDOMElement';
 import { useOutsideClick } from '@/base/dom';
 import { toDisposable } from '@/platform/lifecycle/common/lifecycle';
+import { EditorCustomContextMenu } from '@/core/renderer/html/editor/EditorContextMenu';
 
 export type EditorLang = 'cpp' | 'python' | 'js' | 'json' | 'plain' | 'golang';
 
@@ -31,6 +32,7 @@ export interface IVisitor {
 export class MHTMLEditorBody extends GlyphDOMElement<HTMLDivElement> {
   public readonly textLayer: TextContainerLayer;
   public readonly markerLayer: CurrentRowMarkerLayer;
+  public readonly contextMenu: EditorCustomContextMenu;
   private readonly partitionLayer: MPartitionLayer;
   private readonly visitorMap: Map<string, IVisitor> = new Map();
 
@@ -44,8 +46,8 @@ export class MHTMLEditorBody extends GlyphDOMElement<HTMLDivElement> {
     this.textLayer = new TextContainerLayer();
     this.markerLayer = new CurrentRowMarkerLayer();
     this.partitionLayer = new MPartitionLayer();
-
     this._formatter = new PlainFormatter(context);
+    this.contextMenu = new EditorCustomContextMenu(context);
   }
 
   private _formatter: BaseFormatter;
@@ -136,10 +138,10 @@ export class MHTMLEditorBody extends GlyphDOMElement<HTMLDivElement> {
     this.textLayer.mount(body);
     this.markerLayer.mount(body);
     this.partitionLayer.mount(body);
+    this.contextMenu.mount(body);
 
     const textarea = new EditorBodyTextarea(root);
     textarea.onDidUpdate((letter) => this.renderer.currentState.onInput(letter));
-
   }
 
   private createHTMLElement(root: HTMLElement): void {

@@ -5,7 +5,7 @@ import { HTMLRenderer } from '@/core';
 import { EditorDisplayController } from '@/core/renderer/html/system/EditorDisplayController';
 import { EditorStorage } from '@/core/renderer/html/system/EditorStorage';
 import { toDisposable } from '@/platform/lifecycle/common/lifecycle';
-import { debounce } from '@/base/async';
+import { debounce, throttle } from '@/base/async';
 import { getFirstElement, getLastElement } from '@/base/array';
 import { CriticalError } from '@/base/errors';
 import { GlyphDOMNode } from '@/core/renderer/html/glyphs/GlyphDOMNode';
@@ -120,7 +120,7 @@ export class EditorSelectionContainer extends BaseObject {
     this.render();
   }
 
-  public updateSelection = debounce((position: { start: IPosition, end: IPosition }) => {
+  public updateSelection = (position: { start: IPosition, end: IPosition }) => {
     const { storage } = this;
     const { start, end } = position;
 
@@ -173,7 +173,7 @@ export class EditorSelectionContainer extends BaseObject {
 
     this._positions = positions;
     this.render();
-  }, 5)
+  }
 
   public clearSelect(): void {
     this.layer.clear();
@@ -182,7 +182,7 @@ export class EditorSelectionContainer extends BaseObject {
   public mount(body: HTMLElement): void {
     this.layer.mount(body);
 
-    const onContextmenu = (event: Event) => event.preventDefault();
+    const onContextmenu = (event: MouseEvent) => this.renderer.currentState.onContextMenu(event);
     const onMousedown = (event: MouseEvent) => this.renderer.currentState.onSelectionStart(event);
     const onMousemove = (event: MouseEvent) => this.renderer.currentState.onSelectionMove(event);
     const onMouseup = (event: MouseEvent) => this.renderer.currentState.onSelectionEnd(event);

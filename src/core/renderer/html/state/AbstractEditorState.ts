@@ -6,6 +6,8 @@ export abstract class AbstractEditorState extends BaseObject {
     super();
   }
 
+  public abstract onContextMenu(event: MouseEvent): void;
+
   public abstract onInput(letter: string): void;
 
   public abstract onClick(event: MouseEvent): void;
