@@ -147,6 +147,10 @@ export class EditorRowsController extends BaseObject {
     navigator.setPosition({ row: row.index, column: row.length })
   }
 
+  public pasteText(text: string): void {
+    const textParts = text.split(/\n/);
+  }
+
   public setWholeText(text: string): void {
     const textParts = text.split(/\n/);
 

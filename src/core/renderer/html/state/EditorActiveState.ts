@@ -15,11 +15,9 @@ export class EditorActiveState extends AbstractEditorState {
     const { selection, display } = this.context;
     const isLeftClick = event.button === 0;
 
-    if (!isLeftClick || EditorContextKeys.doubleClickMode.get()) {
+    if (!isLeftClick) {
       return;
     }
-
-    const { clientX, offsetY } = event;
 
     if (selection.startPosition) {
       selection.lastPosition = null;
@@ -27,7 +25,7 @@ export class EditorActiveState extends AbstractEditorState {
     }
 
     selection.started = true;
-    selection.startPosition = display.toEditorPosition({ top: offsetY + 46, left: clientX });
+    selection.startPosition = display.toEditorPosition(event);
   }
 
   public onSelectionMove(event: MouseEvent): void {
@@ -37,8 +35,7 @@ export class EditorActiveState extends AbstractEditorState {
       return;
     }
 
-    const { clientX, offsetY } = event;
-    selection.lastPosition = display.toEditorPosition({ top: offsetY + 46, left: clientX });
+    selection.lastPosition = display.toEditorPosition(event);
 
     const start = selection.startPosition as IPosition;
     const end = selection.lastPosition;
@@ -69,8 +66,7 @@ export class EditorActiveState extends AbstractEditorState {
 
   public onDoubleClick(event: MouseEvent): void {
     const { storage, display, selection } = this.context;
-    const { clientX, offsetY } = event;
-    const position = display.toEditorPosition({ top: offsetY + 46, left: clientX });
+    const position = display.toEditorPosition(event);
 
     const { row, column } = position;
     const matchedRow = storage.at(row);
@@ -104,9 +100,7 @@ export class EditorActiveState extends AbstractEditorState {
       return;
     }
 
-    const { clientX, offsetY } = event;
-    const position = display.toEditorPosition({ top: offsetY + 46, left: clientX });
-
+    const position = display.toEditorPosition(event);
     const matchedRow = storage.at(position.row);
 
     let row: number;
@@ -125,8 +119,6 @@ export class EditorActiveState extends AbstractEditorState {
 
     const isDoubleClickPressed = EditorContextKeys.doubleClickMode.get();
     const normalizedPosition: IPosition = { row, column };
-
-    console.log(isDoubleClickPressed);
 
     // Если до этого сделалил двойной клик по слову, переходим в режим выделения всей строки
     if (isDoubleClickPressed && matchedRow) {

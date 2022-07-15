@@ -103,7 +103,7 @@ export class AbstractKeyApplicator extends BaseObject implements IAbstractKeyApp
 
   protected removeLetterByPosition(column: number): void {
     const { navigator, controller } = this.context;
-    const { currentRow } = controller
+    const { currentRow } = controller;
 
     if (column === 0) {
       return;

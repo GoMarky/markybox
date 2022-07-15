@@ -8,11 +8,6 @@ import { EditorGutterContainer } from '@/core/renderer/html/editor/EditorGutterC
 import { EditorStorage } from '@/core/renderer/html/system/EditorStorage';
 import { toDisposable } from '@/platform/lifecycle/common/lifecycle';
 
-const EDITOR_OFFSET_POSITION: IDOMPosition = {
-  top: 46,
-  left: 42,
-}
-
 export class EditorDisplayController extends BaseObject implements IRendererDisplay {
   private root: HTMLElement;
   public readonly gutter: EditorGutterContainer;
@@ -31,11 +26,13 @@ export class EditorDisplayController extends BaseObject implements IRendererDisp
     }
   }
 
-  public toEditorPosition(position: IDOMPosition): IPosition {
-    let { top, left } = position;
+  public toEditorPosition(event: MouseEvent): IPosition {
+    const target = event.target as HTMLElement;
 
-    top += document.documentElement.scrollTop - EDITOR_OFFSET_POSITION.top;
-    left -= EDITOR_OFFSET_POSITION.left;
+    const rect = target.getBoundingClientRect();
+
+    const left = event.clientX - rect.left; // x position within the element.
+    const top = event.clientY - rect.top;  // y position within the element.
 
     return {
       row: Math.round(top / 16),

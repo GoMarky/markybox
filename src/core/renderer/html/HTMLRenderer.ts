@@ -170,7 +170,8 @@ export class HTMLRenderer extends BaseObject implements IAbstractRenderer {
 
     // Select all code
     this.disposables.add(
-      windowShortcut.registerShortcut(SELECT_ALL_KEY, () => {
+      windowShortcut.registerShortcut(SELECT_ALL_KEY, (event) => {
+        event.preventDefault();
         this.selection.selectAll();
       })
     );
@@ -211,7 +212,8 @@ export class HTMLRenderer extends BaseObject implements IAbstractRenderer {
 
     // Copy all code
     this.disposables.add(
-      windowShortcut.registerShortcut(COPY_KEY, () => {
+      windowShortcut.registerShortcut(COPY_KEY, (event) => {
+        event.preventDefault();
         const text = this.selection.getSelectedText();
 
         void this.clipboard.write(text);
@@ -220,7 +222,8 @@ export class HTMLRenderer extends BaseObject implements IAbstractRenderer {
 
     // Paste all code from clipboard
     this.disposables.add(
-      windowShortcut.registerShortcut(PASTE_KEY, async () => {
+      windowShortcut.registerShortcut(PASTE_KEY, async (event) => {
+        event.preventDefault();
         const text = await this.clipboard.read();
 
         this.controller.setWholeText(text);
@@ -231,11 +234,13 @@ export class HTMLRenderer extends BaseObject implements IAbstractRenderer {
     const onKeydown = (event: KeyboardEvent) => this.currentState.onKeyDown(event);
     const onKeyUp = (event: KeyboardEvent) => this.currentState.onKeyUp(event);
 
-    window.addEventListener('click', onMousedown);
+    const body = this.body.el;
+
+    body.addEventListener('click', onMousedown);
     window.addEventListener('keydown', onKeydown);
     window.addEventListener('keyup', onKeyUp);
 
-    this.disposables.add(toDisposable(() => window.removeEventListener('click', onMousedown)));
+    this.disposables.add(toDisposable(() => body.removeEventListener('click', onMousedown)));
     this.disposables.add(toDisposable(() => window.removeEventListener('keydown', onKeydown)));
     this.disposables.add(toDisposable(() => window.removeEventListener('keyup', onKeyUp)));
   }

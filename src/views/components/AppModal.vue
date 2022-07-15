@@ -15,7 +15,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, onUnmounted } from 'vue';
 import { ILayoutService } from '@/platform/layout/common/layout';
 
 export default window.workbench.createComponent((accessor) => {
@@ -37,6 +37,10 @@ export default window.workbench.createComponent((accessor) => {
       }
 
       window.addEventListener('keyup', onEscape);
+
+      onUnmounted(() => {
+        window.removeEventListener('keyup', onEscape);
+      })
 
       return { isOpenModal, closeModal }
     },

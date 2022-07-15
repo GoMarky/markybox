@@ -11,6 +11,7 @@ import { CriticalError } from '@/base/errors';
 import { GlyphDOMNode } from '@/core/renderer/html/glyphs/GlyphDOMNode';
 import { GlyphRowElement } from '@/core/renderer/html/common/GlyphRowElement';
 import { EditorSelectionDetailParser } from '@/core/renderer/html/editor/selection/EditorSelectionDetailParser';
+import { GlyphSpecialCharNode } from '@/core/renderer/html/glyphs/GlyphSpecialCharNode';
 
 export interface ISelectionPosition {
   row: number;
@@ -49,9 +50,19 @@ export class EditorSelectionContainer extends BaseObject {
   public getSelectedText(): string {
     const { rows } = this.storage;
 
-    return rows
-      .filter((row) => this._positions.find((position) => position.row === row.index))
-      .map((row) => row.toString()).join(endl);
+    const filteredRows = rows.filter((row) => this._positions.find((position) => position.row === row.index));
+    let selectedText: string = '';
+
+    for (let i = 0; i < filteredRows.length; i++) {
+      const row = filteredRows[i];
+      const position = this._positions[i];
+
+      const slicedText = row.text.slice(position.startColumn, position.endColumn);
+
+      selectedText += `${slicedText}\n`;
+    }
+
+    return selectedText;
   }
 
   public selectRow(row: GlyphRowElement, glyph: GlyphDOMNode): void {
@@ -75,10 +86,14 @@ export class EditorSelectionContainer extends BaseObject {
       if (group.includes(glyph) && group.length > 1) {
         const first = getFirstElement(group) as GlyphDOMNode;
         const last = getLastElement(group) as GlyphDOMNode;
-        startColumn = first.start;
-        endColumn = last.end;
 
-        break;
+        // Если начинаются с спец символов
+        if (first instanceof GlyphSpecialCharNode && last instanceof GlyphSpecialCharNode) {
+          startColumn = first.start;
+          endColumn = last.end;
+
+          break;
+        }
       }
     }
 
@@ -100,7 +115,7 @@ export class EditorSelectionContainer extends BaseObject {
   public selectAll(): void {
     const { rows } = this.storage;
 
-    this._positions = rows.map((row) => ({ row: row.index, startColumn: 0, endColumn: 0 }))
+    this._positions = rows.map((row) => ({ row: row.index, startColumn: 0, endColumn: row.length }))
 
     this.render();
   }
@@ -174,14 +189,14 @@ export class EditorSelectionContainer extends BaseObject {
     const onDoubleClick = (event: MouseEvent) => this.renderer.currentState.onDoubleClick(event);
 
     body.addEventListener('contextmenu', onContextmenu);
-    window.addEventListener('mousedown', onMousedown);
-    window.addEventListener('mousemove', onMousemove);
-    window.addEventListener('mouseup', onMouseup);
-    window.addEventListener('dblclick', onDoubleClick);
+    body.addEventListener('mousedown', onMousedown);
+    body.addEventListener('mousemove', onMousemove);
+    body.addEventListener('mouseup', onMouseup);
+    body.addEventListener('dblclick', onDoubleClick);
 
     this.disposables.add(toDisposable(() => body.removeEventListener('contextmenu', onContextmenu)));
-    this.disposables.add(toDisposable(() => window.removeEventListener('mousedown', onMousedown)));
-    this.disposables.add(toDisposable(() => window.removeEventListener('mousemove', onMousemove)));
-    this.disposables.add(toDisposable(() => window.removeEventListener('mouseup', onMouseup)));
+    this.disposables.add(toDisposable(() => body.removeEventListener('mousedown', onMousedown)));
+    this.disposables.add(toDisposable(() => body.removeEventListener('mousemove', onMousemove)));
+    this.disposables.add(toDisposable(() => body.removeEventListener('mouseup', onMouseup)));
   }
 }
