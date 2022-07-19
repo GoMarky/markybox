@@ -1,6 +1,6 @@
 <template>
   <div class="root-node" v-if="rootFiles.length > 0">
-    <workspace-file-list-item @choose-file="onChooseFile" v-for="file in rootFiles" :key="file.id" :file="file" />
+    <workspace-file-list-item :current-file="currentFile" @choose-file="onChooseFile" v-for="file in rootFiles" :key="file.id" :file="file" />
   </div>
 </template>
 
@@ -20,11 +20,13 @@ import { useRoute } from 'vue-router';
 const route = useRoute();
 const workspaceId = route.params.workspaceId as string;
 const rootFiles = ref<IWorkspaceFile[]>([]);
+const currentFile = ref<IWorkspaceFile>();
 
 onMounted(async () => {
   const workspace = await workspaceService.loadWorkspacebyId(workspaceId);
 
   rootFiles.value = workspace.files[0].children as IWorkspaceFile[];
+  currentFile.value = rootFiles.value[0];
 });
 
 
@@ -34,6 +36,8 @@ const emit = defineEmits<{
 
 const onChooseFile = (file: IWorkspaceFile) => {
   emit('choose-file', file);
+
+  currentFile.value = file;
 }
 </script>
 

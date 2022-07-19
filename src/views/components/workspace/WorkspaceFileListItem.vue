@@ -1,14 +1,16 @@
 <template>
-  <div class="workspace-file" @click="onClick()">
-   <div class="workspace-file__content">
-    <div class="workspace-file__icon">
-        <component :is="iconComponent"/>
+    <div class="workspace-file" @click="onClick()">
+        <div class="workspace-file__content" :class="{
+            'workspace-file__content_active': isActive,
+        }">
+            <div class="workspace-file__icon">
+                <component :is="iconComponent" />
+            </div>
+            <span class="workspace-file__name">
+                {{ props.file.name }}
+            </span>
+        </div>
     </div>
-    <span class="workspace-file__name">
-        {{ props.file.name }}
-    </span>
-   </div>
-  </div>
 </template>
 
 <script lang="ts" setup>
@@ -19,16 +21,19 @@ import IconFileDefault from '@/views/components/icons/IconFileDefault.vue';
 import { computed } from '@vue/reactivity';
 
 const props = defineProps<{
-  file: IWorkspaceFile,
+    file: IWorkspaceFile,
+    currentFile: IWorkspaceFile,
 }>();
 
 const emit = defineEmits<{
-  (e: 'choose-file', file: IWorkspaceFile): void
+    (e: 'choose-file', file: IWorkspaceFile): void
 }>()
 
 const onClick = () => {
     emit('choose-file', props.file);
 }
+
+const isActive = computed(() => props.currentFile === props.file);
 
 const iconComponent = computed(() => {
     const name = props.file.name;
@@ -60,6 +65,10 @@ export default { name: 'WorkspaceFileListItem' };
         display: flex
         align-items: center
         padding: 5px
+
+        &_active
+            background-color: var(--accent-blue-default)
+            color: #fff
 
     &__icon
         margin-right: 15px
