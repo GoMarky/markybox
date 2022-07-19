@@ -70,10 +70,15 @@ async function loadNote(): Promise<void> {
     const note = await noteService.getNoteById(noteId);
     const { data, lang } = note
 
-    editor.renderer.mount('#root');
+    if (editor.renderer.$isMount) {
+      editor.renderer.clear();
+    } else {
+      editor.renderer.mount('#root');
+      editor.renderer.display.setFullScreen();
+    }
+
     editor.renderer.setText(data);
     editor.renderer.body.setFormat(lang);
-    editor.renderer.display.setFullScreen();
 
     noteService.store.currentNote.value = note || null;
     socketService.createOrEnterRoom(noteId);

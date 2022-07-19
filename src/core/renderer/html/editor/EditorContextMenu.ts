@@ -83,6 +83,7 @@ export class EditorCustomContextMenu extends Disposable {
     removeChildren(this.layer.el);
 
     this.layer.el.appendChild(menu.el);
+    this.layer.show();
     this.layer.top(top);
     this.layer.left(left);
   }
@@ -90,5 +91,6 @@ export class EditorCustomContextMenu extends Disposable {
   public mount(body: HTMLElement): void {
     this.layer = new ContextMenuLayer();
     this.layer.mount(body);
+    this.layer.hide();
   }
 }

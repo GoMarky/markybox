@@ -246,6 +246,16 @@ export class HTMLRenderer extends BaseObject implements IAbstractRenderer {
   }
 
   public dispose(): void {
-    super.dispose();
+    this.storage.dispose();
+    this.display.dispose();
+    this.navigator.dispose();
+    this.controller.dispose();
+    this.selection.dispose();
+    this.context.dispose();
+    this.body.dispose();
+    this.commandCenter.dispose();
+    this.clipboard.dispose();
+    this.navigatorManager.dispose();
+    
   }
 }
