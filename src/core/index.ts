@@ -1,4 +1,3 @@
-import { MEditor } from '@/core/app/editor';
 import { HTMLRenderer } from '@/core/renderer/html/HTMLRenderer';
 import { EditorLang, EditorTheme } from '@/core/renderer/html/editor/EditorBodyContainer';
 
@@ -39,7 +38,6 @@ sayHello();
 export {
   EditorLang,
   EditorTheme,
-  MEditor,
   HTMLRenderer,
   getDefaultSyntax,
   getSupportedSyntaxes,

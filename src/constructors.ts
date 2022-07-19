@@ -16,8 +16,6 @@ import { SocketService } from '@/code/socket/browser/socket-service';
 import { ISocketService } from '@/code/socket/common/socket-service';
 import { NoteService } from '@/code/notes/browser/note-service';
 import { INoteService } from '@/code/notes/common/notes';
-import { EditorService } from '@/code/editor/browser/editor-service';
-import { IEditorService } from '@/code/editor/common/editor-service';
 import { WorkspaceService } from '@/code/workspace/browser/workspace-service';
 import { IWorkspaceService } from '@/code/workspace/common/workspace-service';
 
@@ -61,10 +59,6 @@ services.set(ISocketService, socketService);
 // note
 const noteService = new NoteService(requestService, sessionService);
 services.set(INoteService, noteService);
-
-// editor
-const editorService = new EditorService(logService, sessionService, noteService, socketService);
-services.set(IEditorService, editorService);
 
 // workspace
 const workspaceService = new WorkspaceService();

@@ -22,7 +22,3 @@ const rootNode = getFirstElement(files) as IWorkspaceFile;
 <script lang="ts">
 export default { name: 'WorkspaceFileListRootNode' };
 </script>
-
-<style lang="sass">
-
-</style>

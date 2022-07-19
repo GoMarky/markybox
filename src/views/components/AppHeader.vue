@@ -14,12 +14,8 @@
     <nav class="page-header__navigation">
       <ul class="page-header__nav-list">
         <li class="page-header__nav-item">
-          <UISelect
-            label="Lang"
-            :value="currentEditorLang"
-            @update:value="currentEditorLang = $event"
-            :options="editorLanguages"
-          ></UISelect>
+          <UISelect label="Lang" :value="currentEditorLang" @update:value="currentEditorLang = $event"
+            :options="editorLanguages"></UISelect>
         </li>
         <li class="page-header__nav-item">
           <button type="button" class="btn btn_primary page-header__nav-link">
@@ -27,25 +23,18 @@
           </button>
         </li>
         <li class="page-header__nav-item">
-          <button
-            type="button"
-            @click.prevent="copyNoteLink()"
-            class="btn btn_primary page-header__nav-link">
+          <button type="button" @click.prevent="copyNoteLink()" class="btn btn_primary page-header__nav-link">
             <icon-share />
           </button>
         </li>
         <li class="page-header__nav-item">
-          <button
-            @click.prevent="isAuth ? openUserProfileModal() : openLoginModal()"
-            type="button"
+          <button @click.prevent="isAuth ? openUserProfileModal() : openLoginModal()" type="button"
             class="btn btn_primary page-header__nav-link">
             <icon-profile />
           </button>
         </li>
         <li v-if="!isAuth" class="page-header__nav-item">
-          <router-link
-            :to="{ name: $RouteName.RegistrationPage }"
-            type="button"
+          <router-link :to="{ name: $RouteName.RegistrationPage }" type="button"
             class="btn btn_primary page-header__nav-link">
             {{ $t('header.registration.title') }}
           </router-link>
@@ -64,7 +53,6 @@ import { ISessionService } from '@/code/session/common/session';
 import { ILayoutService } from '@/platform/layout/common/layout';
 import { INoteService } from '@/code/notes/common/notes';
 import { Mime } from '@/base/string';
-import { IEditorService } from '@/code/editor/common/editor-service';
 
 import { useNotifications } from '@/views/components/notification/use-notifications';
 import useDrawer from '@/views/composables/use-drawer';
@@ -79,7 +67,6 @@ export default window.workbench.createComponent((accessor) => {
   const sessionService = accessor.get(ISessionService);
   const layoutService = accessor.get(ILayoutService);
   const noteService = accessor.get(INoteService);
-  const editorService = accessor.get(IEditorService);
 
   return defineComponent({
     name: 'AppHeader',
@@ -112,7 +99,7 @@ export default window.workbench.createComponent((accessor) => {
 
         if (noteId) {
           await noteService.updateNote(noteId, '');
-          editorService.renderer.clear();
+          // editorService.renderer.clear();
         }
       }
 
@@ -122,10 +109,10 @@ export default window.workbench.createComponent((accessor) => {
 
       watch(currentEditorLang, async (lang: markybox.EditorLang) => {
         const noteId = router.currentRoute.value.params.id as string;
-        const text = editorService.renderer.getText() as string;
+        // const text = editorService.renderer.getText() as string;
 
-        await noteService.updateNote(noteId, text, lang);
-        editorService.renderer.body.setFormat(lang);
+        // await noteService.updateNote(noteId, text, lang);
+        // editorService.renderer.body.setFormat(lang);
       });
 
       async function copyNoteLink(): Promise<void> {

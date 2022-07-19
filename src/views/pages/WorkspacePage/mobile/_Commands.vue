@@ -1,14 +1,12 @@
 <template>
-  <section class="workspace-code">
-
-  </section>
+  <div class="commands"></div>
 </template>
 
 <script lang="ts" setup>
 </script>
 
 <script lang="ts">
-export default { name: 'WorkspaceCode' };
+export default { name: 'Commands' };
 </script>
 
 <style lang="sass">
