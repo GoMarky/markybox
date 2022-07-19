@@ -1,5 +1,5 @@
 <template>
-  <div class="workspace-file">
+  <div class="workspace-file" @click="onClick()">
    <div class="workspace-file__content">
     <div class="workspace-file__icon">
         <component :is="iconComponent"/>
@@ -20,7 +20,15 @@ import { computed } from '@vue/reactivity';
 
 const props = defineProps<{
   file: IWorkspaceFile,
+}>();
+
+const emit = defineEmits<{
+  (e: 'choose-file', file: IWorkspaceFile): void
 }>()
+
+const onClick = () => {
+    emit('choose-file', props.file);
+}
 
 const iconComponent = computed(() => {
     const name = props.file.name;

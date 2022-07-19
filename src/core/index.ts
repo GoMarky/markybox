@@ -33,6 +33,29 @@ function getDefaultSyntax(): EditorLang {
   return 'plain';
 }
 
+const fileExtensions: Record<string, string[]> = {
+  'cpp': ['cpp', 'h'],
+  'python': ['py'],
+  'golang': ['go'],
+  'js': ['js', 'ts'],
+  'plain': [],
+  'json': ['json'],
+}
+
+function getValuableSyntax(filename: string): EditorLang {
+  for (const key in fileExtensions) {
+    const extensions = fileExtensions[key];
+
+    const [, ext] = filename.split('.');
+
+    if (extensions.includes(ext)) {
+      return key as EditorLang;
+    }
+  }
+
+  return 'plain';
+}
+
 sayHello();
 
 export {
@@ -40,5 +63,6 @@ export {
   EditorTheme,
   HTMLRenderer,
   getDefaultSyntax,
+  getValuableSyntax,
   getSupportedSyntaxes,
 }

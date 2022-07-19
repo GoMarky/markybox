@@ -73,7 +73,7 @@ watch(currentEditorLang, async (lang: markybox.EditorLang) => {
   const text = editor.renderer.getText() as string;
 
   await noteService.updateNote(noteId, text, lang);
-  editor.renderer.body.setFormat(lang);
+  editor.renderer.setFormat(lang);
 });
 
 async function loadNote(): Promise<void> {
@@ -90,7 +90,7 @@ async function loadNote(): Promise<void> {
     }
 
     editor.renderer.setText(data);
-    editor.renderer.body.setFormat(lang);
+    editor.renderer.setFormat(lang);
 
     setEditorLang(lang);
     socketService.createOrEnterRoom(noteId);

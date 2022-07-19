@@ -1,7 +1,15 @@
 <template>
   <div>
-    <workspace-mobile-page v-if="isMobile"/>
-    <workspace-desktop-page/>
+    <workspace-mobile-page v-if="isMobile" />
+    <template v-elseÍ>
+      <Suspense>
+        <workspace-desktop-page />
+
+        <template #fallback>
+          Loading...
+        </template>
+      </Suspense>
+    </template>
   </div>
 </template>
 

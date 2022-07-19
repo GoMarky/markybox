@@ -2,7 +2,7 @@ import windowShortcut from '@gomarky/window-shortcut';
 import { BaseObject } from '@/core/objects/BaseObject';
 import { EditorBodyNavigator } from '@/core/renderer/html/editor/EditorBodyNavigator';
 import { EditorDisplayController } from '@/core/renderer/html/system/EditorDisplayController';
-import { MHTMLEditorBody } from '@/core/renderer/html/editor/EditorBodyContainer';
+import { EditorLang, MHTMLEditorBody } from '@/core/renderer/html/editor/EditorBodyContainer';
 import { UserClipboardController } from '@/core/renderer/html/system/UserClipboardController';
 import { EditorSelectionContainer } from '@/core/renderer/html/editor/selection/EditorSelectionContainer';
 import { EditorStorage } from '@/core/renderer/html/system/EditorStorage';
@@ -137,6 +137,10 @@ export class HTMLRenderer extends BaseObject implements IAbstractRenderer {
     this.controller.setWholeText(text);
   }
 
+  public setFormat(lang: EditorLang): void {
+    this.body.setFormat(lang);
+  }
+
   private registerListeners(): void {
     this.disposables.add(this.navigator.onDidUpdatePosition((position) => {
       const row = this.storage.at(position.row);
@@ -256,6 +260,6 @@ export class HTMLRenderer extends BaseObject implements IAbstractRenderer {
     this.commandCenter.dispose();
     this.clipboard.dispose();
     this.navigatorManager.dispose();
-    
+
   }
 }

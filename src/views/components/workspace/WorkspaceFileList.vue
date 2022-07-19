@@ -14,15 +14,24 @@
       </ul>
     </header>
     <article class="workspace-file-list__body">
-      <workspace-file-list-root-node />
+      <workspace-file-list-root-node @choose-file="onChooseFile" />
     </article>
   </section>
 </template>
 
 <script lang="ts" setup>
+import { IWorkspaceFile } from '@/code/workspace/common/workspace-file';
 import IconAdd from '@/views/components/icons/IconAdd.vue';
 import IconAddFile from '@/views/components/icons/IconAddFile.vue';
 import WorkspaceFileListRootNode from '@/views/components/workspace/WorkspaceFileListRootNode.vue';
+
+const emit = defineEmits<{
+  (e: 'choose-file', file: IWorkspaceFile): void
+}>();
+
+const onChooseFile = (file: IWorkspaceFile) => {
+  emit('choose-file', file);
+}
 </script>
 
 <script lang="ts">
