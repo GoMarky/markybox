@@ -14,7 +14,6 @@ export default { name: 'NotePage', components: { Code, Commands } };
 
 <script lang="ts" setup>
 import useCodeSectionNavigation from '@/views/composables/useCodeSectionNavigation';
-import { onUnmounted } from 'vue';
 
 const { currentSection } = useCodeSectionNavigation();
 </script>

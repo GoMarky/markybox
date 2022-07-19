@@ -13,8 +13,8 @@
     </router-link>
     <nav class="page-header__navigation">
       <ul class="page-header__nav-list">
-        <li class="page-header__nav-item">
-          <UISelect label="Lang" :value="currentEditorLang" @update:value="currentEditorLang = $event"
+        <li class="page-header__nav-item" v-if="isNotePage">
+          <UISelect label="Lang" :value="currentEditorLang" @update:value="setEditorLang"
             :options="editorLanguages"></UISelect>
         </li>
         <li class="page-header__nav-item">
@@ -22,7 +22,7 @@
             <icon-settings />
           </button>
         </li>
-        <li class="page-header__nav-item">
+        <li class="page-header__nav-item" v-if="isNotePage">
           <button type="button" @click.prevent="copyNoteLink()" class="btn btn_primary page-header__nav-link">
             <icon-share />
           </button>
@@ -48,20 +48,20 @@
 import { defineComponent, ref, watch } from 'vue';
 import * as markybox from '@/core';
 import { useRouter } from 'vue-router';
-
 import { ISessionService } from '@/code/session/common/session';
 import { ILayoutService } from '@/platform/layout/common/layout';
 import { INoteService } from '@/code/notes/common/notes';
 import { Mime } from '@/base/string';
-
 import { useNotifications } from '@/views/components/notification/use-notifications';
 import useDrawer from '@/views/composables/use-drawer';
-
+import useCurrentEditorNoteLang from '@/views/composables/use-current-editor-note-lang';
 import UISelect from '@/views/components/ui/UISelect.vue';
 import IconBurgerMenu from '@/views/components/icons/IconBurgerMenu.vue';
 import IconShare from '@/views/components/icons/IconShare.vue';
 import IconProfile from '@/views/components/icons/IconProfile.vue';
 import IconSettings from '@/views/components/icons/IconSettings.vue';
+import { computed } from '@vue/reactivity';
+import { RouteName } from '@/code/vue/route-names';
 
 export default window.workbench.createComponent((accessor) => {
   const sessionService = accessor.get(ISessionService);
@@ -80,11 +80,17 @@ export default window.workbench.createComponent((accessor) => {
     setup() {
       const router = useRouter();
       const { name, isAuth } = sessionService.profile;
-      const currentEditorLang = ref<markybox.EditorLang>(markybox.getDefaultSyntax());
       const { addNotification } = useNotifications();
       const { openDrawer } = useDrawer();
+      const { currentEditorLang, setEditorLang } = useCurrentEditorNoteLang();
 
       const editorLanguages: markybox.EditorLang[] = markybox.getSupportedSyntaxes();
+
+      const isNotePage = computed(() => {
+        const routeName = router.currentRoute.value.name;
+
+        return routeName === RouteName.NotePage;
+      });
 
       function openUserProfileModal(): void {
         layoutService.modal.open('UserProfileModal');
@@ -103,18 +109,6 @@ export default window.workbench.createComponent((accessor) => {
         }
       }
 
-      watch(noteService.store.currentNote, (note) => {
-        currentEditorLang.value = note?.lang as markybox.EditorLang;
-      });
-
-      watch(currentEditorLang, async (lang: markybox.EditorLang) => {
-        const noteId = router.currentRoute.value.params.id as string;
-        // const text = editorService.renderer.getText() as string;
-
-        // await noteService.updateNote(noteId, text, lang);
-        // editorService.renderer.body.setFormat(lang);
-      });
-
       async function copyNoteLink(): Promise<void> {
         const link = window.location.href;
 
@@ -131,6 +125,8 @@ export default window.workbench.createComponent((accessor) => {
       }
 
       return {
+        setEditorLang,
+        isNotePage,
         currentEditorLang,
         editorLanguages,
         isAuth,

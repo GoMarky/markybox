@@ -15,14 +15,16 @@ const sessionService = window.workbench.getService(ISessionService);
 </script>
 
 <script lang="ts" setup>
+import * as markybox from '@/core';
 import { onBeforeRouteUpdate, useRouter } from 'vue-router';
-import { onMounted, onUnmounted, ref } from 'vue';
+import { onMounted, onUnmounted, ref, watch } from 'vue';
 import { APIError, ApiError } from '@/platform/request/common/request';
 import { RouteName } from '@/code/vue/route-names';
 import { INoteService } from '@/code/notes/common/notes';
 import { EditorInstance } from '@/code/editor/browser/editor';
 import { ISocketService, SocketCommandType } from '@/code/socket/common/socket-service';
 import useRoomActions from '@/views/composables/use-room-actions';
+import useCurrentEditorNoteLang from '@/views/composables/use-current-editor-note-lang';
 import { ISessionService } from '@/code/session/common/session';
 
 const { currentRoute, push } = useRouter();
@@ -64,6 +66,16 @@ editor.renderer.controller.editorAutoSave.onDidSave((text: string) => {
   noteService.updateNote(noteId, text)
 });
 
+const { currentEditorLang, setEditorLang } = useCurrentEditorNoteLang()
+
+watch(currentEditorLang, async (lang: markybox.EditorLang) => {
+  const noteId = currentRoute.value.params.id as string;
+  const text = editor.renderer.getText() as string;
+
+  await noteService.updateNote(noteId, text, lang);
+  editor.renderer.body.setFormat(lang);
+});
+
 async function loadNote(): Promise<void> {
   try {
     const noteId = currentRoute.value.params.id as string;
@@ -80,7 +92,7 @@ async function loadNote(): Promise<void> {
     editor.renderer.setText(data);
     editor.renderer.body.setFormat(lang);
 
-    noteService.store.currentNote.value = note || null;
+    setEditorLang(lang);
     socketService.createOrEnterRoom(noteId);
   } catch (error) {
     if (error instanceof ApiError && error.is(APIError.NotFoundError)) {
