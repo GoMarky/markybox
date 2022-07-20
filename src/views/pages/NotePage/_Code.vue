@@ -10,7 +10,6 @@
 
 <script lang="ts">
 const noteService = window.workbench.getService(INoteService);
-const socketService = window.workbench.getService(ISocketService);
 const sessionService = window.workbench.getService(ISessionService);
 </script>
 
@@ -22,7 +21,7 @@ import { APIError, ApiError } from '@/platform/request/common/request';
 import { RouteName } from '@/code/vue/route-names';
 import { INoteService } from '@/code/notes/common/notes';
 import { EditorInstance } from '@/code/editor/browser/editor';
-import { ISocketService, SocketCommandType } from '@/code/socket/common/socket-service';
+import { SocketCommandType } from '@/code/socket/common/socket-service';
 import useRoomActions from '@/views/composables/use-room-actions';
 import useCurrentEditorNoteLang from '@/views/composables/use-current-editor-note-lang';
 import { ISessionService } from '@/code/session/common/session';
@@ -38,7 +37,7 @@ onBeforeRouteUpdate(async (_, __, next) => {
 const editor = new EditorInstance('', 'plain', 'light');
 const { onEnterRoom, onLeaveRoom, onEditorAction } = useRoomActions(editor.renderer);
 
-socketService.onMessage((event) => {
+noteService.connection.onMessage((event) => {
   switch (event.type) {
     case SocketCommandType.LeaveRoom:
       return onLeaveRoom(event.data);
@@ -53,7 +52,7 @@ editor.renderer.navigator.onDidUpdatePosition((position) => {
   const { row, column } = position;
   const noteId = currentRoute.value.params.id as string;
 
-  socketService.send({
+  noteService.connection.send({
     type: SocketCommandType.EditorAction,
     position: `${row},${column}`,
     user_name: sessionService.profile.name.value,
@@ -93,7 +92,7 @@ async function loadNote(): Promise<void> {
     editor.renderer.setFormat(lang);
 
     setEditorLang(lang);
-    socketService.createOrEnterRoom(noteId);
+    noteService.createOrEnterRoom(noteId);
   } catch (error) {
     if (error instanceof ApiError && error.is(APIError.NotFoundError)) {
       await push({ name: RouteName.HomePage })

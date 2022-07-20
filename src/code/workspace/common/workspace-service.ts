@@ -1,9 +1,9 @@
 import { createDecorator } from '@/platform/instantiation/common/instantiation';
-import { IWorkspace } from '../browser/workspace-service';
+import { Workspace } from '../browser/workspace-service';
 
 export const IWorkspaceService = createDecorator<IWorkspaceService>('workspaceService');
 
 export interface IWorkspaceService {
-  loadWorkspacebyId(id: string): Promise<IWorkspace>;
+  loadWorkspacebyId(id: string): Promise<Workspace>;
   createUntitledWorkspace(): Promise<void>;
 }

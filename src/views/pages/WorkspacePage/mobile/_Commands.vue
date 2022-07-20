@@ -1,5 +1,7 @@
 <template>
-  <div class="commands"></div>
+  <div class="commands">
+    commands
+  </div>
 </template>
 
 <script lang="ts" setup>

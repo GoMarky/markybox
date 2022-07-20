@@ -1,6 +1,8 @@
 import * as markybox from '@/core';
 import { createDecorator } from '@/platform/instantiation/common/instantiation';
 import { UserNotesStore } from '@/code/notes/browser/note-service';
+import { SocketConnection } from '@/code/socket/browser/socket';
+import { IBaseSocketMessagePayload, ISocketMessageResponse } from '@/code/socket/common/socket-service';
 
 export namespace Note {
   export type NoteId = string;
@@ -18,9 +20,12 @@ export interface INoteInfo {
 }
 
 export interface INoteService {
+  readonly connection: SocketConnection<IBaseSocketMessagePayload, ISocketMessageResponse>;
   readonly store: UserNotesStore;
 
   createNoteAfterLogin: boolean;
+
+  createOrEnterRoom(noteId: Note.NoteId): void;
 
   getNoteById(noteId: Note.NoteId): Promise<INoteInfo>;
 

@@ -1,12 +1,7 @@
 <template>
   <div v-if="bottomMenuItems" class="m-bottom-nav" :class="{ 'is-hidden': !isBottomNavShown }">
-    <div
-      v-for="item in bottomMenuItems"
-      :key="item.id"
-      class="m-bottom-nav__item"
-      :class="{ 'is-active': activeMenuItem === item }"
-      @click="onNavItemClick(item)"
-    >
+    <div v-for="item in bottomMenuItems" :key="item.id" class="m-bottom-nav__item"
+      :class="{ 'is-active': activeMenuItem === item }" @click="onNavItemClick(item)">
       <component :is="item.icon" class="m-bottom-nav__icon" />
       <div class="m-bottom-nav__item-title">
         {{ item.name }}
@@ -56,7 +51,7 @@ const activeMenuItem = ref<IBottomNavItem>(bottomMenuItems.value[0]);
 function onNavItemClick(item: IBottomNavItem) {
   activeMenuItem.value = item;
 
-  if (['Code, Files, Commands, Console'].includes(item.id)) {
+  if (['Code', 'Files', 'Console', 'Commands'].includes(item.id)) {
     return setSection(item.id as CodeSection);
   }
 

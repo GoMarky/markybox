@@ -1,9 +1,7 @@
 <template>
   <div class="code">
     <div id="root" class="marky">
-      <div v-if="errorMessage.length > 0">
-        {{ errorMessage }}
-      </div>
+      Code
     </div>
   </div>
 </template>

@@ -7,4 +7,14 @@ export class EditorThemeService extends BaseObject {
   constructor() {
     super();
   }
+
+  public get theme(): EditorTheme {
+    return this._theme;
+  }
+
+  public setTheme(theme: EditorTheme): void {
+    console.log(theme);
+
+    this._theme = theme;
+  }
 }

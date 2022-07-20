@@ -2,7 +2,7 @@ import windowShortcut from '@gomarky/window-shortcut';
 import { BaseObject } from '@/core/objects/BaseObject';
 import { EditorBodyNavigator } from '@/core/renderer/html/editor/EditorBodyNavigator';
 import { EditorDisplayController } from '@/core/renderer/html/system/EditorDisplayController';
-import { EditorLang, MHTMLEditorBody } from '@/core/renderer/html/editor/EditorBodyContainer';
+import { EditorLang, EditorTheme, MHTMLEditorBody } from '@/core/renderer/html/editor/EditorBodyContainer';
 import { UserClipboardController } from '@/core/renderer/html/system/UserClipboardController';
 import { EditorSelectionContainer } from '@/core/renderer/html/editor/selection/EditorSelectionContainer';
 import { EditorStorage } from '@/core/renderer/html/system/EditorStorage';
@@ -21,6 +21,7 @@ import { CommandsRegistry, EditorCommandCenter, NoHistoryCommandImpl } from '@/c
 import { EditorGlobalContext } from '@/core/renderer/html/system/EditorGlobalContext';
 
 import './actions/editor-actions';
+import { EditorThemeService } from './system/EditorTheme';
 
 export class HTMLRenderer extends BaseObject implements IAbstractRenderer {
   public readonly storage: EditorStorage;
@@ -33,6 +34,7 @@ export class HTMLRenderer extends BaseObject implements IAbstractRenderer {
   public readonly body: MHTMLEditorBody;
   public readonly context: EditorGlobalContext;
   public readonly commandCenter: EditorCommandCenter;
+  public readonly theme: EditorThemeService;
 
   public currentState: AbstractEditorState;
   public $isMount: boolean = false;
@@ -55,6 +57,7 @@ export class HTMLRenderer extends BaseObject implements IAbstractRenderer {
     const body = this.body = new MHTMLEditorBody(storage, this, context);
     const command = this.commandCenter = new EditorCommandCenter(context);
 
+    this.theme = new EditorThemeService();
     this.clipboard = new UserClipboardController();
     this.navigatorManager = new EditorSimpleNavigator(controller, display, storage);
 

@@ -12,8 +12,6 @@ import { SessionService } from '@/code/session/browser/sessionService';
 import { ISessionService } from '@/code/session/common/session';
 import { LayoutService } from '@/platform/layout/browser/layout-service';
 import { ILayoutService } from '@/platform/layout/common/layout';
-import { SocketService } from '@/code/socket/browser/socket-service';
-import { ISocketService } from '@/code/socket/common/socket-service';
 import { NoteService } from '@/code/notes/browser/note-service';
 import { INoteService } from '@/code/notes/common/notes';
 import { WorkspaceService } from '@/code/workspace/browser/workspace-service';
@@ -51,10 +49,6 @@ services.set(IRequestService, requestService);
 // session
 const sessionService = new SessionService(requestService)
 services.set(ISessionService, sessionService);
-
-// socket
-const socketService = new SocketService(sessionService);
-services.set(ISocketService, socketService);
 
 // note
 const noteService = new NoteService(requestService, sessionService);

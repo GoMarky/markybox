@@ -1,5 +1,7 @@
 <template>
-  <div class="console"></div>
+  <div class="console">
+    console
+  </div>
 </template>
 
 <script lang="ts" setup>

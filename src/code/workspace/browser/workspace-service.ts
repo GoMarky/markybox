@@ -2,19 +2,12 @@ import { Disposable } from '@/platform/lifecycle/common/lifecycle';
 import { IWorkspaceService } from '@/code/workspace/common/workspace-service';
 import { IWorkspaceFile } from '../common/workspace-file';
 import { getMockFileTreeArray } from '../common/workspace-mocks';
-import { WorkspaceSocketChannel } from './workspace-socket-channel';
+import { SocketConnection } from '@/code/socket/browser/socket';
+import { IWorkspaceSocketMessage, IWorkspaceSocketResponse, WorkspaceChannelCommand } from './workspace-socket-channel';
+import { BASE_WEBSOCKET_URL } from '@/code/request/api';
 
-export interface IWorkspace {
-  readonly id: string;
-  readonly channel: WorkspaceSocketChannel;
-
-  files: IWorkspaceFile[];
-
-  requestFile(_: string): void;
-}
-
-class Workspace extends Disposable implements IWorkspace {
-  public readonly channel: WorkspaceSocketChannel;
+export class Workspace extends Disposable {
+  public readonly connection: SocketConnection<IWorkspaceSocketMessage, IWorkspaceSocketResponse>;
 
   public files: IWorkspaceFile[] = getMockFileTreeArray();
 
@@ -24,22 +17,26 @@ class Workspace extends Disposable implements IWorkspace {
   ) {
     super();
 
-    this.channel = new WorkspaceSocketChannel(id);
-    
+    const socketURL = `${BASE_WEBSOCKET_URL}/v1/workspace/${id}/`;
+
+    this.connection = new SocketConnection(socketURL);
+    this.connection.connect();
     this.registerListeners();
   }
   
   private registerListeners(): void {
-    this.channel.onMessage((event) => console.log(event));
+    this.connection.onMessage((event) => console.log(event));
   }
 
   public requestFile(_: string): void {
-    return;
+    this.connection.send({
+      type: WorkspaceChannelCommand.FetchFile,
+    })
   }
 }
 
 export class WorkspaceService extends Disposable implements IWorkspaceService {
-  private readonly workspaces: Map<string, IWorkspace> = new Map();
+  private readonly workspaces: Map<string, Workspace> = new Map();
 
   constructor() {
     super();
@@ -49,9 +46,9 @@ export class WorkspaceService extends Disposable implements IWorkspaceService {
 
   }
 
-  public async loadWorkspacebyId(id: string): Promise<IWorkspace> {
+  public async loadWorkspacebyId(id: string): Promise<Workspace> {
     if (this.workspaces.has(id)) {
-      return this.workspaces.get(id) as IWorkspace;
+      return this.workspaces.get(id) as Workspace;
     }
 
     const workspaceName = '@gomarky/core';

@@ -1,5 +1,5 @@
 <template>
-  <div class="root-node" v-if="rootFiles.length > 0">
+  <div class="root-node" v-if="rootFiles.length > 0 && currentFile">
     <workspace-file-list-item :current-file="currentFile" @choose-file="onChooseFile" v-for="file in rootFiles" :key="file.id" :file="file" />
   </div>
 </template>

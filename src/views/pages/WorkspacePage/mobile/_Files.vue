@@ -1,5 +1,7 @@
 <template>
-  <div class="files"></div>
+  <div class="files">
+    files
+  </div>
 </template>
 
 <script lang="ts" setup>

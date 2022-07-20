@@ -29,17 +29,3 @@ export interface ISocketMessageResponse {
   type: SocketCommandType;
   data: any;
 }
-
-export interface ISocketService {
-  readonly onMessage: IEvent<ISocketMessageResponse>;
-
-  createOrEnterRoom(noteId: Note.NoteId): void;
-
-  connect(): Promise<void>;
-
-  send<T>(payload: T & IBaseSocketMessagePayload): void;
-
-  disconnect(): void;
-}
-
-export const ISocketService = createDecorator<ISocketService>('socketService');

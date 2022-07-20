@@ -29,13 +29,14 @@ const editor = new EditorInstance('', 'plain', 'light');
 const workspaceId = route.params.workspaceId as string;
 const workspace = await workspaceService.loadWorkspacebyId(workspaceId);
 
-workspace.channel.onMessage(() => {
-    console.log('message received');
+workspace.connection.onMessage(() => {
+    editor.renderer.clear();
+    editor.renderer.setText('import test');
 })
 
 onMounted(() => {
     editor.renderer.mount('#root');
-    editor.renderer.setText('');
+    editor.renderer.clear();
     editor.renderer.body.setFormat('plain');
     editor.renderer.display.setFullScreen();
 });
