@@ -19,7 +19,7 @@ export default { name: 'WorkspaceDesktopPage' };
 import WorkspaceSidebarMenu from '@/views/components/workspace/WorkspaceSidebarMenu.vue';
 import WorkspaceFileListSection from '@/views/components/workspace/WorkspaceFileList.vue';
 import { EditorInstance } from '@/code/editor/browser/editor';
-import { onMounted } from 'vue';
+import { inject, onMounted } from 'vue';
 import * as markybox from '@/core';
 import { IWorkspaceFile } from '@/code/workspace/common/workspace-file';
 
@@ -28,6 +28,9 @@ const editor = new EditorInstance('', 'plain', 'light');
 
 const workspaceId = route.params.workspaceId as string;
 const workspace = await workspaceService.loadWorkspacebyId(workspaceId);
+
+inject('workspace', workspace);
+inject('editor', editor);
 
 workspace.connection.onMessage(() => {
     editor.renderer.clear();
@@ -38,6 +41,7 @@ onMounted(() => {
     editor.renderer.mount('#root');
     editor.renderer.clear();
     editor.renderer.body.setFormat('plain');
+    editor.renderer.setTheme('dark');
     editor.renderer.display.setFullScreen();
 });
 

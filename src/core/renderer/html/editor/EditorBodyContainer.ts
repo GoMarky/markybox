@@ -36,6 +36,8 @@ export class MHTMLEditorBody extends GlyphDOMElement<HTMLDivElement> {
   private readonly partitionLayer: MPartitionLayer;
   private readonly visitorMap: Map<string, IVisitor> = new Map();
 
+  public rootElement: HTMLElement | null = null;
+
   constructor(
     private readonly storage: EditorStorage,
     private readonly renderer: HTMLRenderer,
@@ -119,8 +121,12 @@ export class MHTMLEditorBody extends GlyphDOMElement<HTMLDivElement> {
   public mount(root: HTMLElement): void {
     this.createHTMLElement(root);
 
-    const onRootClick = (_: MouseEvent) => {
+    this.rootElement = root;
+
+    const onRootClick = (event: MouseEvent) => {
       this.renderer.unlock();
+
+      this.renderer.currentState.onClick(event);
     };
 
     const onOutsideClick = useOutsideClick(root, () => {

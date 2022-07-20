@@ -1,5 +1,4 @@
 import { BaseLayer } from '@/core/renderer/html/layers/BaseLayer';
-import { HTMLRenderer } from '@/core';
 import { EditorCSSName } from '@/core/renderer/html/common/helpers';
 
 export class TextContainerLayer extends BaseLayer {

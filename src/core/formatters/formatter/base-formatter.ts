@@ -1,7 +1,5 @@
 import { BaseObject } from '@/core/objects/BaseObject';
 import { EditorLang } from '@/core';
-import { EditorBodyNavigator } from '@/core/renderer/html/editor/EditorBodyNavigator';
-import { EditorRowsController } from '@/core/renderer/html/editor/EditorRowsController';
 import { IAbstractKeyApplicator } from '@/core/formatters/formatter/base-applicator';
 import { IAbstractFormatterFactory } from '@/core/formatters/formatter/base-factory';
 import { EditorGlobalContext } from '@/core/renderer/html/system/EditorGlobalContext';
@@ -9,6 +7,7 @@ import { EditorGlobalContext } from '@/core/renderer/html/system/EditorGlobalCon
 export enum CodeStatement {
   Text = 'text',
   VariableDeclaration = 'VariableDeclaration',
+  GlobalVariable = 'GlobalVariable',
 }
 
 export abstract class BaseFormatter extends BaseObject {

@@ -57,7 +57,7 @@ export class HTMLRenderer extends BaseObject implements IAbstractRenderer {
     const body = this.body = new MHTMLEditorBody(storage, this, context);
     const command = this.commandCenter = new EditorCommandCenter(context);
 
-    this.theme = new EditorThemeService();
+    this.theme = new EditorThemeService(body);
     this.clipboard = new UserClipboardController();
     this.navigatorManager = new EditorSimpleNavigator(controller, display, storage);
 
@@ -115,6 +115,8 @@ export class HTMLRenderer extends BaseObject implements IAbstractRenderer {
     this.body.addVisitor('hint', new UserTextHintVisitor(navigator));
     this.body.addVisitor('keyword', new KeywordCheckerVisitor(body));
 
+    this.theme.init();
+
     this.registerListeners();
 
     this.$isMount = true;
@@ -142,6 +144,10 @@ export class HTMLRenderer extends BaseObject implements IAbstractRenderer {
 
   public setFormat(lang: EditorLang): void {
     this.body.setFormat(lang);
+  }
+
+  public setTheme(theme: EditorTheme): void {
+    this.theme.setTheme(theme);
   }
 
   private registerListeners(): void {

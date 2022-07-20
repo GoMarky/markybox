@@ -1,4 +1,7 @@
 export const EditorCSSName = {
+  LightTheme: 'marky_light-theme',
+  DarkTheme: 'marky_dark-theme',
+
   Identifier: 'marky__identifier',
   IdentifierName: 'marky__identifier-name',
   IdentifierString: 'marky__identifier-string',

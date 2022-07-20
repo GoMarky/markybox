@@ -1,18 +1,82 @@
-@import 'marky-keyword-style.css';
-
-:root {
+.marky.marky_light-theme {
+    /* editor colors */
     --marky-text-color: #222;
     --marky-background-color: #fff;
     --marky-background-color-secondary: #e8e8e8;
     --marky-selection-color: #b5d5ff;
     --marky-active-line-color: rgba(0, 0, 0, 0.071);
 
+    --marky-user-caret-color: #0079F2;
+
     --marky-selection-z-index: 400;
     --marky-layer-caret-label-z-index: 500;
     --marky-textarea-z-index: 100;
     --marky-layer-z-index: 300;
     --marky-layer-context-menu: 600;
+
+    /* keywords color */
+    --marky-identifier-color: #c800a4;
+    --marky-identifier-name-color: #2858b3;
+    --marky-class-name-color: #c79229;
+    --marky-string-color: #4bad4d;
+    --marky-comment-color: #008E00;
+    --marky-type-color: #689720;
+    --marky-number-color: #3a00dc;
 }
+
+.marky.marky_dark-theme {
+    /* editor colors */
+    --marky-text-color: #fff;
+    --marky-background-color: #1c2333;
+    --marky-background-color-secondary: #0e1525;
+    --marky-selection-color: #004182;;
+    --marky-active-line-color: #2536633d;
+    --marky-user-caret-color: #0079F2;
+
+    --marky-selection-z-index: 400;
+    --marky-layer-caret-label-z-index: 500;
+    --marky-textarea-z-index: 100;
+    --marky-layer-z-index: 300;
+    --marky-layer-context-menu: 600;
+
+    /* keywords color */
+    --marky-identifier-color: #c800a4;
+    --marky-identifier-name-color: #F2E088;
+    --marky-class-name-color: #c79229;
+    --marky-string-color: #4bad4d;
+    --marky-comment-color: #009118;
+    --marky-type-color: #689720;
+    --marky-number-color: #C4E581;
+}
+
+.marky__type {
+    color: var(--marky-type-color);
+}
+
+.marky__comment {
+    color: var(--marky-comment-color);
+}
+
+.marky__identifier {
+    color: var(--marky-identifier-color);
+}
+
+.marky__number {
+    color: var(--marky-number-color);
+}
+
+.marky__identifier-name {
+    color: var(--marky-identifier-name-color);
+}
+
+.marky__class-name {
+    color: var(--marky-class-name-color);
+}
+
+.marky__identifier-string {
+    color: var(--marky-string-color);
+}
+
 
 .marky {
     display: flex;
@@ -114,8 +178,8 @@
 
 .marky__layer-caret {
     font-size: 12px;
-    background-color: blue;
-    color: blue;
+    background-color: var(--marky-user-caret-color);
+    color: var(--marky-user-caret-color);
     opacity: 0.5;
     height: 1.5em;
     width: 3px;

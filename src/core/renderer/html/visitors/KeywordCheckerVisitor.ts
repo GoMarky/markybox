@@ -17,6 +17,8 @@ function getClassNameByStatement(statement?: CodeStatement): string | undefined 
   switch (statement) {
     case CodeStatement.VariableDeclaration:
       return EditorCSSName.Identifier;
+    case CodeStatement.GlobalVariable:
+      return EditorCSSName.IdentifierName;
     case CodeStatement.Text:
     default:
       return undefined;
