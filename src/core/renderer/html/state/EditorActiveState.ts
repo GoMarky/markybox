@@ -103,12 +103,16 @@ export class EditorActiveState extends AbstractEditorState {
   }
 
   public onClick(event: MouseEvent): void {
-    const { display, storage, selection } = this.context;
+    const { display, storage, selection, body } = this.context;
 
     const isLeftMouseKey = event.button === 0;
 
     if (!isLeftMouseKey) {
       return;
+    }
+
+    if (body.contextMenu.isOpen) {
+      body.contextMenu.removeMenu();
     }
 
     const position = display.toEditorPosition(event);
@@ -196,10 +200,6 @@ export class EditorActiveState extends AbstractEditorState {
         title: 'Paste',
         action: () => console.log('paste'),
       },
-      {
-        title: 'Console',
-        action: () => console.log('console'),
-      }
     ]);
   }
 

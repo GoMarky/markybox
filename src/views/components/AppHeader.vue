@@ -167,6 +167,11 @@ export default window.workbench.createComponent((accessor) => {
     font-size: 0
     outline-color: var(--foreground-default)
 
+  &__menu
+    display: flex
+    font-size: 28px
+    cursor: pointer
+
   &__logo-wrapper
     margin-right: 7px
 
@@ -182,10 +187,6 @@ export default window.workbench.createComponent((accessor) => {
     font-weight: bold
     line-height: 1
     text-align: left
-
-.page-header__menu
-  display: flex
-  font-size: 28px
 
 .page-header__navigation
   text-align: center

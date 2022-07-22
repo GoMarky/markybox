@@ -1,36 +1,33 @@
 <template>
     <div class="workspace">
         <WorkspaceSidebarMenu class="workspace__section workspace__section_sidebar" />
-        <WorkspaceFileListSection @choose-file="onChooseFile" class="workspace__section" />
+        <WorkspaceFileListSection class="workspace__section" />
         <div id="root" class="marky">
         </div>
     </div>
 </template>
 
 <script lang="ts">
-import { IWorkspaceService } from '@/code/workspace/common/workspace-service';
-import { useRoute } from 'vue-router';
-const workspaceService = window.workbench.getService(IWorkspaceService);
-
 export default { name: 'WorkspaceDesktopPage' };
 </script>
 
 <script lang="ts" setup>
 import WorkspaceSidebarMenu from '@/views/components/workspace/WorkspaceSidebarMenu.vue';
 import WorkspaceFileListSection from '@/views/components/workspace/WorkspaceFileList.vue';
+import { IWorkspaceService } from '@/code/workspace/common/workspace-service';
 import { EditorInstance } from '@/code/editor/browser/editor';
-import { inject, onMounted } from 'vue';
-import * as markybox from '@/core';
-import { IWorkspaceFile } from '@/code/workspace/common/workspace-file';
+import { provide, onMounted } from 'vue';
+import { useRoute } from 'vue-router';
 
 const route = useRoute();
 const editor = new EditorInstance('', 'plain', 'light');
+const workspaceService = window.workbench.getService(IWorkspaceService);
 
 const workspaceId = route.params.workspaceId as string;
 const workspace = await workspaceService.loadWorkspacebyId(workspaceId);
 
-inject('workspace', workspace);
-inject('editor', editor);
+provide('workspace', workspace);
+provide('editor', editor);
 
 workspace.connection.onMessage(() => {
     editor.renderer.clear();
@@ -44,13 +41,6 @@ onMounted(() => {
     editor.renderer.setTheme('dark');
     editor.renderer.display.setFullScreen();
 });
-
-const onChooseFile = (file: IWorkspaceFile) => {
-    workspace.requestFile('');
-
-    const lang = markybox.getValuableSyntax(file.name);
-    editor.renderer.body.setFormat(lang);
-}
 </script>
 
 <style lang="sass" scoped>

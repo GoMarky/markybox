@@ -1,17 +1,12 @@
-# markybox - a text sandbox for you code
+# markybox - a simple note codekeeper for you.
 
 ## Documentation
 - **Notion:** https://gomarky.notion.site/markybox-4e4b90c6cab548539a410aad3f11a37c
 
 ## Links
-
-Prod
+Production link
 
 [code.gomarky.tech](code.gomarky.tech)
-
-### Development environment
-
-### Production environment
 
 ## List of dev / build commands and their descriptions.
 

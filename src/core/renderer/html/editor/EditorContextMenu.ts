@@ -5,6 +5,7 @@ import { IPosition } from '@/core/app/common';
 import { EditorCSSName } from '@/core/renderer/html/common/helpers';
 import { ContextMenuLayer } from '@/core/renderer/html/layers/ContextMenuLayer';
 import { removeChildren } from '@/base/dom';
+import { isUndefinedOrNull } from '@/base/types';
 
 export interface IContextMenuItem {
   title: string;
@@ -65,27 +66,45 @@ class CustomContextMenubar extends GlyphDOMElement {
 
     this._el.appendChild(fragment);
   }
+
+  public dispose() {
+    this._el.remove();
+    super.dispose();
+  }
 }
 
 export class EditorCustomContextMenu extends Disposable {
   private layer: ContextMenuLayer;
+  private menu: CustomContextMenubar | null = null;
 
   constructor(private readonly context: EditorGlobalContext) {
     super();
   }
 
+  public get isOpen(): boolean {
+    return !isUndefinedOrNull(this.menu);
+  }
+
   public createMenu(position: IPosition, items: IContextMenuItem[]): void {
     const { display } = this.context;
 
-    const { top, left } = display.toDOMPosition(position);
-    const menu = new CustomContextMenubar(items);
+    if (this.menu) {
+      this.menu.dispose();
+      this.menu = null;
+    }
 
-    removeChildren(this.layer.el);
+    const { top, left } = display.toDOMPosition(position);
+    const menu = this.menu = new CustomContextMenubar(items);
 
     this.layer.el.appendChild(menu.el);
     this.layer.show();
     this.layer.top(top);
     this.layer.left(left);
+  }
+
+  public removeMenu(): void {
+    this.menu?.dispose();
+    this.menu = null;
   }
 
   public mount(body: HTMLElement): void {

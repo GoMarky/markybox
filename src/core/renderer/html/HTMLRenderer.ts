@@ -22,6 +22,7 @@ import { EditorGlobalContext } from '@/core/renderer/html/system/EditorGlobalCon
 
 import './actions/editor-actions';
 import { EditorThemeService } from './system/EditorTheme';
+import { EditorMouseHandler } from '@/core/renderer/html/system/EditorMouseHandler';
 
 export class HTMLRenderer extends BaseObject implements IAbstractRenderer {
   public readonly storage: EditorStorage;
@@ -35,6 +36,8 @@ export class HTMLRenderer extends BaseObject implements IAbstractRenderer {
   public readonly context: EditorGlobalContext;
   public readonly commandCenter: EditorCommandCenter;
   public readonly theme: EditorThemeService;
+
+  public readonly mouse: EditorMouseHandler = new EditorMouseHandler();
 
   public currentState: AbstractEditorState;
   public $isMount: boolean = false;
@@ -56,6 +59,9 @@ export class HTMLRenderer extends BaseObject implements IAbstractRenderer {
     const context = this.context = new EditorGlobalContext(navigator, controller, storage, display, selection);
     const body = this.body = new MHTMLEditorBody(storage, this, context);
     const command = this.commandCenter = new EditorCommandCenter(context);
+
+    this.body.addVisitor('hint', new UserTextHintVisitor(navigator));
+    this.body.addVisitor('keyword', new KeywordCheckerVisitor(body));
 
     this.theme = new EditorThemeService(body);
     this.clipboard = new UserClipboardController();
@@ -106,17 +112,11 @@ export class HTMLRenderer extends BaseObject implements IAbstractRenderer {
     this.display.mount(rootElement);
 
     const bodyElement = this.body.el;
-
     this.navigator.mount(bodyElement);
     this.selection.mount(bodyElement);
 
     this.unlock();
-
-    this.body.addVisitor('hint', new UserTextHintVisitor(navigator));
-    this.body.addVisitor('keyword', new KeywordCheckerVisitor(body));
-
     this.theme.init();
-
     this.registerListeners();
 
     this.$isMount = true;
@@ -184,6 +184,10 @@ export class HTMLRenderer extends BaseObject implements IAbstractRenderer {
     // Select all code
     this.disposables.add(
       windowShortcut.registerShortcut(SELECT_ALL_KEY, (event) => {
+        if (this._isLock) {
+          return;
+        }
+
         event.preventDefault();
         this.selection.selectAll();
       })
@@ -192,6 +196,10 @@ export class HTMLRenderer extends BaseObject implements IAbstractRenderer {
     // on Tab action
     this.disposables.add(
       windowShortcut.registerShortcut('Tab', (event) => {
+        if (this._isLock) {
+          return;
+        }
+
         event.preventDefault();
         this.controller.addIndentToCurrentRow();
       })
@@ -200,8 +208,11 @@ export class HTMLRenderer extends BaseObject implements IAbstractRenderer {
     /// Redo action
     this.disposables.add(
       windowShortcut.registerShortcut(REDO_KEY, (event) => {
-        event.preventDefault();
+        if (this._isLock) {
+          return;
+        }
 
+        event.preventDefault();
         void this.commandCenter.executeCommand('editor.redo');
       })
     );
@@ -209,6 +220,10 @@ export class HTMLRenderer extends BaseObject implements IAbstractRenderer {
     // Undo action
     this.disposables.add(
       windowShortcut.registerShortcut(UNDO_KEY, (event) => {
+        if (this._isLock) {
+          return;
+        }
+
         event.preventDefault();
 
         void this.commandCenter.executeCommand('editor.undo');
@@ -218,6 +233,10 @@ export class HTMLRenderer extends BaseObject implements IAbstractRenderer {
     // Shift+Tab action
     this.disposables.add(
       windowShortcut.registerShortcut('Shift+Tab', (event) => {
+        if (this._isLock) {
+          return;
+        }
+
         event.preventDefault();
         this.controller.removeIndentFromCurrentRow();
       })
@@ -226,9 +245,12 @@ export class HTMLRenderer extends BaseObject implements IAbstractRenderer {
     // Copy all code
     this.disposables.add(
       windowShortcut.registerShortcut(COPY_KEY, (event) => {
+        if (this._isLock) {
+          return;
+        }
+
         event.preventDefault();
         const text = this.selection.getSelectedText();
-
         void this.clipboard.write(text);
       })
     );
@@ -236,9 +258,12 @@ export class HTMLRenderer extends BaseObject implements IAbstractRenderer {
     // Paste all code from clipboard
     this.disposables.add(
       windowShortcut.registerShortcut(PASTE_KEY, async (event) => {
+        if (this._isLock) {
+          return;
+        }
+
         event.preventDefault();
         const text = await this.clipboard.read();
-
         this.controller.setWholeText(text);
       })
     );
@@ -248,6 +273,8 @@ export class HTMLRenderer extends BaseObject implements IAbstractRenderer {
     const onKeyUp = (event: KeyboardEvent) => this.currentState.onKeyUp(event);
 
     const body = this.body.el;
+
+    this.mouse.init(body);
 
     body.addEventListener('click', onMousedown);
     window.addEventListener('keydown', onKeydown);
