@@ -3,7 +3,7 @@ import { IAbstractKeyApplicator } from '@/core/formatters/formatter/base-applica
 import { PlainKeyApplicator } from '@/core/formatters/plain/plain-applicator';
 import { IAbstractFormatterFactory } from '@/core/formatters/formatter/base-factory';
 import { PlainFactory } from '@/core/formatters/plain/plain-factory';
-import { EditorGlobalContext } from '@/core/renderer/html/system/EditorGlobalContext';
+import { EditorGlobalContext } from '@/core/renderer/system/EditorGlobalContext';
 
 export class PlainFormatter extends BaseFormatter {
   public readonly applicator: IAbstractKeyApplicator;

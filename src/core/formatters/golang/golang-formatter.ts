@@ -3,7 +3,7 @@ import { IAbstractKeyApplicator } from '@/core/formatters/formatter/base-applica
 import { IAbstractFormatterFactory } from '@/core/formatters/formatter/base-factory';
 import { GolangFactory } from '@/core/formatters/golang/golang-factory';
 import { GolangKeyApplicator } from '@/core/formatters/golang/golang-applicator';
-import { EditorGlobalContext } from '@/core/renderer/html/system/EditorGlobalContext';
+import { EditorGlobalContext } from '@/core/renderer/system/EditorGlobalContext';
 
 const Regexp = {
   VariableStatement: /^(break|default|func|interface|select|case|defer|go|map|struct|chan|else|goto|package|switch|const|fallthrough|if|range|type|continue|for|import|return|var$)/,

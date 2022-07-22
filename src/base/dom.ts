@@ -1,3 +1,5 @@
+import { Event } from '@sentry/browser';
+
 export const useOutsideClick = (element: HTMLElement, callback: () => void) => (
   event: MouseEvent
 ): void => {

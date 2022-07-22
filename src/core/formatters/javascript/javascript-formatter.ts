@@ -3,7 +3,7 @@ import { IAbstractKeyApplicator } from '@/core/formatters/formatter/base-applica
 import { JavascriptKeyApplicator } from '@/core/formatters/javascript/javascript-applicator';
 import { IAbstractFormatterFactory } from '@/core/formatters/formatter/base-factory';
 import { JavascriptFactory } from '@/core/formatters/javascript/javascript-factory';
-import { EditorGlobalContext } from '@/core/renderer/html/system/EditorGlobalContext';
+import { EditorGlobalContext } from '@/core/renderer/system/EditorGlobalContext';
 
 const GLOBAL_VARIABLES_LIST = [
   "URIError",

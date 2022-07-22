@@ -1,8 +1,8 @@
-import { BaseObject } from '@/core/objects/BaseObject';
+import { BaseObject } from '@/core/BaseObject';
 import { EditorLang } from '@/core';
 import { IAbstractKeyApplicator } from '@/core/formatters/formatter/base-applicator';
 import { IAbstractFormatterFactory } from '@/core/formatters/formatter/base-factory';
-import { EditorGlobalContext } from '@/core/renderer/html/system/EditorGlobalContext';
+import { EditorGlobalContext } from '@/core/renderer/system/EditorGlobalContext';
 
 export enum CodeStatement {
   Text = 'text',

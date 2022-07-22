@@ -1,5 +1,5 @@
-import { HTMLRenderer } from '@/core/renderer/html/HTMLRenderer';
-import { EditorLang, EditorTheme } from '@/core/renderer/html/editor/EditorBodyContainer';
+import { HTMLRenderer } from '@/core/renderer/HTMLRenderer';
+import { EditorLang, EditorTheme } from '@/core/renderer/editor/EditorBodyContainer';
 
 function sayHello(): void {
   const args = [

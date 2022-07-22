@@ -1,6 +1,6 @@
-import { GlyphNodeFragment } from '@/core/renderer/html/common/GlyphNodeFragment';
-import { GlyphDOMNode } from '@/core/renderer/html/glyphs/GlyphDOMNode';
-import { GlyphParenNode, ParenType } from '@/core/renderer/html/glyphs/GlyphParenNode';
+import { GlyphNodeFragment } from '@/core/renderer/common/GlyphNodeFragment';
+import { GlyphDOMNode } from '@/core/renderer/glyphs/GlyphDOMNode';
+import { GlyphParenNode, ParenType } from '@/core/renderer/glyphs/GlyphParenNode';
 
 export class MHTMLPythonNodeFragment extends GlyphNodeFragment {
   constructor() {

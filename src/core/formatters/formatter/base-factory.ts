@@ -1,6 +1,6 @@
-import { BaseObject } from '@/core/objects/BaseObject';
-import { GlyphRowElement } from '@/core/renderer/html/common/GlyphRowElement';
-import { GlyphNodeFragment } from '@/core/renderer/html/common/GlyphNodeFragment';
+import { BaseObject } from '@/core/BaseObject';
+import { GlyphRowElement } from '@/core/renderer/common/GlyphRowElement';
+import { GlyphNodeFragment } from '@/core/renderer/common/GlyphNodeFragment';
 
 export interface IAbstractFormatterFactory {
   createGlyphRow(): GlyphRowElement;

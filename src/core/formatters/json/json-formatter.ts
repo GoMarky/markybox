@@ -3,7 +3,7 @@ import { IAbstractKeyApplicator } from '@/core/formatters/formatter/base-applica
 import { JSONKeyApplicator } from '@/core/formatters/json/json-applicator';
 import { IAbstractFormatterFactory } from '@/core/formatters/formatter/base-factory';
 import { JSONFactory } from '@/core/formatters/json/json-factory';
-import { EditorGlobalContext } from '@/core/renderer/html/system/EditorGlobalContext';
+import { EditorGlobalContext } from '@/core/renderer/system/EditorGlobalContext';
 
 export class JSONCodeFormatter extends BaseFormatter {
   public readonly applicator: IAbstractKeyApplicator;

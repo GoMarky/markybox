@@ -1,8 +1,8 @@
-import { BaseObject } from '@/core/objects/BaseObject';
+import { BaseObject } from '@/core/BaseObject';
 import { CriticalError } from '@/base/errors';
 import { throttle } from '@/base/async';
-import { GlyphRowElement } from '@/core/renderer/html/common/GlyphRowElement';
-import { EditorGlobalContext } from '@/core/renderer/html/system/EditorGlobalContext';
+import { GlyphRowElement } from '@/core/renderer/common/GlyphRowElement';
+import { EditorGlobalContext } from '@/core/renderer/system/EditorGlobalContext';
 import { Counter } from '@/base/counter';
 
 export interface IAbstractKeyApplicator {

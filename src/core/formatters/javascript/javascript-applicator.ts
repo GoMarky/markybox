@@ -1,8 +1,8 @@
 import { AbstractKeyApplicator, IAbstractKeyApplicator } from '@/core/formatters/formatter/base-applicator';
 import { copyStringNumberOfTimes } from '@/base/string';
-import { BASE_INDENT_VALUE } from '@/core/renderer/html/common/helpers';
-import { ParenType } from '@/core/renderer/html/glyphs/GlyphParenNode';
-import { EditorGlobalContext } from '@/core/renderer/html/system/EditorGlobalContext';
+import { BASE_INDENT_VALUE } from '@/core/renderer/common/helpers';
+import { ParenType } from '@/core/renderer/glyphs/GlyphParenNode';
+import { EditorGlobalContext } from '@/core/renderer/system/EditorGlobalContext';
 
 export class JavascriptKeyApplicator extends AbstractKeyApplicator implements IAbstractKeyApplicator {
   constructor(context: EditorGlobalContext) {
