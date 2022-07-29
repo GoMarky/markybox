@@ -1,4 +1,4 @@
-import { Disposable } from '@/platform/lifecycle/common/lifecycle';
+import { Disposable } from '@/app/platform/lifecycle/common/lifecycle';
 import { EditorBodyNavigator } from '@/core/renderer/editor/EditorBodyNavigator';
 import { EditorRowsController } from '@/core/renderer/editor/EditorRowsController';
 import { MHTMLEditorBody } from '@/core/renderer/editor/EditorBodyContainer';

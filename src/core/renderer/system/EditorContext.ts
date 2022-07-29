@@ -1,4 +1,4 @@
-import { Disposable } from '@/platform/lifecycle/common/lifecycle';
+import { Disposable } from '@/app/platform/lifecycle/common/lifecycle';
 
 export interface IContextKey<T> {
   set(value: T): void;

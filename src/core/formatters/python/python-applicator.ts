@@ -32,7 +32,12 @@ export class PythonKeyApplicator extends AbstractKeyApplicator implements IAbstr
       indentGlyphs.push(glyph);
     }
 
-    indentRow.renderGlyphs(indentGlyphs);
+    const text = indentGlyphs.reduce((acc, glyph) => {
+      acc += glyph.text
+      return acc;
+    }, '');
+
+    indentRow.setText(text);
 
     // Выставляем нужно количество пробелов в зависимости от количества левых скобок
     const indentWhitespace = copyStringNumberOfTimes(BASE_INDENT_VALUE, amountLeftParen);

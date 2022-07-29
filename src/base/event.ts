@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/await-thenable */
 
-import { Disposable, IDisposable } from '@/platform/lifecycle/common/lifecycle';
+import { Disposable, IDisposable } from '@/app/platform/lifecycle/common/lifecycle';
 import { FunctionLike } from '@/types/common';
 import { LinkedList } from '@/base/linked-list';
 import { onUnexpectedError } from '@/base/errors';

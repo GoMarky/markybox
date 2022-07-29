@@ -1,4 +1,4 @@
-import { Disposable, DisposableStore } from '@/platform/lifecycle/common/lifecycle';
+import { Disposable, DisposableStore } from '@/app/platform/lifecycle/common/lifecycle';
 import { nanoid } from 'nanoid';
 
 export abstract class BaseObject extends Disposable {

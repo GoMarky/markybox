@@ -3,7 +3,7 @@ import { toPixel } from '@/base/dom';
 import { Char } from '@/base/char';
 import { GlyphDOMNode } from '@/core/renderer/glyphs/GlyphDOMNode';
 import { isSystemChar } from '@/core/common';
-import { toDisposable } from '@/platform/lifecycle/common/lifecycle';
+import { toDisposable } from '@/app/platform/lifecycle/common/lifecycle';
 import { EditorCSSName } from '@/core/renderer/common/helpers';
 import { GlyphDOMElement } from '@/core/renderer/common/GlyphDOMElement';
 

@@ -1,4 +1,4 @@
-import { Disposable, IDisposable, toDisposable } from '@/platform/lifecycle/common/lifecycle';
+import { Disposable, IDisposable, toDisposable } from '@/app/platform/lifecycle/common/lifecycle';
 
 type Listener = (...args: any[]) => void;
 

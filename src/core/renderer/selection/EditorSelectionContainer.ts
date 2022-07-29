@@ -4,7 +4,7 @@ import { UserSelectionLayer } from '@/core/renderer/layers/UserSelectionLayer';
 import { HTMLRenderer } from '@/core';
 import { EditorDisplayController } from '@/core/renderer/system/EditorDisplayController';
 import { EditorStorage } from '@/core/renderer/system/EditorStorage';
-import { toDisposable } from '@/platform/lifecycle/common/lifecycle';
+import { toDisposable } from '@/app/platform/lifecycle/common/lifecycle';
 import { debounce, throttle } from '@/base/async';
 import { getFirstElement, getLastElement } from '@/base/array';
 import { CriticalError } from '@/base/errors';

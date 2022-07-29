@@ -11,7 +11,7 @@ export class Barrier {
    * @author Teodor_Dre <swen295@gmail.com>
    *
    * @description
-   *  Create barrier for code.
+   *  Create barrier for app.
    *  It create promise that you can resolve in any time you want. (By calling open method).
    */
   constructor() {

@@ -168,7 +168,7 @@ module.exports = ({ mode } = { mode: 'production' }) => {
   //#endregion CSS
 
   return webpackMerge({
-        entry: path.resolve(__dirname, 'src/main.ts'),
+        entry: path.resolve(__dirname, 'src/app/main.ts'),
         output: {
           filename,
           sourceMapFilename,

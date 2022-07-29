@@ -18,7 +18,7 @@ import { isUndefinedOrNull } from '@/base/types';
 import { EditorGlobalContext } from '@/core/renderer/system/EditorGlobalContext';
 import { GlyphDOMElement } from '@/core/renderer/common/GlyphDOMElement';
 import { useOutsideClick } from '@/base/dom';
-import { toDisposable } from '@/platform/lifecycle/common/lifecycle';
+import { toDisposable } from '@/app/platform/lifecycle/common/lifecycle';
 import { EditorCustomContextMenu } from '@/core/renderer/editor/EditorContextMenu';
 
 export type EditorLang = 'cpp' | 'python' | 'js' | 'json' | 'plain' | 'golang';

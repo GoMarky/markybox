@@ -15,7 +15,7 @@ import { UserTextHintVisitor } from '@/core/renderer/visitors/UserTextHintVisito
 import { KeywordCheckerVisitor } from '@/core/renderer/visitors/KeywordCheckerVisitor';
 import { EditorSimpleNavigator } from '@/core/renderer/editor/EditorSimpleNavigator';
 import { IAbstractRenderer } from '@/core/renderer';
-import { toDisposable } from '@/platform/lifecycle/common/lifecycle';
+import { toDisposable } from '@/app/platform/lifecycle/common/lifecycle';
 import { isMac } from '@/base/platform';
 import { CommandsRegistry, EditorCommandCenter, NoHistoryCommandImpl } from '@/core/renderer/commands/command-manager';
 import { EditorGlobalContext } from '@/core/renderer/system/EditorGlobalContext';
@@ -178,7 +178,7 @@ export class HTMLRenderer extends BaseObject implements IAbstractRenderer {
     const COPY_KEY = `${meta}+C`;
     const PASTE_KEY = `${meta}+V`;
 
-    // Select all code
+    // Select all app
     this.disposables.add(
       windowShortcut.registerShortcut(SELECT_ALL_KEY, (event) => {
         if (this._isLock) {
@@ -239,7 +239,7 @@ export class HTMLRenderer extends BaseObject implements IAbstractRenderer {
       })
     )
 
-    // Copy all code
+    // Copy all app
     this.disposables.add(
       windowShortcut.registerShortcut(COPY_KEY, (event) => {
         if (this._isLock) {
@@ -252,7 +252,7 @@ export class HTMLRenderer extends BaseObject implements IAbstractRenderer {
       })
     );
 
-    // Paste all code from clipboard
+    // Paste all app from clipboard
     this.disposables.add(
       windowShortcut.registerShortcut(PASTE_KEY, async (event) => {
         if (this._isLock) {

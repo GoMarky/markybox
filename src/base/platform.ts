@@ -1,4 +1,4 @@
-import { IServiceIdentifier, IServicesAccessor } from '@/platform/instantiation/common/instantiation';
+import { IServiceIdentifier, IServicesAccessor } from '@/app/platform/instantiation/common/instantiation';
 
 enum SystemOS {
   MacOS = 'MacOS',

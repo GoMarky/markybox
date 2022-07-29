@@ -1,5 +1,5 @@
 import * as markybox from '@/core';
-import { EditorActionType } from '@/code/socket/common/socket-service';
+import { EditorActionType } from '@/app/socket/common/socket-service';
 import { IPosition, ITuplePosition } from '../../src/core/common';
 import { ArrayIterator } from '@/base/iterator';
 

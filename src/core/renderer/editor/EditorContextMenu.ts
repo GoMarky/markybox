@@ -1,4 +1,4 @@
-import { Disposable, toDisposable } from '@/platform/lifecycle/common/lifecycle';
+import { Disposable, toDisposable } from '@/app/platform/lifecycle/common/lifecycle';
 import { EditorGlobalContext } from '@/core/renderer/system/EditorGlobalContext';
 import { GlyphDOMElement } from '@/core/renderer/common/GlyphDOMElement';
 import { IPosition } from '@/core/common';

@@ -6,7 +6,7 @@ import { IRendererDisplay } from '@/core/renderer';
 import { debounce } from '@/base/async';
 import { EditorGutterContainer } from '@/core/renderer/editor/EditorGutterContainer';
 import { EditorStorage } from '@/core/renderer/system/EditorStorage';
-import { toDisposable } from '@/platform/lifecycle/common/lifecycle';
+import { toDisposable } from '@/app/platform/lifecycle/common/lifecycle';
 
 export class EditorDisplayController extends BaseObject implements IRendererDisplay {
   private root: HTMLElement;

@@ -1,5 +1,5 @@
-import { Disposable } from '@/platform/lifecycle/common/lifecycle';
+import { Disposable } from '@/app/platform/lifecycle/common/lifecycle';
 
 export class DragNDropHandler extends Disposable {
-  
+
 }

@@ -137,26 +137,9 @@ export class GlyphRowElement extends GlyphDOMElement<HTMLDivElement> {
   }
 
   public accept(visitors: IVisitor[]): void {
-    if (!this.fragment) {
-      throw new CriticalError(`this.fragment must be defined`);
-    }
-
     const { fragment } = this;
 
     visitors.forEach((visitor) => visitor.visit(fragment));
-  }
-
-  public renderGlyphs(children: GlyphDOMNode[]): void {
-    this.clearNodeFragment();
-
-    const text = children.reduce((acc, glyph) => {
-      acc += glyph.text
-      return acc;
-    }, '');
-
-    this._text = text;
-
-    this.doRender(children);
   }
 
   public dispose(): void {

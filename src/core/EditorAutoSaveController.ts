@@ -1,6 +1,6 @@
 import { BaseObject } from '@/core/BaseObject';
 import { Emitter, IEvent } from '@/base/event';
-import { Note } from '@/code/notes/common/notes';
+import { Note } from '@/app/code/notes/common/notes';
 import { HTMLRenderer } from '@/core/index';
 import { debounce } from '@/base/async';
 

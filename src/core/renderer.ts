@@ -1,4 +1,4 @@
-import { IDisposable } from '@/platform/lifecycle/common/lifecycle';
+import { IDisposable } from '@/app/platform/lifecycle/common/lifecycle';
 
 export interface IRendererDisplay {
   setFullScreen(): void;

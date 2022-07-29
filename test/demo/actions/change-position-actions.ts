@@ -1,4 +1,4 @@
-import { EditorActionType } from '@/code/socket/common/socket-service';
+import { EditorActionType } from '@/app/socket/common/socket-service';
 import { IFakeUserInteraction } from '../demo-user-interaction';
 
 export const changePositionActions: IFakeUserInteraction[] = [

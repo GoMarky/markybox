@@ -1,7 +1,7 @@
 import { GlyphDOMNode } from '@/core/renderer/glyphs/GlyphDOMNode';
 import { toPixel } from '@/base/dom';
 import { HTMLRenderer } from '@/core';
-import { toDisposable } from '@/platform/lifecycle/common/lifecycle';
+import { toDisposable } from '@/app/platform/lifecycle/common/lifecycle';
 import { EditorCSSName } from '@/core/renderer/common/helpers';
 import { GlyphDOMElement } from '@/core/renderer/common/GlyphDOMElement';
 

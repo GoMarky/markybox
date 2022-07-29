@@ -1,4 +1,4 @@
-import { Disposable } from '@/platform/lifecycle/common/lifecycle';
+import { Disposable } from '@/app/platform/lifecycle/common/lifecycle';
 import { GlyphNodeFragment } from '@/core/renderer/common/GlyphNodeFragment';
 import { GlyphDOMNode } from '@/core/renderer/glyphs/GlyphDOMNode';
 import { GlyphTextNode } from '@/core/renderer/glyphs/GlyphTextNode';
