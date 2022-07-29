@@ -11,13 +11,5 @@ export class MHTMLPythonNodeFragment extends GlyphNodeFragment {
     this._el = document.createDocumentFragment();
 
     this._children = children;
-
-    for (const glyph of children) {
-      this._el.appendChild(glyph.el);
-
-      if (glyph instanceof GlyphParenNode && glyph.type === ParenType.Colon) {
-        this._hasOpenBrace = true;
-      }
-    }
   }
 }

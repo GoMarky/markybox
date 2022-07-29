@@ -12,8 +12,6 @@ function removeClasses(glyph: GlyphDOMNode): void {
 }
 
 export class GlyphNodeFragment extends GlyphDOMElement<DocumentFragment> {
-  protected _hasOpenBrace: boolean = false;
-  protected _hasCloseBrace: boolean = false;
   protected _children: GlyphDOMNode[] = [];
   public parenDepthLevel: number = 0;
 
@@ -38,16 +36,6 @@ export class GlyphNodeFragment extends GlyphDOMElement<DocumentFragment> {
 
     for (const glyph of children) {
       this._el.appendChild(glyph.el);
-
-      if (glyph instanceof GlyphParenNode) {
-        if (glyph.type === ParenType.OpenBrace) {
-          this._hasOpenBrace = true;
-        }
-
-        if (glyph.type === ParenType.CloseBrace) {
-          this._hasCloseBrace = true;
-        }
-      }
     }
   }
 
@@ -63,14 +51,6 @@ export class GlyphNodeFragment extends GlyphDOMElement<DocumentFragment> {
 
   public first(): GlyphDOMNode | undefined {
     return getFirstElement(this._children);
-  }
-
-  public get hasOpenBrace(): boolean {
-    return this._hasOpenBrace;
-  }
-
-  public get hasCloseBrace(): boolean {
-    return this._hasCloseBrace;
   }
 
   public get children(): GlyphDOMNode[] {

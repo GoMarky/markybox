@@ -50,7 +50,6 @@ export class GlyphRowElement extends GlyphDOMElement<HTMLDivElement> {
 
   public setParent(renderer: HTMLRenderer, index: number): void {
     this._renderer = renderer;
-
     this.index = index;
     const rowElement = document.createElement('div');
     rowElement.classList.add(EditorCSSName.Row);
@@ -285,12 +284,12 @@ export class GlyphRowElement extends GlyphDOMElement<HTMLDivElement> {
     const { body } = this._renderer;
     const { visitors } = body;
 
-    const nodeFragment = this._renderer.body.formatter.factory.createNodeFragment();
+    const nodeFragment = new GlyphNodeFragment();
     nodeFragment.setChildren(children);
     this.fragment = nodeFragment;
 
     this.accept(visitors);
-    this._gutter.expandable = nodeFragment.hasOpenBrace;
+    this._gutter.expandable = false;
     this._el.appendChild(nodeFragment.el);
   }
 }

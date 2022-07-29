@@ -20,19 +20,12 @@ export class GolangKeyApplicator extends AbstractKeyApplicator implements IAbstr
     const indentRow = controller.addRowAt(indentRowIndex);
 
     // Считаем количество отступов (учитываем соседние скобки до этого)
-    const amountLeftParen = controller.getLeftParenAmountFromStartByIndex(indentRowIndex);
+    const amountLeftParen = 1
     // Выставляем нужно количество пробелов в зависимости от количества левых скобок
     const indentWhitespace = copyStringNumberOfTimes(BASE_INDENT_VALUE, amountLeftParen);
     indentRow.setText(indentWhitespace);
 
-    const existRightParenWindow = controller.findClosestRightParenRowDown(indentRowIndex);
-
-    if (existRightParenWindow) {
-      const rightParenRow = controller.addRowAt(rightParenRowIndex);
-      rightParenRow.setText(copyStringNumberOfTimes(BASE_INDENT_VALUE, amountLeftParen - 1));
-    } else {
-      controller.addRowAt(rightParenRowIndex);
-    }
+    controller.addRowAt(rightParenRowIndex);
 
     navigator.setPosition({ row: indentRowIndex, column: indentWhitespace.length });
   }

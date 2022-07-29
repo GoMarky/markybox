@@ -177,7 +177,6 @@ export class JavascriptCodeFormatter extends BaseFormatter {
   }
 
   public parseKeyword(input: string): CodeStatement | undefined {
-
     switch (true) {
       case KEYWORDS_LIST.includes(input):
         return CodeStatement.VariableDeclaration;

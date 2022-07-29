@@ -20,7 +20,7 @@ export class PythonKeyApplicator extends AbstractKeyApplicator implements IAbstr
     // Строчка с пробелами, добавляем ее в редактор
     const indentRow = controller.addRowAt(indentRowIndex);
     // Считаем количество отступов (учитываем соседние скобки до этого)
-    const amountLeftParen = controller.getLeftParenAmountFromStartByIndex(indentRowIndex);
+    const amountLeftParen = 1;
     let _amountLeftParen = amountLeftParen;
 
     const indentGlyphs: GlyphIndentNode[] = [];
@@ -37,14 +37,7 @@ export class PythonKeyApplicator extends AbstractKeyApplicator implements IAbstr
     // Выставляем нужно количество пробелов в зависимости от количества левых скобок
     const indentWhitespace = copyStringNumberOfTimes(BASE_INDENT_VALUE, amountLeftParen);
 
-    const existRightParenWindow = controller.findClosestLeftParenRowDown(indentRowIndex);
-
-    if (existRightParenWindow) {
-      const rightParenRow = controller.addRowAt(rightParenRowIndex);
-      rightParenRow.setText(copyStringNumberOfTimes(BASE_INDENT_VALUE, amountLeftParen - 1));
-    } else {
-      controller.addRowAt(rightParenRowIndex);
-    }
+    controller.addRowAt(rightParenRowIndex);
 
     navigator.setPosition({ row: indentRowIndex, column: indentWhitespace.length });
   }

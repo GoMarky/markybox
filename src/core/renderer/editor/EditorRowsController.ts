@@ -7,14 +7,12 @@ import { BASE_INDENT_VALUE } from '@/core/renderer/common/helpers';
 import { EditorAutoSaveController } from '@/core/EditorAutoSaveController';
 import { removeLastLetter } from '@/base/string';
 import { CriticalError } from '@/base/errors';
-import { Counter } from '@/base/counter';
 
 export class EditorRowsController extends BaseObject {
   public readonly editorAutoSave: EditorAutoSaveController
   private _currentRow: GlyphRowElement;
 
-  constructor(
-    private readonly renderer: HTMLRenderer) {
+  constructor(private readonly renderer: HTMLRenderer) {
     super();
 
     this.editorAutoSave = new EditorAutoSaveController(this.renderer)
@@ -49,15 +47,10 @@ export class EditorRowsController extends BaseObject {
     nextRow.setText(last);
   }
 
-  public expandOrShrinkRow(index: number): void {
+  public expandOrShrinkRow(_: number): void {
     const { storage } = this.renderer;
 
-    const leftParenRow = storage.at(index);
-    const rightParenRow = this.findClosestRightParenRowDown(index);
-
-    if (!leftParenRow) {
-      throw new CriticalError('ExpandOrShrinkRow# - row must exist.');
-    }
+    throw new CriticalError('Method not implemented');
   }
 
   public isCurrentColumnInsideGlyph(): boolean {
@@ -181,83 +174,6 @@ export class EditorRowsController extends BaseObject {
 
     currentRow.inputAt(BASE_INDENT_VALUE, column);
     navigator.setPosition({ row: currentRow.index, column: column + 4 })
-  }
-
-  public findClosestLeftParenRowDown(startIndex: number): GlyphRowElement | undefined {
-    const { storage } = this.renderer;
-
-    for (let i = startIndex + 1; i < storage.count; i++) {
-      const row = storage.at(i);
-
-      // Если во время поиска нашли правую скобку, значит следующая левая скобка уже не принадлежит искомой позиции
-      if (row?.fragment?.hasCloseBrace) {
-        return undefined;
-      }
-
-      if (row?.fragment?.hasOpenBrace) {
-        return row;
-      }
-    }
-
-    return undefined;
-  }
-
-  public findClosestRightParenRowDown(startIndex: number): GlyphRowElement | undefined {
-    const { storage } = this.renderer;
-
-    for (let i = startIndex + 1; i < storage.count; i++) {
-      const row = storage.at(i);
-
-      // Если во время поиска нашли левую скобку, значит следующая правая скобка уже не принадлежит искомой позиции
-      if (row?.fragment?.hasOpenBrace) {
-        return undefined;
-      }
-
-      if (row?.fragment?.hasCloseBrace) {
-        return row;
-      }
-    }
-
-    return undefined;
-  }
-
-  public getRightParenAmountFromStartByIndex(startIndex: number): number {
-    const { storage } = this.renderer;
-
-    const counter = new Counter(0, 1);
-
-    for (let i = startIndex; i >= 0; i--) {
-      const row = storage.at(i);
-
-      if (row?.fragment?.hasOpenBrace) {
-        counter.decrement();
-      }
-
-      if (row?.fragment?.hasCloseBrace) {
-        counter.increment();
-      }
-    }
-
-    return counter.value;
-  }
-
-  public getLeftParenAmountFromStartByIndex(startIndex: number): number {
-    const { storage } = this.renderer;
-    let amount = 0;
-
-    for (let i = startIndex; i >= 0; i--) {
-      const row = storage.at(i);
-
-      if (row?.fragment?.hasOpenBrace) {
-        amount += 1;
-      }
-
-      if (row?.fragment?.hasCloseBrace) {
-        amount -= 1;
-      }
-    }
-
-    return amount;
   }
 
   public clear(): void {
