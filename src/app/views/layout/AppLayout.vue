@@ -35,12 +35,13 @@
 <script lang="ts">
 import UserLoginModal from '@/app/views/modals/UserLoginModal.vue';
 import UserProfileModal from '@/app/views/modals/UserProfileModal.vue';
+import EnterNameModal from '@/app/views/modals/EnterNameModal.vue';
 import { ILayoutService } from '@/app/platform/layout/common/layout';
 
 const layoutService = window.workbench.getService(ILayoutService);
 const { isOpen: isOpenModal, currentModal } = layoutService.modal;
 
-export default { name: 'AppLayout', components: { UserLoginModal, UserProfileModal } };
+export default { name: 'AppLayout', components: { UserLoginModal, UserProfileModal, EnterNameModal } };
 </script>
 
 <script lang="ts" setup>

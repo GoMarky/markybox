@@ -8,8 +8,10 @@
 import Code from './_Code.vue';
 import Commands from './_Commands.vue';
 import { ISessionService } from '@/app/code/session/common/session';
+import { ILayoutService } from '@/app/platform/layout/common/layout';
 
 const sessionService = window.workbench.getService(ISessionService);
+const layoutService = window.workbench.getService(ILayoutService);
 
 export default { name: 'NotePage', components: { Code, Commands } };
 </script>
@@ -17,21 +19,24 @@ export default { name: 'NotePage', components: { Code, Commands } };
 
 <script lang="ts" setup>
 import useCodeSectionNavigation from '@/app/views/composables/useCodeSectionNavigation';
+import useAnonymousUserName from '@/app/views/composables/use-anonymous-user-name';
 import { computed, onBeforeMount } from 'vue';
 
 const { currentSection } = useCodeSectionNavigation();
 const profile = sessionService.profile;
+
+const { name: userName } = useAnonymousUserName();
 
 const canShowNoteContainer = computed(() => {
   if (profile.isAuth.value) {
     return true;
   }
 
-  return false;
+  return Boolean(userName.value);
 })
 
 const showEnterNameModal = (): void => {
-  console.log('enter-name');
+  layoutService.modal.open('EnterNameModal');
 }
 
 onBeforeMount(() => {
