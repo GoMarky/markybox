@@ -28,6 +28,7 @@ import { EditorInstance } from '@/app/code/editor/browser/editor';
 import { SocketCommandType } from '@/app/code/socket/common/socket-service';
 import useRoomActions from '@/app/views/composables/use-room-actions';
 import useCurrentEditorNoteLang from '@/app/views/composables/use-current-editor-note-lang';
+import useAnonymousUserName from '@/app/views/composables/use-anonymous-user-name';
 
 const { currentRoute, push } = useRouter();
 const errorMessage = ref('');
@@ -35,9 +36,11 @@ const errorMessage = ref('');
 onBeforeRouteUpdate(async (_, __, next) => {
   await loadNote();
   next();
-})
+});
 
-const editor = new EditorInstance('', 'plain', 'light');
+const { name: userName } = useAnonymousUserName();
+
+const editor = new EditorInstance(userName.value);
 const { onEnterRoom, onLeaveRoom, onEditorAction } = useRoomActions(editor.renderer);
 
 noteService.connection.onMessage((event) => {

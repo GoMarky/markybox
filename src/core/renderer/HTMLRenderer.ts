@@ -40,7 +40,9 @@ export class HTMLRenderer extends BaseObject implements IAbstractRenderer {
   public $isMount: boolean = false;
   private _isLock: boolean = true;
 
-  constructor() {
+  constructor(
+    name: string = 'user',
+  ) {
     super();
 
     if (!window.isSecureContext) {
@@ -49,7 +51,7 @@ export class HTMLRenderer extends BaseObject implements IAbstractRenderer {
 
     const storage = this.storage = new EditorStorage();
     const display = this.display = new EditorDisplayController(storage);
-    const navigator = this.navigator = new EditorBodyNavigator(storage, display, 'user');
+    const navigator = this.navigator = new EditorBodyNavigator(storage, display, name);
     const controller = this.controller = new EditorRowsController(this);
     const selection = this.selection = new EditorSelectionContainer(this, storage, display);
 

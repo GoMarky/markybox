@@ -8,12 +8,10 @@ export class EditorInstance extends Disposable {
   }
 
   constructor(
-    private readonly text: string,
-    private readonly lang: markybox.EditorLang,
-    private readonly theme: markybox.EditorTheme,
+    private readonly name: string,
   ) {
     super();
 
-    this._renderer = new markybox.HTMLRenderer();
+    this._renderer = new markybox.HTMLRenderer(name);
   }
 }
