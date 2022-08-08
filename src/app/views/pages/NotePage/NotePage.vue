@@ -19,21 +19,28 @@ export default { name: 'NotePage', components: { Code, Commands } };
 
 <script lang="ts" setup>
 import useCodeSectionNavigation from '@/app/views/composables/useCodeSectionNavigation';
-import useAnonymousUserName from '@/app/views/composables/use-anonymous-user-name';
-import { computed, onBeforeMount } from 'vue';
+import useAnonymousUser from '@/app/views/composables/use-anonymous-user';
+import { computed, onBeforeMount, provide } from 'vue';
+import { NoteStorageInstance } from '@/base/storage';
+import { useRoute } from 'vue-router';
 
 const { currentSection } = useCodeSectionNavigation();
 const profile = sessionService.profile;
-
-const { name: userName } = useAnonymousUserName();
+const { isFilledName } = useAnonymousUser();
+const route = useRoute();
 
 const canShowNoteContainer = computed(() => {
   if (profile.isAuth.value) {
     return true;
   }
 
-  return Boolean(userName.value);
-})
+  return Boolean(isFilledName.value);
+});
+
+const id = route.params.id as string;
+const storage = new NoteStorageInstance(id);
+
+provide('storage', storage);
 
 const showEnterNameModal = (): void => {
   layoutService.modal.open('EnterNameModal');
@@ -43,5 +50,5 @@ onBeforeMount(() => {
   if (!profile.isAuth.value) {
     showEnterNameModal();
   }
-})
+});
 </script>

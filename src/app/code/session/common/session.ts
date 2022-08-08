@@ -14,6 +14,8 @@ export class UserProfile extends Disposable {
   public readonly email: Ref<string> = ref('');
   public readonly notes: Ref<INoteInfo[]> = ref([]);
 
+  public readonly isAnonymousMode: Ref<boolean> = ref(false);
+
   public readonly isAuth: ComputedRef<boolean> = computed(() => {
     const { sessionId } = this;
 

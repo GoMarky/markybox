@@ -24,20 +24,18 @@
 </template>
 
 <script lang="ts">
-import { ILayoutService } from '@/app/platform/layout/common/layout';
-
-const layoutService = window.workbench.getService(ILayoutService);
-
 export default { name: 'EnterNameModal' }
 </script>
 
 <script lang="ts" setup>
 import { ref } from 'vue';
-import useAnonymousUserName from '@/app/views/composables/use-anonymous-user-name';
+import useAnonymousUser from '@/app/views/composables/use-anonymous-user';
 import UIInput from '@/app/views/components/ui/UIInput.vue';
 import UIButton from '@/app/views/components/ui/UIButton.vue';
+import { ILayoutService } from '@/app/platform/layout/common/layout';
 
-const { name: userName } = useAnonymousUserName();
+const layoutService = window.workbench.getService(ILayoutService);
+const { name: userName } = useAnonymousUser();
 const name = ref('');
 
 async function submit() {

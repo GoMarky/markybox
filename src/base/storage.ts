@@ -73,5 +73,18 @@ export class LocalStorageBooleanItem extends LocalStorageItem<boolean> {
 }
 
 export abstract class AbstractLocalStorageInstance {
-  protected constructor(protected namespace: string) {}
+  protected constructor(protected readonly namespace: string) {
+  }
+}
+
+export class NoteStorageInstance extends AbstractLocalStorageInstance {
+  public readonly userName: LocalStorageStringItem;
+
+  constructor(
+    namespace: string,
+  ) {
+    super(namespace);
+
+    this.userName = new LocalStorageStringItem(`${namespace}.name`);
+  }
 }

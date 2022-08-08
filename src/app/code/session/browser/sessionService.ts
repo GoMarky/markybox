@@ -22,6 +22,11 @@ export class SessionService extends Disposable implements ISessionService {
     this.profile = new UserProfile();
   }
 
+  public setAnonymousUserCredentials(name: string): void {
+    this.profile.isAnonymousMode.value = true;
+    this.profile.name.value = name;
+  }
+
   public async registerUser(options: ISessionRegisterUserRequestAttributes): Promise<void> {
     const { email, userName } = options;
 
@@ -78,6 +83,10 @@ export class SessionService extends Disposable implements ISessionService {
     this.profile.notes.value = notes;
     this.profile.name.value = user;
     this.profile.email.value = email;
+
+    if (this.profile.isAnonymousMode.value) {
+      this.profile.isAnonymousMode.value = false;
+    }
 
     setLocalStorageItem('sessionId', session_id);
 

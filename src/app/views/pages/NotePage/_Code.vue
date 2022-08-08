@@ -21,14 +21,15 @@ export default { name: 'Code' };
 <script lang="ts" setup>
 import * as markybox from '@/core';
 import { onBeforeRouteUpdate, useRouter } from 'vue-router';
-import { onMounted, onUnmounted, ref, watch } from 'vue';
+import { inject, onMounted, onUnmounted, ref, watch } from 'vue';
 import { APIError, ApiError } from '@/app/platform/request/common/request';
 import { RouteName } from '@/app/code/vue/route-names';
 import { EditorInstance } from '@/app/code/editor/browser/editor';
 import { SocketCommandType } from '@/app/code/socket/common/socket-service';
 import useRoomActions from '@/app/views/composables/use-room-actions';
 import useCurrentEditorNoteLang from '@/app/views/composables/use-current-editor-note-lang';
-import useAnonymousUserName from '@/app/views/composables/use-anonymous-user-name';
+import useAnonymousUser from '@/app/views/composables/use-anonymous-user';
+import { NoteStorageInstance } from '@/base/storage';
 
 const { currentRoute, push } = useRouter();
 const errorMessage = ref('');
@@ -38,7 +39,7 @@ onBeforeRouteUpdate(async (_, __, next) => {
   next();
 });
 
-const { name: userName } = useAnonymousUserName();
+const { name: userName } = useAnonymousUser();
 
 const editor = new EditorInstance(userName.value);
 const { onEnterRoom, onLeaveRoom, onEditorAction } = useRoomActions(editor.renderer);
