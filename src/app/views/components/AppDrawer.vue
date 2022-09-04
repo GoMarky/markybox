@@ -2,16 +2,16 @@
   <div class="m-drawer">
     <div class="m-drawer__content" ref="contentRef">
       <div class="m-drawer__top-container">
-
+        <app-drawer-user-section v-if="isAuth" />
       </div>
 
-      <div class="m-drawer__logout">
+      <div class="m-drawer__create">
         <UIButton is-outline>{{ $t('drawer.note.create') }}</UIButton>
       </div>
 
-      <div>
-        <div class="m-drawer__build-date">Built on</div>
-        <div>{{ 123123123 }}</div>
+      <div class="m-drawer__build">
+        <b class="m-drawer__build-date">Built date: </b>
+        <span>{{ new Date().toUTCString() }}</span>
       </div>
     </div>
     <button class="m-drawer__button" type="button" @click="closeDrawer()">
@@ -23,10 +23,13 @@
 <script lang="ts" setup>
 import UIButton from '@/app/views/components/ui/UIButton.vue';
 import IconClose from '@/app/views/components/icons/IconClose.vue';
+import AppDrawerUserSection from '@/app/views/components/AppDrawerUserSection.vue';
 import useDrawer from '@/app/views/composables/use-drawer';
+import useSession from '@/app/views/composables/use-session';
+
+const { isAuth } = useSession();
 
 const { closeDrawer } = useDrawer();
-
 </script>
 
 <script lang="ts">
@@ -47,7 +50,10 @@ export default { name: 'AppDrawer' };
     height: 100%
     background-color: var(--accent-blurple-dimmest)
     overflow-y: auto
-    padding-bottom: 50px
+    padding: 8px 8px 50px
+
+  &__build
+    margin-top: 16px
 
   &__button
     font-size: 12px
@@ -58,12 +64,14 @@ export default { name: 'AppDrawer' };
     margin-left: 5px
     color: var(--foreground-default)
 
-  &__logout
-    margin: 8px 16px 16px
+  &__create
+    width: 100%
+
+    & > .ui-button > .btn
+      width: 100%
 
   &__top-container
     border-bottom: 1px solid #222
-    background-color: #fff
     position: sticky
     top: 0
 

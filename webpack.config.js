@@ -5,6 +5,8 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const webpackMerge = require('webpack-merge');
 const { VueLoaderPlugin } = require('vue-loader');
 const ExtractCssChunks = require('extract-css-chunks-webpack-plugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
+
 const WebpackBar = require('webpackbar');
 const StdEnv = require('std-env');
 const IgnoreNotFoundExportPlugin = require('./config/plugins/IgnoreNotFoundExportPlugin');
@@ -72,6 +74,11 @@ module.exports = ({ mode } = { mode: 'production' }) => {
   ];
 
   plugins.push(new HtmlWebpackPlugin(htmlWebpackPluginOptions));
+  plugins.push(new CopyWebpackPlugin({
+    patterns: [
+      { from: 'src/app/assets', to: 'public' }
+    ],
+  }))
 
   const PROCESS_VARIABLES = {
     'process.env.NODE_ENV': JSON.stringify(EnvironmentVariable.isDev ? 'development' : 'production'),
@@ -117,8 +124,6 @@ module.exports = ({ mode } = { mode: 'production' }) => {
   //#endregion Vue
 
   plugins.push(new ExtractCssChunks({
-    // Options similar to the same options in webpackOptions.output
-    // all options are optional
     // filename: EnvironmentVariable.isDev ? '[name].css' : 'css/[name].[hash].css',
     // chunkFilename: EnvironmentVariable.isDev ? '[id].css' : 'css/[id].[hash].css',
     ignoreOrder: true, // Enable to remove warnings about conflicting order
