@@ -9,6 +9,10 @@
         <UIButton is-outline>{{ $t('drawer.note.create') }}</UIButton>
       </div>
 
+      <div class="m-drawer__navigation">
+        <app-drawer-navigation-menu />
+      </div>
+
       <div class="m-drawer__build">
         <b class="m-drawer__build-date">Built date: </b>
         <span>{{ new Date().toUTCString() }}</span>
@@ -24,6 +28,7 @@
 import UIButton from '@/app/views/components/ui/UIButton.vue';
 import IconClose from '@/app/views/components/icons/IconClose.vue';
 import AppDrawerUserSection from '@/app/views/components/AppDrawerUserSection.vue';
+import AppDrawerNavigationMenu from '@/app/views/components/AppDrawerNavigationMenu.vue';
 import useDrawer from '@/app/views/composables/use-drawer';
 import useSession from '@/app/views/composables/use-session';
 
