@@ -20,7 +20,7 @@ import { provide, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
 
 const route = useRoute();
-const editor = new EditorInstance('', 'plain', 'light');
+const editor = new EditorInstance('');
 const workspaceService = window.workbench.getService(IWorkspaceService);
 
 const workspaceId = route.params.workspaceId as string;

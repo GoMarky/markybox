@@ -44,7 +44,8 @@
     "*.ts",
     "*.tsx",
     "*.vue",
-    "src"
+    "src",
+    "shims.d.ts"
   ],
   "exclude": [
     "node_modules"

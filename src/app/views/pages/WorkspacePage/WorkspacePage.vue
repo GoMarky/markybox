@@ -1,7 +1,7 @@
 <template>
   <div>
     <workspace-mobile-page v-if="isMobile" />
-    <template v-elseÍ>
+    <template v-else>
       <Suspense>
         <workspace-desktop-page />
 

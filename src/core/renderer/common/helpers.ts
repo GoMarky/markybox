@@ -1,4 +1,5 @@
 export const EditorCSSName = {
+  RootClassName: 'marky',
   LightTheme: 'marky_light-theme',
   DarkTheme: 'marky_dark-theme',
 

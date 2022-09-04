@@ -22,6 +22,7 @@ import { EditorGlobalContext } from '@/core/renderer/system/EditorGlobalContext'
 
 import './commands/default-commands';
 import { EditorThemeService } from './system/EditorTheme';
+import { EditorCSSName } from '@/core/renderer/common/helpers';
 
 export class HTMLRenderer extends BaseObject implements IAbstractRenderer {
   public readonly storage: EditorStorage;
@@ -100,7 +101,6 @@ export class HTMLRenderer extends BaseObject implements IAbstractRenderer {
   }
 
   public mount(selector: string): void {
-    const { navigator, body } = this;
     const rootElement = document.querySelector<HTMLElement>(selector);
 
     if (!rootElement) {
@@ -114,9 +114,12 @@ export class HTMLRenderer extends BaseObject implements IAbstractRenderer {
     this.navigator.mount(bodyElement);
     this.selection.mount(bodyElement);
 
+    rootElement.classList.add(EditorCSSName.RootClassName);
+
     this.unlock();
     this.theme.init();
     this.registerListeners();
+    this.controller.addEmptyRow();
 
     this.$isMount = true;
   }
@@ -293,6 +296,5 @@ export class HTMLRenderer extends BaseObject implements IAbstractRenderer {
     this.commandCenter.dispose();
     this.clipboard.dispose();
     this.navigatorManager.dispose();
-
   }
 }

@@ -1,6 +1,6 @@
 import { ref } from 'vue';
 
-const isDrawerShown = ref(true);
+const isDrawerShown = ref(false);
 const openDrawer = () => {
   isDrawerShown.value = true;
 };

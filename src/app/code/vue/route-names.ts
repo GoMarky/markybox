@@ -4,4 +4,8 @@ export enum RouteName {
   LoginPage = 'LoginPage',
   NotePage = 'NotePage',
   WorkspacePage = 'WorkspacePage',
+  NotesPage = 'NotesPage',
+  WorkspacesPage = 'WorkspacesPage',
+  SettingsPage = 'SettingsPage',
+  SandboxPage = 'SandboxPage'
 }

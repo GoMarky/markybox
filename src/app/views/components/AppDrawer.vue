@@ -76,8 +76,8 @@ export default { name: 'AppDrawer' };
       width: 100%
 
   &__top-container
-    border-bottom: 1px solid #222
     position: sticky
+    margin-bottom: 8px
     top: 0
 
 </style>

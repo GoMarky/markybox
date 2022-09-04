@@ -1,4 +1,8 @@
 {
+  "drawer.navigation.home": "Home",
+  "drawer.navigation.workspaces": "Workspaces",
+  "drawer.navigation.notes": "Notes",
+  "drawer.navigation.settings": "Settings",
   "drawer.note.create": "Create",
   "header.login.title": "Login",
   "home.top.text": "Code, create, and learn together",

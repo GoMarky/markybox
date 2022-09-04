@@ -81,6 +81,7 @@
 .marky {
     display: flex;
     position: relative;
+    height: 600px;
     overflow: scroll;
     direction: ltr;
     font-weight: bold;

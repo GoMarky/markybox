@@ -8,6 +8,26 @@ const routes = [
     component: AppLayout,
     children: [
       {
+        name: RouteName.SandboxPage,
+        path: '/sandbox/',
+        component: () => import(/* webpackChunkName: "[SandboxPage]" */ '@/app/views/pages/SandboxPage.vue'),
+      },
+      {
+        name: RouteName.NotesPage,
+        path: '/notes/',
+        component: () => import(/* webpackChunkName: "[NotesPage]" */ '@/app/views/pages/NotesPage/NotesPage.vue'),
+      },
+      {
+        name: RouteName.SettingsPage,
+        path: '/settings/',
+        component: () => import(/* webpackChunkName: "[SettingsPage]" */ '@/app/views/pages/SettingsPage/SettingsPage.vue'),
+      },
+      {
+        name: RouteName.WorkspacesPage,
+        path: '/workspaces/',
+        component: () => import(/* webpackChunkName: "[WorkspacesPage]" */ '@/app/views/pages/WorkspacesPage/WorkspacesPage.vue'),
+      },
+      {
         name: RouteName.HomePage,
         path: '/',
         component: () => import(/* webpackChunkName: "[HomePage]" */ '@/app/views/pages/HomePage.vue'),

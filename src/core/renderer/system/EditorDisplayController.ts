@@ -68,10 +68,11 @@ export class EditorDisplayController extends BaseObject implements IRendererDisp
 
     const debounced = debounce(() => {
       const { count } = storage;
-      const { innerHeight } = window;
+
+      const offsetHeight = root.offsetHeight;
 
       const totalRowsHeight = count * 16;
-      const rootHeight = totalRowsHeight > innerHeight ? totalRowsHeight : innerHeight;
+      const rootHeight = totalRowsHeight > offsetHeight ? totalRowsHeight : offsetHeight;
 
       root.style.height = toPixel(rootHeight);
     }, resizeBodyDelayMilliseconds);
