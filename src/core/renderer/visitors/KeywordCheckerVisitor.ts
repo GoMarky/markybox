@@ -1,5 +1,5 @@
 import { BaseObject } from '@/core/BaseObject';
-import { IVisitor, MHTMLEditorBody } from '@/core/renderer/editor/EditorBodyContainer';
+import { IVisitor, EditorBodyContainer } from '@/core/renderer/editor/EditorBodyContainer';
 import { GlyphWordNode } from '@/core/renderer/glyphs/GlyphWordNode';
 import { GlyphNodeFragment } from '@/core/renderer/common/GlyphNodeFragment';
 import { CodeStatement } from '@/core/formatters/formatter/base-formatter';
@@ -33,7 +33,7 @@ function addClass(glyph: GlyphDOMNode, className: string): void {
 
 export class KeywordCheckerVisitor extends BaseObject implements IVisitor {
   constructor(
-    private readonly body: MHTMLEditorBody
+    private readonly body: EditorBodyContainer
   ) {
     super();
   }

@@ -19,11 +19,16 @@ import * as markybox from '@/core';
 import { onMounted } from 'vue';
 
 const editorBig = new markybox.HTMLRenderer();
-const editorSmall = new markybox.HTMLRenderer();
+const editorSmall = new markybox.HTMLRenderer({
+  name: 'small',
+  width: 600,
+  height: 400,
+  fullscreen: false,
+});
 const editorReadonly = new markybox.HTMLRenderer();
 
 onMounted(() => {
-  editorBig.mount('#editor-big');
+  editorSmall.mount('#editor-small');
 });
 </script>
 

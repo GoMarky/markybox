@@ -12,6 +12,6 @@ export class EditorInstance extends Disposable {
   ) {
     super();
 
-    this._renderer = new markybox.HTMLRenderer(name);
+    this._renderer = new markybox.HTMLRenderer({ name });
   }
 }

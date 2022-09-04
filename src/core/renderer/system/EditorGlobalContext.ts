@@ -1,14 +1,14 @@
 import { Disposable } from '@/app/platform/lifecycle/common/lifecycle';
 import { EditorBodyNavigator } from '@/core/renderer/editor/EditorBodyNavigator';
 import { EditorRowsController } from '@/core/renderer/editor/EditorRowsController';
-import { MHTMLEditorBody } from '@/core/renderer/editor/EditorBodyContainer';
+import { EditorBodyContainer } from '@/core/renderer/editor/EditorBodyContainer';
 import { EditorStorage } from '@/core/renderer/system/EditorStorage';
 import { EditorDisplayController } from '@/core/renderer/system/EditorDisplayController';
 import { EditorSelectionContainer } from '@/core/renderer/selection/EditorSelectionContainer';
 import { EditorCommandCenter } from '@/core/renderer/commands/command-manager';
 
 export class EditorGlobalContext extends Disposable {
-  public body: MHTMLEditorBody;
+  public body: EditorBodyContainer;
   public command: EditorCommandCenter;
 
   constructor(
@@ -21,7 +21,7 @@ export class EditorGlobalContext extends Disposable {
     super();
   }
 
-  public setBody(body: MHTMLEditorBody): void {
+  public setBody(body: EditorBodyContainer): void {
     this.body = body;
   }
 

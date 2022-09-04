@@ -3,18 +3,36 @@ import { toPixel } from '@/base/dom';
 import { IPosition } from '@/core/common';
 import { IDOMPosition } from '@/core/renderer/common/helpers';
 import { IRendererDisplay } from '@/core/renderer';
-import { debounce } from '@/base/async';
+import { Barrier, debounce } from '@/base/async';
 import { EditorGutterContainer } from '@/core/renderer/editor/EditorGutterContainer';
 import { EditorStorage } from '@/core/renderer/system/EditorStorage';
 import { toDisposable } from '@/app/platform/lifecycle/common/lifecycle';
 
+interface IEditorDisplayOptions {
+  width?: number;
+  height?: number;
+  fullscreen?: boolean;
+}
+
 export class EditorDisplayController extends BaseObject implements IRendererDisplay {
+  public readonly whenMounted: Barrier = new Barrier();
+
   private root: HTMLElement;
   public readonly gutter: EditorGutterContainer;
 
-  constructor(private readonly storage: EditorStorage) {
+  constructor(
+    private readonly storage: EditorStorage,
+    private readonly options: IEditorDisplayOptions) {
     super();
     this.gutter = new EditorGutterContainer();
+  }
+
+  public get rootWidth(): number {
+    return this.root.offsetWidth;
+  }
+
+  public get rootHeight(): number {
+    return this.root.offsetHeight;
   }
 
   public toDOMPosition(position: IPosition): IDOMPosition {
@@ -51,6 +69,13 @@ export class EditorDisplayController extends BaseObject implements IRendererDisp
   public mount(root: HTMLElement): void {
     this.root = root;
     this.gutter.mount(root);
+
+    const { width, height } = this.options;
+
+    if (width && height) {
+      this.root.style.height = toPixel(height);
+      this.root.style.width = toPixel(width);
+    }
 
     this.registerListeners();
   }

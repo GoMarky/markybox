@@ -9,7 +9,7 @@ import { PythonCodeFormatter } from '@/core/formatters/python/python-formatter';
 import { CPPCodeFormatter } from '@/core/formatters/cpp/cpp-formatter';
 import { TextContainerLayer } from '@/core/renderer/layers/TextContainerLayer';
 import { CurrentRowMarkerLayer } from '@/core/renderer/layers/CurrentRowMarkerLayer';
-import { MPartitionLayer } from '@/core/renderer/layers/UserPartitionLayer';
+import { UserPartitionLayer } from '@/core/renderer/layers/UserPartitionLayer';
 import { GolangCodeFormatter } from '@/core/formatters/golang/golang-formatter';
 import { EditorStorage } from '@/core/renderer/system/EditorStorage';
 import { EditorCSSName } from '@/core/renderer/common/helpers';
@@ -20,6 +20,7 @@ import { GlyphDOMElement } from '@/core/renderer/common/GlyphDOMElement';
 import { useOutsideClick } from '@/base/dom';
 import { toDisposable } from '@/app/platform/lifecycle/common/lifecycle';
 import { EditorCustomContextMenu } from '@/core/renderer/editor/EditorContextMenu';
+import { EditorDisplayController } from '@/core/renderer/system/EditorDisplayController';
 
 export type EditorLang = 'cpp' | 'python' | 'js' | 'json' | 'plain' | 'golang';
 
@@ -29,17 +30,18 @@ export interface IVisitor {
   visit(fragment: GlyphNodeFragment): void;
 }
 
-export class MHTMLEditorBody extends GlyphDOMElement<HTMLDivElement> {
+export class EditorBodyContainer extends GlyphDOMElement<HTMLDivElement> {
   public readonly textLayer: TextContainerLayer;
   public readonly markerLayer: CurrentRowMarkerLayer;
   public readonly contextMenu: EditorCustomContextMenu;
-  private readonly partitionLayer: MPartitionLayer;
+  private readonly partitionLayer: UserPartitionLayer;
   private readonly visitorMap: Map<string, IVisitor> = new Map();
 
   public rootElement: HTMLElement | null = null;
 
   constructor(
     private readonly storage: EditorStorage,
+    private readonly display: EditorDisplayController,
     private readonly renderer: HTMLRenderer,
     private readonly context: EditorGlobalContext,
   ) {
@@ -47,7 +49,7 @@ export class MHTMLEditorBody extends GlyphDOMElement<HTMLDivElement> {
 
     this.textLayer = new TextContainerLayer();
     this.markerLayer = new CurrentRowMarkerLayer();
-    this.partitionLayer = new MPartitionLayer();
+    this.partitionLayer = new UserPartitionLayer(display);
     this._formatter = new PlainFormatter(context);
     this.contextMenu = new EditorCustomContextMenu(context);
   }

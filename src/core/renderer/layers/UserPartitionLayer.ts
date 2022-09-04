@@ -2,10 +2,19 @@ import { BaseLayer } from '@/core/renderer/layers/BaseLayer';
 import { HTMLRenderer } from '@/core';
 import { toPixel } from '@/base/dom';
 import { EditorCSSName } from '@/core/renderer/common/helpers';
+import { EditorDisplayController } from '@/core/renderer/system/EditorDisplayController';
 
-export class MPartitionLayer extends BaseLayer {
-  constructor() {
+export class UserPartitionLayer extends BaseLayer {
+  constructor(
+    private readonly display: EditorDisplayController,
+  ) {
     super();
+
+    this.display.whenMounted.wait().then(() => {
+      const rootWidth = this.display.rootWidth;
+
+      this._el.style.left = toPixel(rootWidth / 1.5);
+    });
   }
 
   public mount(body: HTMLElement): void {

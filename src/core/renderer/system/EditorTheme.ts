@@ -1,6 +1,6 @@
 import { BaseObject } from '@/core/BaseObject';
 import { EditorTheme } from '@/core';
-import { MHTMLEditorBody } from '../editor/EditorBodyContainer';
+import { EditorBodyContainer } from '../editor/EditorBodyContainer';
 import { CriticalError } from '@/base/errors';
 import { EditorCSSName } from '../common/helpers';
 
@@ -18,7 +18,7 @@ export class EditorThemeService extends BaseObject {
   private _theme: EditorTheme = 'light';
 
   constructor(
-    private readonly body: MHTMLEditorBody,
+    private readonly body: EditorBodyContainer,
   ) {
     super();
   }

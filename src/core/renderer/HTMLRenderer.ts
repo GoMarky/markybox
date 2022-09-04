@@ -2,7 +2,7 @@ import windowShortcut from '@gomarky/window-shortcut';
 import { BaseObject } from '@/core/BaseObject';
 import { EditorBodyNavigator } from '@/core/renderer/editor/EditorBodyNavigator';
 import { EditorDisplayController } from '@/core/renderer/system/EditorDisplayController';
-import { EditorLang, EditorTheme, MHTMLEditorBody } from '@/core/renderer/editor/EditorBodyContainer';
+import { EditorLang, EditorTheme, EditorBodyContainer } from '@/core/renderer/editor/EditorBodyContainer';
 import { UserClipboardController } from '@/core/renderer/system/UserClipboardController';
 import { EditorSelectionContainer } from '@/core/renderer/selection/EditorSelectionContainer';
 import { EditorStorage } from '@/core/renderer/system/EditorStorage';
@@ -23,6 +23,23 @@ import { EditorGlobalContext } from '@/core/renderer/system/EditorGlobalContext'
 import './commands/default-commands';
 import { EditorThemeService } from './system/EditorTheme';
 import { EditorCSSName } from '@/core/renderer/common/helpers';
+import { removeChildren } from '@/base/dom';
+
+export interface IEditorOptions {
+  name?: string;
+  fullscreen?: boolean;
+  readonly?: boolean;
+  width?: number;
+  height?: number;
+}
+
+const DEFAULT_OPTIONS: IEditorOptions = {
+  name: 'user',
+  fullscreen: false,
+  readonly: false,
+  width: undefined,
+  height: undefined,
+};
 
 export class HTMLRenderer extends BaseObject implements IAbstractRenderer {
   public readonly storage: EditorStorage;
@@ -32,7 +49,7 @@ export class HTMLRenderer extends BaseObject implements IAbstractRenderer {
   public readonly display: EditorDisplayController;
   public readonly navigator: EditorBodyNavigator;
   public readonly controller: EditorRowsController;
-  public readonly body: MHTMLEditorBody;
+  public readonly body: EditorBodyContainer;
   public readonly context: EditorGlobalContext;
   public readonly commandCenter: EditorCommandCenter;
   public readonly theme: EditorThemeService;
@@ -40,24 +57,27 @@ export class HTMLRenderer extends BaseObject implements IAbstractRenderer {
   public currentState: AbstractEditorState;
   public $isMount: boolean = false;
   private _isLock: boolean = true;
+  private readonly _options: IEditorOptions;
 
-  constructor(
-    name: string = 'user',
-  ) {
+  constructor(options: IEditorOptions = {}) {
     super();
+
+    this._options = Object.assign(DEFAULT_OPTIONS, options);
+
+    const { name } = this._options as Required<IEditorOptions>;
 
     if (!window.isSecureContext) {
       console.warn(`markybox works only in https context.`);
     }
 
     const storage = this.storage = new EditorStorage();
-    const display = this.display = new EditorDisplayController(storage);
+    const display = this.display = new EditorDisplayController(storage, this._options);
     const navigator = this.navigator = new EditorBodyNavigator(storage, display, name);
     const controller = this.controller = new EditorRowsController(this);
     const selection = this.selection = new EditorSelectionContainer(this, storage, display);
 
     const context = this.context = new EditorGlobalContext(navigator, controller, storage, display, selection);
-    const body = this.body = new MHTMLEditorBody(storage, this, context);
+    const body = this.body = new EditorBodyContainer(storage, display, this, context);
     const command = this.commandCenter = new EditorCommandCenter(context);
 
     this.body.addVisitor('hint', new UserTextHintVisitor(navigator));
@@ -107,6 +127,10 @@ export class HTMLRenderer extends BaseObject implements IAbstractRenderer {
       throw new CriticalError('Element ${selector} not found.');
     }
 
+    if (rootElement.hasChildNodes()) {
+      removeChildren(rootElement);
+    }
+
     this.body.mount(rootElement);
     this.display.mount(rootElement);
 
@@ -120,6 +144,8 @@ export class HTMLRenderer extends BaseObject implements IAbstractRenderer {
     this.theme.init();
     this.registerListeners();
     this.controller.addEmptyRow();
+
+    this.display.whenMounted.open();
 
     this.$isMount = true;
   }
