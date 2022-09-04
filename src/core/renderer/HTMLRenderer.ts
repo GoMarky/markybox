@@ -26,6 +26,7 @@ import { EditorCSSName } from '@/core/renderer/common/helpers';
 import { removeChildren } from '@/base/dom';
 
 export interface IEditorOptions {
+  mode?: 'standalone' | 'embed';
   name?: string;
   fullscreen?: boolean;
   readonly?: boolean;
@@ -34,6 +35,7 @@ export interface IEditorOptions {
 }
 
 const DEFAULT_OPTIONS: IEditorOptions = {
+  mode: 'standalone',
   name: 'user',
   fullscreen: false,
   readonly: false,
@@ -161,12 +163,7 @@ export class HTMLRenderer extends BaseObject implements IAbstractRenderer {
     return rows.map((row) => row.toString()).join('\n');
   }
 
-  public setText(text?: string): void {
-    if (!text) {
-      this.controller.addEmptyRow();
-      return;
-    }
-
+  public setText(text: string): void {
     this.controller.setWholeText(text);
   }
 

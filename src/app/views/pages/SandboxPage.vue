@@ -20,18 +20,28 @@ import { onMounted } from 'vue';
 
 const editorBig = new markybox.HTMLRenderer();
 const editorSmall = new markybox.HTMLRenderer({
+  mode: 'embed',
   name: 'small',
   width: 600,
   height: 400,
   fullscreen: false,
 });
-const editorReadonly = new markybox.HTMLRenderer();
+const editorReadonly = new markybox.HTMLRenderer({
+  mode: 'embed',
+  name: 'readonly',
+  width: 600,
+  height: 200,
+});
 
 onMounted(() => {
   editorSmall.mount('#editor-small');
+
+  editorReadonly.mount('#editor-readonly');
 });
 </script>
 
-<style lang="scss">
-
+<style lang="sass">
+.sandbox
+  &__item
+    margin-top: 40px
 </style>

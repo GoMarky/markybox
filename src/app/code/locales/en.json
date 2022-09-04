@@ -7,7 +7,7 @@
   "header.login.title": "Login",
   "home.top.text": "Code, create, and learn together",
   "home.coding.button.create": "Create as anonymous",
-  "header.registration.title": "Registration",
+  "header.registration.title": "Register",
   "home.coding.button.create.auth": "Create as {{ userName }}",
   "home.coding.button.login.create": "Login and create new",
   "home.footer.text": "Use our free, collaborative, in-browser text editor."
