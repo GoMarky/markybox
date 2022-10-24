@@ -12,8 +12,6 @@ import { translate } from '@/app/code/locales/translate';
 import { RouteName } from '@/app/code/vue/route-names';
 import { timestamp } from '@/base/string';
 
-import '@/app/views/styles/marky.css';
-
 console.log(`markybox v${APP_VERSION}`)
 
 class Application {

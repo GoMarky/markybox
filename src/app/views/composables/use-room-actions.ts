@@ -1,10 +1,10 @@
-import * as markybox from '@/core';
+import { HTMLRenderer } from '@gomarky/markybox-core';
 
 export type EditorActionPayload = { position: string, user_name: string };
 export type EditorEnterRoomPayload = { user_name: string };
 export type EditorLeaveRoomPayload = { user_name: string };
 
-export default function useRoomActions(renderer: markybox.HTMLRenderer) {
+export default function useRoomActions(renderer: HTMLRenderer) {
     function onLeaveRoom(data: EditorLeaveRoomPayload): void {
         const { user_name } = data;
 

@@ -15,7 +15,7 @@
       <ul class="page-header__nav-list">
         <li class="page-header__nav-item" v-if="isNotePage">
           <UISelect label="Lang" :value="currentEditorLang" @update:value="setEditorLang"
-            :options="editorLanguages"></UISelect>
+                    :options="editorLanguages"></UISelect>
         </li>
         <li class="page-header__nav-item">
           <button type="button" class="btn btn_primary page-header__nav-link">
@@ -29,13 +29,13 @@
         </li>
         <li class="page-header__nav-item">
           <button @click.prevent="isAuth ? openUserProfileModal() : openLoginModal()" type="button"
-            class="btn btn_primary page-header__nav-link">
+                  class="btn btn_primary page-header__nav-link">
             <icon-profile />
           </button>
         </li>
         <li v-if="!isAuth" class="page-header__nav-item">
           <router-link :to="{ name: $RouteName.RegistrationPage }" type="button"
-            class="btn btn_primary page-header__nav-link">
+                       class="btn btn_primary page-header__nav-link">
             {{ $t('header.registration.title') }}
           </router-link>
         </li>
@@ -45,8 +45,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, watch } from 'vue';
-import * as markybox from '@/core';
+import { defineComponent } from 'vue';
 import { useRouter } from 'vue-router';
 import { ISessionService } from '@/app/code/session/common/session';
 import { ILayoutService } from '@/app/platform/layout/common/layout';
@@ -62,6 +61,8 @@ import IconProfile from '@/app/views/components/icons/IconProfile.vue';
 import IconSettings from '@/app/views/components/icons/IconSettings.vue';
 import { computed } from '@vue/reactivity';
 import { RouteName } from '@/app/code/vue/route-names';
+import { getSupportedSyntaxes } from '@gomarky/markybox-core';
+import { EditorLang } from '@gomarky/markybox-core/lib/types/common';
 
 export default window.workbench.createComponent((accessor) => {
   const sessionService = accessor.get(ISessionService);
@@ -84,7 +85,7 @@ export default window.workbench.createComponent((accessor) => {
       const { openDrawer } = useDrawer();
       const { currentEditorLang, setEditorLang } = useCurrentEditorNoteLang();
 
-      const editorLanguages: markybox.EditorLang[] = markybox.getSupportedSyntaxes();
+      const editorLanguages: EditorLang[] = getSupportedSyntaxes();
 
       const isNotePage = computed(() => {
         const routeName = router.currentRoute.value.name;

@@ -15,18 +15,18 @@
 </template>
 
 <script lang="ts" setup>
-import * as markybox from '@/core';
 import { onMounted } from 'vue';
+import { HTMLRenderer } from '@gomarky/markybox-core';
 
-const editorBig = new markybox.HTMLRenderer();
-const editorSmall = new markybox.HTMLRenderer({
+const editorBig = new HTMLRenderer();
+const editorSmall = new HTMLRenderer({
   mode: 'embed',
   name: 'small',
   width: 600,
   height: 400,
   fullscreen: false,
 });
-const editorReadonly = new markybox.HTMLRenderer({
+const editorReadonly = new HTMLRenderer({
   mode: 'embed',
   name: 'readonly',
   width: 600,

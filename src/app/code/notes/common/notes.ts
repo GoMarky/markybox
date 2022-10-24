@@ -1,13 +1,13 @@
-import * as markybox from '@/core';
 import { createDecorator } from '@/app/platform/instantiation/common/instantiation';
 import { UserNotesStore } from '@/app/code/notes/browser/note-service';
 import { SocketConnection } from '@/app/code/socket/browser/socket';
 import { IBaseSocketMessagePayload, ISocketMessageResponse } from '@/app/code/socket/common/socket-service';
+import { EditorLang } from '@gomarky/markybox-core/lib/types/common';
 
 export namespace Note {
   export type NoteId = string;
   export type NoteContent = string;
-  export type NoteLang = markybox.EditorLang;
+  export type NoteLang = EditorLang;
 }
 
 export interface INoteInfo {

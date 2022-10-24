@@ -1,7 +1,7 @@
-import * as markybox from '@/core';
-import { EditorActionType } from '@/app/socket/common/socket-service';
-import { IPosition, ITuplePosition } from '../../src/core/common';
 import { ArrayIterator } from '@/base/iterator';
+import { IPosition, ITuplePosition } from '@gomarky/markybox-core/lib/types/common';
+import { EditorActionType } from '@/app/code/socket/common/socket-service';
+import { HTMLRenderer } from '@gomarky/markybox-core';
 
 export interface IFakeUserInteraction {
   type: EditorActionType;
@@ -35,7 +35,7 @@ export class DemoUserInteraction {
   private animationFrameId: number;
 
   constructor(
-    private readonly renderer: markybox.HTMLRenderer,
+    private readonly renderer: HTMLRenderer,
     private readonly actions: IFakeUserInteraction[],
     private readonly userName: string,
     private readonly fps: number) {

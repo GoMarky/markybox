@@ -1,9 +1,10 @@
 import { ref } from 'vue';
-import * as markybox from '@/core';
+import { EditorLang } from '@gomarky/markybox-core/lib/types/common';
+import { getDefaultSyntax } from '@gomarky/markybox-core';
 
-const currentEditorLang = ref<markybox.EditorLang>(markybox.getDefaultSyntax());
+const currentEditorLang = ref<EditorLang>(getDefaultSyntax());
 
-function setEditorLang(lang: markybox.EditorLang): void {
+function setEditorLang(lang: EditorLang): void {
     currentEditorLang.value = lang;
 }
 

@@ -1,5 +1,5 @@
 import { Disposable } from '@/app/platform/lifecycle/common/lifecycle';
-import * as markybox from '@/core';
+import * as markybox from '@gomarky/markybox-core';
 
 export class EditorInstance extends Disposable {
   private readonly _renderer: markybox.HTMLRenderer;

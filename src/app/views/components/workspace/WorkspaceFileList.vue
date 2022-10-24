@@ -20,7 +20,6 @@
 </template>
 
 <script lang="ts" setup>
-import * as markybox from '@/core';
 import { inject } from 'vue';
 import { IWorkspaceFile } from '@/app/code/workspace/common/workspace-file';
 import IconAdd from '@/app/views/components/icons/IconAdd.vue';
@@ -28,6 +27,7 @@ import IconAddFile from '@/app/views/components/icons/IconAddFile.vue';
 import WorkspaceFileListRootNode from '@/app/views/components/workspace/WorkspaceFileListRootNode.vue';
 import { Workspace } from '@/app/code/workspace/browser/workspace-service';
 import { EditorInstance } from '@/app/code/editor/browser/editor';
+import { getValuableSyntax } from '@gomarky/markybox-core';
 
 const workspace = inject<Workspace>('workspace') as Workspace;
 const editor = inject<EditorInstance>('editor') as EditorInstance;
@@ -35,7 +35,7 @@ const editor = inject<EditorInstance>('editor') as EditorInstance;
 const onChooseFile = (file: IWorkspaceFile) => {
   workspace.requestFile('');
 
-  const lang = markybox.getValuableSyntax(file.name);
+  const lang = getValuableSyntax(file.name);
   editor.renderer.body.setFormat(lang);
 }
 </script>
